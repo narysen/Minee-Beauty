@@ -18,11 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Shop now button
   if (shopNowBtn) {
     shopNowBtn.addEventListener("click", function () {
-      window.location.href = "product.html"; // change if needed
+      window.location.href = "product.html";
     });
   }
-});
 
+  updateCartButton();
+  renderCartPreview();
+});
 
 function goToPage(page) {
   if (page) {
@@ -30,6 +32,7 @@ function goToPage(page) {
   }
 }
 
+// ONLY ONE CART (GLOBAL)
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 /* ================= CART ================= */
@@ -57,13 +60,14 @@ function updateCartButton() {
   if (!btn) return;
 
   const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
-  btn.innerText = `Cart Item (${totalQty})`;
+  btn.innerText = 'Cart Item (${totalQty})';
 }
 
 function renderCartPreview() {
   const list = document.getElementById("cart-items");
   const totalBox = document.getElementById("cart-total");
 
+  // FIXED CONDITION
   if (!list || !totalBox) return;
 
   list.innerHTML = "";
@@ -82,7 +86,7 @@ function renderCartPreview() {
     list.appendChild(li);
   });
 
-  totalBox.innerText = `Total: $${total.toFixed(2)}`;
+  totalBox.innerText = 'Total: $${total.toFixed(2)}';
 }
 
 function increase(i) {
@@ -100,41 +104,37 @@ function decrease(i) {
   saveCart();
 }
 
-/* ================= CHECKOUT ================= */
+/* ================= CART TOGGLE ================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   const cartButton = document.getElementById("cart-button");
   const preview = document.getElementById("cart-preview");
 
-  // Load cart safely from localStorage
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  // Toggle cart preview
   if (cartButton && preview) {
     cartButton.onclick = () => {
       preview.style.display =
         preview.style.display === "block" ? "none" : "block";
     };
   }
-
-  // Save cart globally so confirmCart can use it
-  window.cart = cart;
-
-  updateCartButton();
-  renderCartPreview();
 });
 
-
+/* ================= CHECKOUT ================= */
 
 function confirmCart() {
   const user = JSON.parse(localStorage.getItem("user"));
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if (!user) {
+    alert("User not logged in!");
+    return;
+  }
 
   if (!cart.length) {
     alert("Cart is empty!");
     return;
   }
 
- fetch("http://localhost:3000/checkout", {
+  fetch("/checkout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -151,10 +151,8 @@ function confirmCart() {
 
     alert("Order placed successfully!");
 
-    // clear cart after order
     localStorage.removeItem("cart");
 
-    // go to profile / history
     window.location.href = "profileinfo.html";
   })
   .catch(err => {
