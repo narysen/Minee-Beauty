@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><img src="./image/logo copy.png" alt="banner-top"  style="width:60px;"></div>
+     <ul class="nav-links">
+    <li>
+      <a href="index.html">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    <li>
+      <a href="about.html">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>About</span>
+      </a>
+    </li>
+    <li>
+      <a href="profileinfo.html">
+        <i class="fa-solid fa-user-circle"></i>
+        <span>Profile</span>
+      </a>
+    </li>
+  </ul>
+    </nav>
+  </header>
+
+  <section id="products" class="products">
+    <div class="box-container">
+      <div class="box">
+        <img src="./image/makeup/oneye/mascara/m1.jpeg" alt="">
+        <p>Maybeline Mascara -Last Sensatioinal</p>
+        <div class="price">$7.20</div>
+      <button onclick="addToCart(51, 'Maybeline Mascara -Last Sensatioinal', 7.20)">Add to Cart</button>
+      </div>
+      <div class="box">
+          <img src="./image/makeup/oneye/mascara/m2.jpeg" alt="">   
+            <p>Maybeline New York Sky High  </p>
+        <div class="price">$7.50</div>
+      <button onclick="addToCart(52, 'Maybeline New York Sky High', 7.50)">Add to Cart</button>
+      </div>
+      <div class="box">
+        <img src="./image/makeup/oneye/mascara/m3.jpeg" alt="">
+        <p>SUAKE Waterproof Quick-drying Eyelash </p>
+    <div class="price">$7.99</div>
+      <button onclick="addToCart(53, 'SUAKE Waterproof Quick-drying Eyelash', 7.99)">Add to Cart</button>
+
+      </div>
+      <div class="box">
+        <img src="./image/makeup/oneye/mascara/m4.jpeg" alt="">
+            <p>Etude Curl Fix Mascara </p>
+    <div class="price">$5.90</div>
+      <button onclick="addToCart(54, 'Etude Curl Fix Mascara', 5.90)">Add to Cart</button>
+      </div>
+      <div class="box">
+        <img src="./image/makeup/oneye/mascara/m5.jpeg" alt="">
+        <p>Rom&and All fix Mascara<br>V01 Valume Black</p>
+    <div class="price">$7.60</div>
+      <button onclick="addToCart(55, 'Rom&and All fix Mascara -V01 Valume Black', 7.60)">Add to Cart</button>
+      </div>
+    <div class="box">
+        <img src="./image/makeup/oneye/mascara/m6.jpeg" alt="">
+        <p>Rom&and All fix Mascara<br>V03 Valume Black</p>
+    <div class="price">$7.60</div>
+      <button onclick="addToCart(56, 'Rom&and All fix Mascara -V03 Valume Black', 7.60)">Add to Cart</button>
+    </div>
+  
+<!-- CART BUTTON -->
+<button id="cart-button">Cart (0)</button>
+
+
+<!-- CART PREVIEW -->
+<div id="cart-preview">
+  <h3>Preview Item</h3>
+  <ul id="cart-items"></ul>
+  <h4 id="cart-total"></h4>
+  <button onclick="confirmCart()">Confirm Order</button>
+</div>
+
+    <footer class="footer">
+  <div class="footer-container">
+    
+    <!-- Company Section -->
+    <div class="footer-section">
+      <h3>OUR STORE</h3>
+      <p>MINEE BEAUTY </p>
+     
+      <p>We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+      <p>We alway choose the best product for make ur beauty.
+        <span>We give all customer the truth and respection.</span>
+      </p>
+      <a href="https://maps.google.com" class="footer-link">Google Map (click)</a>
+    </div>
+    
+    <!-- Social Section -->
+    <div class="footer-section">
+      <h3>OUR PLATFORM</h3>
+      <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+      <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+    </div>
+    
+    <!-- Contact Section -->
+    <div class="footer-section">
+      <h3>CONTACT</h3>
+      <p>+885: 015 479 408</p>
+      <p><a href="email:narysen913@gamil.comm" class="footer-link">minee beauty.com</a></p>
+      <button class="footer-btn">Unlock 5% off</button>
+    </div>
+    
+  </div>
+</footer>
+<script src="product.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+.gif-posters {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+}
+
+.banner-carousel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.banner-carousel .carousel-item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.banner-carousel .carousel-item.active {
+  opacity: 1;
+}
+
+.banner-carousel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.carousel-item{
+  position: relative; /* needed for overlay */
+}
+
+.banner-overlay{
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  pointer-events: none; /* text won't block carousel clicks */
+}
+
+.banner-overlay h1{
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.banner-overlay p{
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.banner-overlay button{
+  pointer-events: auto; /* allow button to be clickable */
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  background: #3ab3e7;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.banner-overlay button:hover {
+  transform: scale(1.05);
+  background: navy;
+}
+.gif-section {
+    margin: 40px 0;
+    text-align: center;
+  }
+
+  .gif-section h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .gif-gallery {
+    display: flex;
+    justify-content: center; /* center all GIFs */
+    gap: 20px; /* space between GIFs */
+    flex-wrap: wrap; /* wrap on smaller screens */
+  }
+
+  .gif-gallery img {
+    width: 300px; /* fixed size for all GIFs */
+    height:400px;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+
+  .gif-gallery img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+
+
+.gif-posters {
+    margin: 40px 0;
+    text-align: center;
+  }
+  
+.gif-poster img {
+    width: 100%; /* fixed size for all GIFs */
+    height:500px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  @media (max-width: 800px) {
+    .gif-gallery img {
+      width: 45%; /* responsive for smaller screens */
+      margin-bottom: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .gif-gallery img {
+      width: 100%; /* almost full width on tiny screens */
+    }
+}
+
+.gif-posters {
+    margin: 0px ;
+    text-align: center;
+  }
+  
+.gif-poster img {
+    width: 100%; /* fixed size for all GIFs */
+    height:500px;
+    border-radius: 8px;
+    position: relative;
+  }
+/*.gif-poster img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+*/
+
+ 

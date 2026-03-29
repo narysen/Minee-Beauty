@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Standard favicon (computer browsers) -->
+<link rel="icon" type="image/png" href="/favicon.png?v=999">
+</head>
+<body>
+  
+  <header>
+    <nav class="navbar">
+  <div class="logo">
+    <img src="./image/logo copy.png" style="width:60px;">
+  </div>
+
+  <ul class="nav-links">
+    <li>
+      <a href="index.html">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    <!-- SEARCH -->
+<select onchange="goToPage(this.value)">
+  <option value="">Select Brand</option>
+  <option value="product.html">Mary&May</option>
+  <option value="skin1004.html">Centella-skin1004</option>
+  <option value="cosmetic.html">Make up</option>
+  <option value="etude.html">Etude Lipsticks</option>
+  <option value="sheertint.html">Rom&and-Sheertint</option>
+  <option value="dasique.html">Dasique Palette</option>
+  <option value="mascara.html">Mascara Brand</option>
+  <option value="lipbalm.html">Rom&and-Lipbalms</option>
+
+
+</select>
+    <li>
+      <a href="about.html">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>About</span>
+      </a>
+    </li>
+    <li>
+      <a href="profileinfo.html">
+        <i class="fa-solid fa-user-circle"></i>
+        <span>Profile</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+  
+  </header>
+
+  <section class="hero">
+    <img src="./image/banner copy.png" alt="Banner">
+
+</div>
+<div class="marquee">
+  <div class="marquee-content">
+    <span>Welcome to Girly World!!</span>
+    <span>Get 5% off your first order</span>
+    <span>Sign Up Now</span>
+    <span>Welcome to Girly World!!</span>
+    <span>Get 5% off your first order</span>
+    <span>Sign Up Now</span>
+    <span>Welcome to Girly World!!</span>
+    <span>Get 5% off your first order</span>
+    <span>Sign Up Now</span>
+    <span>Welcome to Girly World!!</span>
+    <span>Get 5% off your first order</span>
+    <span>Sign Up Now</span>
+  </div>
+</div>
+  <!-- Discount Popup -->
+<div class="popup" id="discountPopup">
+      <div class="popup-content">
+          <span class="close" id="closePopup">×</span>
+          <h2> Special Discount </h2>
+          <p>Get <b>5% OFF</b> on your first order!!🎉🪪</p>
+          <button id="shopNowBtn">Sign Up Now!!</button>
+      </div>
+  </div>
+ <div class="banner-content">
+  <a href="product.html" class="shop-btn">Shop Now</a>
+</div>
+</div>
+  </section>
+
+  
+  </section>
+  <section id="products" class="products">
+    <h2 style="text-align: center;">Best in our store!!</h2>
+    <div class="box-container">
+      <div class="box" data-name="maryandmay">
+        <a href="product.html?brand=marymay">
+        <img src="https://marynmay.com/cdn/shop/articles/10_4b9a4607-f88f-439f-9cfc-148a04ceed99.jpg?v=1759224906" alt="">
+        </a>
+        <h3>Mary&May Brand</h3>
+        <span>All product- Mary&May</span>
+      </div>
+     
+      <div class="box">
+        <a href="skin1004.html">
+        <img src="https://images.soco.id/dbeeb514-c542-4d45-80e6-b5a159087478-.jpg" alt="">
+        </a>
+        <h3>Centella</h3>
+        <span>All product- Centella</span>
+      </div>
+    
+
+      <div class="box">
+        <a href="cosmetic.html">
+        <img src="https://www.shutterstock.com/image-photo/skin-care-makeup-products-on-260nw-2186652653.jpg" alt="">
+        </a>
+        <h3>Make-Up</h3>
+        <span>Beauty Make-Up Station</span>
+      </div>
+    </div>
+    </div>
+  </section>
+<section id="products" class="products">
+    <h2 style="text-align: center;">Make your beauty here 🎀</h2>
+    <div class="box-container">
+      <div class="box">
+        <img src="./image/mary&maycream/bcream.webp" alt="">
+        <p>Mary&May Idebbenone Blackberry<br> Intense Cream</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(6,'Mary&May Idenenone+BlackBerry Intense Cream',8.30)">Add to Cart</button>
+      </div>
+    <div class="box">
+        <img src="./image/makeup/oneye/dasique.webp" alt="">
+      <p>Dasique Shadow Palette</p>
+      <div class="price">$13.00</div>
+      <button onclick="addToCart(43, 'Dasique Shadow Palette', 13.00)">Add to Cart</button>
+    </div>
+    <div class="box">
+        <img src="https://web.tradekorea.com/product/585/2251585/(rom_nd)_SHEER_TINTED_STICK_05_DUTCH_COCOA_2.jpg" alt="">
+            <p>Rom&and Sheer Tint Stick<br>code:06 </p>
+    <div class="price">$6.50</div>
+      <button onclick="addToCart(41, 'Rom&and Sheer Tint Stick-06', 6.50)">Add to Cart</button>
+      </div>
+       <div class="box">
+        <img src="https://www.yeppo.fi/cdn/shop/files/ETUDE-Glow-Fixing-Tint-chilling-red.jpg?v=1759908528&width=1920" alt="">
+         <p>Etude Glowing Tint- 222</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(37, 'Etude Glowing Tint', 12.00)">Add to Cart</button>
+    </div>
+  </div>
+
+</section>
+      
+<br>
+    
+
+  <footer class="footer">
+  <div class="footer-container">
+        <div class="footer-section">
+      <h3>OUR STORE</h3>
+      <p>MINEE BEAUTY </p>
+     
+      <p>We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+      <p>We alway choose the best product for make ur beauty.
+        <span>We give all customer the truth and respection.</span>
+      </p>
+      <a href="https://maps.google.com" class="footer-link">Google Map (click)</a>
+    </div>
+    
+    <div class="footer-section">
+      <h3>OUR PLATFORM</h3>
+      <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+      <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>CONTACT</h3>
+      <p>+885: 015 479 408</p>
+      <p><a href="email:narysen913@gamil.comm" class="footer-link">minee beauty.com</a></p>
+      <button class="footer-btn">Unlock 5% off</button>
+    </div>
+    
+  </div>
+  </footer>
+  <script src="product.js"></script>
+</body>
+</html>
+

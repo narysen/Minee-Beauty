@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><img src="./image/logo copy.png" alt="logo" style="width:60px;"></div>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+        <li><a href="about.html"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
+        <li><a href="profileinfo.html"><i class="fa-solid fa-user-circle"></i><span>Profile</span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="products" class="products">
+    <h2 style="text-align:center;">Pick your best choice !!</h2>
+    <div class="box-container">
+
+      <div class="box">
+        <img src="./image/mary&maycream/bcream.webp" alt="">
+        <p>Mary&May Idebbenone Blackberry<br> Intense Cream</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(6,'Mary&May Idenenone+BlackBerry Intense Cream',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&may mask/cica.webp" alt="">
+        <p>Mary&May Cica Houttuynia<br>Tea Tree Calming Mask</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(7,'Mary&May Cica Houttuynia Tea Tree Calming Mask',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&may mask/colloagen.jpeg" alt="">
+        <p>Mary&May Collagen Peptide<br>Vital Mask</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(8,'Mary&May Collagen Peptide Vital Mask',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&may mask/gray.jpeg" alt="">
+        <p>Mary&May Cica Tea Tree Shooting<br>Wash of mask pack</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(9,'Mary&May Cica Tea Tree Shooting Wash of mask pack',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&may mask/pink.jpeg" alt="">
+        <p>Mary&May Long-lasting moisture<br>Wash of mask pack</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(10,'Mary&May Long-lasting moisture Wash of mask pack',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&maysunscreen/sun3.png" alt="">
+        <p>Mary&May Vegan<br>Peptidebakuchiol Sun Stick</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(11,'Mary&May Vegan Peptidebakuchiol Sun Stick',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&maycream/eyecream.webp" alt="">
+        <p>Mary&May - Tranexamic Acid + Glutathione Eye Cream</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(12,'Mary&May Tranexamic Acid + Glutathione Eye Cream',8.30)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/mary&maysunscreen/sun1.webp" alt="">
+        <p>Mary&May Vegan CICA Soothing<br>Sun Screen</p>
+        <div class="price">$8.30</div>
+        <button onclick="addToCart(13,'Mary&May Vegan CICA Soothing Sun Screen',8.30)">Add to Cart</button>
+      </div>
+
+    </div>
+  </section>
+
+  <button id="cart-button" style="position:fixed; bottom:20px; right:20px; z-index:1000;">
+    Cart (0)
+  </button>
+
+  <div id="cart-preview">
+    <h3>Preview Item</h3>
+    <ul id="cart-items"></ul>
+    <h4 id="cart-total">Total: $0.00</h4>
+    <button onclick="confirmCart()">Confirm Order</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+
+      <div class="footer-section">
+        <h3>OUR STORE</h3>
+        <p>MINEE BEAUTY</p>
+        <p>We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p>We always choose the best products for your beauty. <span>We give all customers the truth and respect.</span></p>
+        <a href="https://maps.google.com" class="footer-link">Google Map (click)</a>
+      </div>
+
+      <div class="footer-section">
+        <h3>OUR PLATFORM</h3>
+        <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+        <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+      </div>
+
+      <div class="footer-section">
+        <h3>CONTACT</h3>
+        <p>+885: 015 479 408</p>
+        <p><a href="email:narysen913@gamil.comm" class="footer-link">minee beauty.com</a></p>
+        <button class="footer-btn">Unlock 5% off</button>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="product.js"></script>
+</body>
+</html>

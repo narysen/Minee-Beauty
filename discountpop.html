@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty - About</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Mary&May</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="product.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div>
+    <button onclick="window.location.href='index.html'"></button>
+  </div>
+  <!-- Discount Popup -->
+  <div class="popup" id="discountPopup">
+      <div class="popup-content">
+          <span class="close" id="closePopup">×</span>
+          <h2>Special Discount 🎉</h2>
+          <p>Get <b>10% OFF</b> on your first order!</p>
+          <button id="shopNowBtn">Shop Now</button>
+      </div>
+  </div>
+
+  <script>
+    const popup = document.getElementById("discountPopup");
+    const closeBtn = document.getElementById("closePopup");
+    const shopNowBtn = document.getElementById("shopNowBtn");
+
+    // Close popup when clicked
+    closeBtn.addEventListener("click", function() {
+        popup.style.display = "none";
+    });
+
+    // Shop Now button redirects
+    shopNowBtn.addEventListener("click", function() {
+        window.location.href = "product.html"; // change to page
+    });
+
+    // Show popup immediately when page loads
+    window.addEventListener("load", function() {
+        popup.style.display = "flex";
+    });
+  </script>
+</body>
+</html>

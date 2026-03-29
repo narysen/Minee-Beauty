@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><img src="./image/logo copy.png" alt="banner-top"  style="width:60px;"></div>
+     <ul class="nav-links">
+    <li>
+      <a href="index.html">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    <li>
+      <a href="about.html">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>About</span>
+      </a>
+    </li>
+    <li>
+      <a href="profileinfo.html">
+        <i class="fa-solid fa-user-circle"></i>
+        <span>Profile</span>
+      </a>
+    </li>
+  </ul>
+    </nav>
+  </header>
+
+  <section id="products" class="products">
+    <div class="box-container">
+      <div class="box">
+        <img src="https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//r/o/romand-glasting-melting-balm-03-sorbet-balm-3-5g.jpg" alt="">
+        <p>Romand Glasting Melting Balm 03 - Sorbet Balm</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(57, 'Romand Glasting Melting Balm 03 - Sorbet Balm', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 2 -->
+    <div class="box">
+        <img src="https://static.beautytocare.com/media/catalog/product/r/o/romand-glasting-melting-balm-01-coco-nude-3-5g.jpg" alt="">
+        <p>Romand Glasting Melting Balm 01 - Coco Nude</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(58, 'Romand Glasting Melting Balm 01 - Coco Nude', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 3 -->
+    <div class="box">
+        <img src="https://sokoskins.shop/cdn/shop/products/romand_GlastingMeltingBalm_02_01_530x@2x.webp?v=1678868643" alt="">
+        <p>Romand Glasting Melting Balm 02</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(59, 'Romand Glasting Melting Balm 02', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 4 -->
+    <div class="box">
+        <img src="https://sokoskins.shop/cdn/shop/products/romand_GlastingMeltingBalm_04_01_600x600_crop_center_756c84a7-e6e9-4d57-8b05-ba8d59a31ea5_600x.webp?v=1678868964" alt="">
+        <p>Romand Glasting Melting Balm 04</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(60, 'Romand Glasting Melting Balm 04', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 5 -->
+    <div class="box">
+        <img src="https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//r/o/romand-glasting-melting-balm-05-nougat-sand-3-5g.jpg" alt="">
+        <p>Romand Glasting Melting Balm 05 - Nougat Sand</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(61, 'Romand Glasting Melting Balm 05 - Nougat Sand', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 6 -->
+    <div class="box">
+        <img src="https://static.beautytocare.com/cdn-cgi/image/f=auto/media/catalog/product/r/o/romand-glasting-melting-balm-06-kaya-fig-3-5g.jpg" alt="">
+        <p>Romand Glasting Melting Balm 06 - Kaya Fig</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(62, 'Romand Glasting Melting Balm 06 - Kaya Fig', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 7 -->
+    <div class="box">
+        <img src="https://sokoskins.shop/cdn/shop/products/romand_GlastingMeltingBalm_07_01_530x@2x.webp?v=1678869428" alt="">
+        <p>Romand Glasting Melting Balm 07</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(63, 'Romand Glasting Melting Balm 07', 8.30)">Add to Cart</button>
+    </div>
+
+      <!-- Product 8 -->
+    <div class="box">
+        <img src="https://static.beautytocare.com/cdn-cgi/image/f=auto/media/catalog/product/r/o/romand-glasting-melting-balm-12-veiled-rose-3-5g.jpg" alt="">
+        <p>Romand Glasting Melting Balm 12 - Veiled Rose</p>
+    <div class="price">$8.30</div>
+      <button onclick="addToCart(33, 'Romand Glasting Melting Balm 12 - Veiled Rose', 8.30)">Add to Cart</button>
+    </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <!-- CART BUTTON -->
+<button id="cart-button">Cart (0)</button>
+
+
+<!-- CART PREVIEW -->
+<div id="cart-preview" >
+  <h3>Preview Item</h3>
+  <ul id="cart-items"></ul>
+  <h4 id="cart-total"></h4>
+  <button onclick="confirmCart()">Confirm Order</button>
+</div>
+
+
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>OUR STORE</h3>
+        <p>MINEE BEAUTY</p>
+        <p>We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p>We always choose the best product for your beauty. <span>We give all customers truth and respect.</span></p>
+        <a href="https://maps.google.com" class="footer-link">Google Map (click)</a>
+      </div>
+      <div class="footer-section">
+        <h3>OUR PLATFORM</h3>
+        <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+        <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+      </div>
+      <div class="footer-section">
+        <h3>CONTACT</h3>
+        <p>+885: 015 479 408</p>
+        <p><a href="mailto:narysen913@gmail.com" class="footer-link">minee beauty.com</a></p>
+        <button class="footer-btn">Unlock 5% off</button>
+      </div>
+    </div>
+  </footer>
+<script src="product.js"></script>
+
+</body>
+</html>

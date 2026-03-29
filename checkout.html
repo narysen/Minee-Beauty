@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="checkout.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+</head>
+ <header>
+    <nav class="navbar">
+      <div class="logo"><img src="./image/logo copy.png" alt="banner-top" style="width: 60px;" ></div>
+</nav>
+</header>
+<body>
+
+<div class="checkout-container">
+  <h2>Your Checkout Item</h2>
+
+  <!-- Cart Items -->
+  <ul id="cart-items"></ul>
+  <h3 id="cart-total"></h3>
+
+  <!-- Payment Options -->
+  <h3>Choose Payment Method</h3>
+  <button class="pay-btn" onclick="payByBank()">Pay by Bank QR</button>
+  <button class="pay-btn" onclick="payByPhone()">Pay by Phone Number</button>
+  <button class="pay-btn" onclick="payByCash()">Cash on Delivery</button>
+
+  <!-- Bank QR -->
+  <div id="bank-qr" class="payment-section">
+    <p>Scan this QR to pay:</p>
+    <img src="./image/payment/qr1.jpg" alt="Bank QR Code" class="qr-code">
+    <img src="./image/payment/q2.jpg" alt="Bank QR Code" class="qr-code">
+
+    <p><strong>Bank ID:</strong> 015 479 408</p>
+    <button class="pay-btn" onclick="finishOrder()">Done</button>
+  </div>
+
+  <!-- Phone -->
+  <div id="phone-pay" class="payment-section">
+    <p>Send payment to phone number:</p>
+    <strong>+855-15 479 408</strong>
+    <button class="pay-btn" onclick="finishOrder()">Done</button>
+  </div>
+
+  <!-- Cash -->
+  <div id="cash-pay" class="payment-section">
+    <p>Your order is confirmed.</p>
+    <p>Please prepare cash for delivery.</p>
+    <button class="pay-btn" onclick="finishOrder()">Done</button>
+  </div>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function renderCheckoutCart() {
+  const cartItems = document.getElementById("cart-items");
+  const cartTotal = document.getElementById("cart-total");
+  cartItems.innerHTML = '';
+  let total = 0;
+
+  cart.forEach(item => {
+    total += item.price * item.quantity;
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${item.name} - $${item.price.toFixed(2)}</span>
+      <span>Qty: ${item.quantity}</span>
+    `;
+    cartItems.appendChild(li);
+  });
+
+  cartTotal.innerText = "Total: $" + total.toFixed(2);
+}
+
+function hideAllPayments() {
+  document.getElementById("bank-qr").style.display = "none";
+  document.getElementById("phone-pay").style.display = "none";
+  document.getElementById("cash-pay").style.display = "none";
+}
+
+function payByBank() {
+  hideAllPayments();
+  document.getElementById("bank-qr").style.display = "block";
+}
+
+function payByPhone() {
+  hideAllPayments();
+  document.getElementById("phone-pay").style.display = "block";
+}
+
+function payByCash() {
+  hideAllPayments();
+  document.getElementById("cash-pay").style.display = "block";
+}
+
+// Finish order and go home
+function finishOrder() {
+  alert("Thank you! Your order is confirmed.");
+  localStorage.removeItem("cart"); // clear cart
+  window.location.href = "index.html"; // redirect to home page
+}
+
+// Render cart on load
+document.addEventListener("DOMContentLoaded", renderCheckoutCart);
+
+function finishOrder() {
+  alert("Thank you! Your order is confirmed.");
+  
+  // Save history
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+  history.push({
+    date: new Date().toLocaleString(),
+    items: cart,
+    total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  });
+  localStorage.setItem("history", 
+  JSON.stringify(history));
+
+  //localStorage.removeItem("cart"); // clear cart
+  window.location.href = "index.html"; // back to home
+}
+</script>
+
+</body>
+</html>

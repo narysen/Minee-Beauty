@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Checkout</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Standard favicon (computer browsers) -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+<!-- Apple (iPhone / iPad) -->
+<link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+
+<!-- Android / mobile -->
+<link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.container{
+    width:400px;
+    margin:50px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:1px solid #ccc;
+}
+
+.payment{
+    margin:10px 0;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#28a745;
+    color:white;
+    border:none;
+    font-size:16px;
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<h3>Payment Method</h3>
+
+<div class="payment">
+<input type="radio" name="pay" value="cod"> Cash on Delivery
+</div>
+
+<div class="payment">
+<input type="radio" name="pay" value="card"> Credit / Debit Card
+</div>
+
+<div class="payment">
+<input type="radio" name="pay" value="paypal"> QR Code
+</div>
+
+<button onclick="pay()">Confirm Payment</button>
+
+</div>
+
+<script>
+
+function pay(){
+
+let method = document.querySelector('input[name="pay"]:checked');
+
+if(!method){
+alert("Please select payment method");
+return;
+}
+
+alert("Payment method selected: " + method.value);
+
+}
+
+</script>
+
+</body>
+</html>

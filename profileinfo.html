@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="profileinfo.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon"  href="favicon.png">
+ 
+</head>
+<body>
+<div class="header">
+  <div class="top">
+    <div class="avatar-frame">
+      <img src="./image/profiile.jpeg" id="avatar" class="avatar">
+      <div class="overlay"><i class="fa-solid fa-camera"></i></div>
+    </div>
+    <div class="info">
+      <h2 id="name">Name</h2>
+      <p id="username">@username</p>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="uploadPhoto" accept="image/*">
+<div class="menu">
+  
+  <div onclick="toggleSection('history-section')"><i class="fa-solid fa-clock"></i>History</div>
+  <div onclick="toggleSection('address-section')"><i class="fa-solid fa-location-dot"></i>Address</div>
+</div>
+<div id="history-section" class="orders" style="display:none;">
+  <div class="orders-top"><h3>Order History</h3></div>
+  <ul id="history-list"></ul>
+</div>
+<div id="address-section" class="orders" style="display:none;">
+  <div class="orders-top"><h3>Saved Addresses</h3></div>
+  <ul id="address-list"></ul>
+  
+  <button onclick="addAddress()">Add New Address</button>
+</div>
+
+<button class="logout" onclick="logout()">Logout</button>
+<script src="profileinfo.js"></script>
+
+</body>
+</html>

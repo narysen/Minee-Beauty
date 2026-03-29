@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minee Beauty</title>
+<link rel="stylesheet" href="contact.css">
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg">
+  <img src="./image/banner copy.png" alt="Banner">
+</div>
+
+<!-- NAVBAR -->
+<header>
+  <nav class="navbar">
+    <img src="./image/logo copy.png" style="width:60px;">
+  </nav>
+</header>
+
+<!-- FORM -->
+<div class="container">
+
+  <h2 id="formTitle">Create Account</h2>
+
+  <form id="authForm">
+
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="tel" id="phone" placeholder="Phone Number">
+    <input id="address" type="text" placeholder="Address" onclick="getCurrentLocation()">
+      
+    <input type="password" id="password" placeholder="Password" required>
+
+    <button type="submit">Create Account</button>
+
+    <div class="switch">
+      Already have an account?
+      <a onclick="switchForm()">Sign In</a>
+    </div>
+
+  </form>
+</div>
+
+<script src="contact.js"></script>
+</body>
+</html>
+

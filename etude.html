@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+
+
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><img src="./image/logo copy.png" alt="banner-top" style="width:60px;"></div>
+      <ul class="nav-links">
+        <li>
+          <a href="index.html">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="about.html">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>About</span>
+          </a>
+        </li>
+        <li>
+          <a href="profileinfo.html">
+            <i class="fa-solid fa-user-circle"></i>
+            <span>Profile</span>
+          </a>
+  
+        </li>
+      </ul>
+          
+    </nav>
+  </header>
+
+  <section id="products" class="products">
+    <div class="box-container">
+      <div class="box">
+        <img src="./image/makeup/02.webp" alt="">
+       <p>Etude Fixing Tint- 02</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(30, 'Etude Fixing Tint Mated-02', 12.00)">Add to Cart</button>
+      </div>
+
+      <div class="box">
+        <img src="./image/makeup/03.jpeg" alt="">
+        <p>Etude Fixing Tint- 03</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(31, 'Etude Fixing Tint Mated-03', 12.00)">Add to Cart</button>
+    </div>
+
+
+      <div class="box">
+        <img src="./image/makeup/04.jpeg" alt="">
+        <p>Etude Fixing Tint- 04</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(32, 'Etude Fixing Tint Mated-04', 12.00)">Add to Cart</button>
+    </div>
+
+
+      <div class="box">
+        <img src="./image/makeup/05.jpeg" alt="">
+        <p>Etude Fixing Tint- 05</p>
+      <div class="price">$12.00</div>
+       <button onclick="addToCart(33, 'Etude Fixing Tint Mated-05', 12.00)">Add to Cart</button>
+    </div>
+
+
+      <div class="box">
+        <img src="./image/makeup/12.jpeg" alt="">
+        <p>Etude Fixing Tint- 12</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(34, 'Etude Fixing Tint Mated-12', 12.00)">Add to Cart</button>
+    </div>
+
+      <div class="box">
+        <img src="./image/makeup/20.jpeg" alt="">
+       <p>Etude Fixing Tint- 20</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(35, 'Etude Fixing Tint Mated-20', 12.00)">Add to Cart</button>
+    </div>
+
+      <div class="box">
+        <img src="https://m.media-amazon.com/images/I/41EfXENd3pL.jpg" alt="">
+        <p>Etude Glowing Tint- 000</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(36, 'Etude Glowing Tint', 12.00)">Add to Cart</button>
+    </div>
+
+      <div class="box">
+        <img src="https://www.yeppo.fi/cdn/shop/files/ETUDE-Glow-Fixing-Tint-chilling-red.jpg?v=1759908528&width=1920" alt="">
+         <p>Etude Glowing Tint- 222</p>
+      <div class="price">$12.00</div>
+        <button onclick="addToCart(37, 'Etude Glowing Tint', 12.00)">Add to Cart</button>
+    </div>
+  </div>
+</section>
+
+<!-- CART BUTTON -->
+<button id="cart-button">Cart (0)</button>
+
+
+<!-- CART PREVIEW -->
+<div id="cart-preview">
+  <h3>Preview Item</h3>
+  <ul id="cart-items"></ul>
+  <h4 id="cart-total"></h4>
+  <button onclick="confirmCart()">Confirm Order</button>
+</div>
+
+  
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>OUR STORE</h3>
+        <p>MINEE BEAUTY</p>
+        <p>We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p>We always choose the best product for your beauty. <span>We give all customers truth and respect.</span></p>
+        <a href="https://maps.google.com" class="footer-link">Google Map (click)</a>
+      </div>
+      <div class="footer-section">
+        <h3>OUR PLATFORM</h3>
+        <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+        <p><a href="#" class="footer-link">@minee beauty.official</a></p>
+      </div>
+      <div class="footer-section">
+        <h3>CONTACT</h3>
+        <p>+885: 015 479 408</p>
+        <p><a href="mailto:narysen913@gmail.com" class="footer-link">minee beauty.com</a></p>
+        <button class="footer-btn">Unlock 5% off</button>
+      </div>
+    </div>
+  
+  </footer>
+    <script src="product.js"></script>
+    <script src="server.js"></script>
+
+</body>
+</html>
