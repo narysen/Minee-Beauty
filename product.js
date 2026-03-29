@@ -99,26 +99,6 @@ function decrease(i) {
 
   saveCart();
 }
-function confirmCart() {
-  window.location.href = "checkout.html";
-}
-
-/* ================= CART TOGGLE ================= 
-
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("cart-button");
-  const preview = document.getElementById("cart-preview");
-
-  if (btn && preview) {
-    btn.onclick = () => {
-      preview.style.display =
-        preview.style.display === "block" ? "none" : "block";
-    };
-  }
-
-  updateCartButton();
-  renderCartPreview();
-});
 
 /* ================= CHECKOUT ================= */
 document.addEventListener("DOMContentLoaded", () => {
@@ -144,55 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ==========================
-// CONFIRM ORDER → CHECKOUT
-/* ==========================
-function confirmCart() {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // save cart before checkout
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  // redirect to checkout page
-  window.location.href = "checkout.html";
-}
-
-function loadHistory() {
-  fetch("http://localhost:3000/orders")
-    .then(res => res.json())
-    .then(history => {
-      const historyList = document.getElementById("history-list");
-      if (!historyList) return;
-
-      historyList.innerHTML = "";
-
-      // safety check
-      if (!Array.isArray(history) || history.length === 0) {
-        historyList.innerHTML = "<li>No orders yet</li>";
-        return;
-      }
-
-      history.forEach(order => {
-        const li = document.createElement("li");
-
-        const itemsText = (order.items || [])
-          .map(i => `${i.product || "Item"} (x${i.quantity || 1})`)
-          .join(", ");
-
-        li.innerHTML = `
-          <strong>${order.created_at ? new Date(order.created_at).toLocaleString() : "No date"}</strong><br>
-          Address: ${order.address || "No address"}<br>
-          Total: $${order.total || 0}<br>
-          Items: ${itemsText}
-        `;
-
-        historyList.appendChild(li);
-      });
-    })
-    .catch(err => {
-      console.error("History load error:", err);
-    });
-}*/
 function confirmCart() {
   const user = JSON.parse(localStorage.getItem("user"));
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -202,7 +134,7 @@ function confirmCart() {
     return;
   }
 
-  fetch("http://localhost:3000/checkout", {
+ fetch("http://localhost:3000/checkout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

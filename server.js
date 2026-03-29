@@ -10,8 +10,8 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "R@y5277R!",   // your password
-  database: "ecommerce"    // your schema
+  password: "R@y5277R!",   
+  database: "ecommerce"   
 });
 
 db.connect(err => {
@@ -60,7 +60,7 @@ app.post("/checkout", (req, res) => {
         );
       });
 
-      console.log("✅ ORDER SAVED:", orderId);
+      console.log("ORDER SAVED:", orderId);
 
       res.json({ message: "Order saved successfully!", orderId });
     }
