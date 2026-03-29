@@ -99,6 +99,9 @@ function decrease(i) {
 
   saveCart();
 }
+function confirmCart() {
+  window.location.href = "checkout.html";
+}
 
 /* ================= CART TOGGLE ================= 
 
