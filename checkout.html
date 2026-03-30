@@ -54,26 +54,35 @@
 </div>
 
 <script>
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function renderCheckoutCart() {
   const cartItems = document.getElementById("cart-items");
   const cartTotal = document.getElementById("cart-total");
-  cartItems.innerHTML = '';
+
+  cartItems.innerHTML = "";
+
   let total = 0;
 
   cart.forEach(item => {
     total += item.price * item.quantity;
-    const li = document.createElement('li');
+
+    const li = document.createElement("li");
     li.innerHTML = `
-      <span>${item.name} - $${item.price.toFixed(2)}</span>
-      <span>Qty: ${item.quantity}</span>
+      <div style="display:flex;justify-content:space-between;gap:10px;">
+        <span><b>${item.name}</b></span>
+        <span>Qty: ${item.quantity}</span>
+        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+      </div>
     `;
     cartItems.appendChild(li);
   });
 
   cartTotal.innerText = "Total: $" + total.toFixed(2);
 }
+
+/* ================= PAYMENT UI ================= */
 
 function hideAllPayments() {
   document.getElementById("bank-qr").style.display = "none";
@@ -96,33 +105,46 @@ function payByCash() {
   document.getElementById("cash-pay").style.display = "block";
 }
 
-// Finish order and go home
-function finishOrder() {
-  alert("Thank you! Your order is confirmed.");
-  localStorage.removeItem("cart"); // clear cart
-  window.location.href = "index.html"; // redirect to home page
-}
-
-// Render cart on load
-document.addEventListener("DOMContentLoaded", renderCheckoutCart);
+/* ================= FINISH ORDER (FIXED + MODERN) ================= */
 
 function finishOrder() {
-  alert("Thank you! Your order is confirmed.");
-  
-  // Save history
-  let history = JSON.parse(localStorage.getItem("history")) || [];
-  history.push({
-    date: new Date().toLocaleString(),
+  if (!cart.length) {
+    alert("Cart is empty!");
+    return;
+  }
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const order = {
+    customer_name: user?.name || "Guest",
+    address: user?.address || "No address",
     items: cart,
-    total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  });
-  localStorage.setItem("history", 
-  JSON.stringify(history));
+    total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    created_at: new Date().toISOString()
+  };
 
-  //localStorage.removeItem("cart"); // clear cart
-  window.location.href = "index.html"; // back to home
+  //  Save to "orders" (IMPORTANT FIX)
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  // clear cart
+  localStorage.removeItem("cart");
+
+  alert("Thank you! Your order is confirmed.");
+
+  // go to profile history
+  window.location.href = "profileinfo.html";
 }
+
+/* ================= INIT ================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderCheckoutCart();
+  hideAllPayments();
+});
 </script>
+
 
 </body>
 </html>

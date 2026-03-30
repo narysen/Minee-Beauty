@@ -3,19 +3,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const closeBtn = document.getElementById("closePopup");
   const shopNowBtn = document.getElementById("shopNowBtn");
 
-  // Show popup when page loads
-  if (popup) {
-    popup.style.display = "flex";
-  }
+  if (popup) popup.style.display = "flex";
 
-  // Close popup
   if (closeBtn) {
     closeBtn.addEventListener("click", function () {
       popup.style.display = "none";
     });
   }
 
-  // Shop now button
   if (shopNowBtn) {
     shopNowBtn.addEventListener("click", function () {
       window.location.href = "product.html";
@@ -23,15 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
 function goToPage(page) {
-  if (page) {
-    window.location.href = page;
-  }
+  if (page) window.location.href = page;
 }
 
-let cart = JSON.parse(localStorage.getItem("cart")) ||  [];
-//cart
+/* ================= CART ================= */
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function addToCart(id, name, price) {
   const existing = cart.find(item => item.id === id);
@@ -99,15 +92,12 @@ function decrease(i) {
   saveCart();
 }
 
-//checkout
+/* ================= INIT ================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   const cartButton = document.getElementById("cart-button");
   const preview = document.getElementById("cart-preview");
 
-  // Load cart safely from localStorage
-  let cart = JSON.parse(localStorage.getItem("cart")) ||  [];
-
-  // Toggle cart preview
   if (cartButton && preview) {
     cartButton.onclick = () => {
       preview.style.display =
@@ -115,48 +105,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Save cart globally so confirmCart can use it
-  window.cart = cart;
-
   updateCartButton();
   renderCartPreview();
 });
 
-
+/* ================= CHECKOUT (FIXED FLOW) ================= */
 
 function confirmCart() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const cart = JSON.parse(localStorage.getItem("cart")) ||  [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   if (!cart.length) {
     alert("Cart is empty!");
     return;
   }
 
- fetch("https://minee-beauty.onrender.com/checkout", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      customer_name: user.name,
-      address: user.address || "No address",
-      cart: cart
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("SERVER RESPONSE:", data);
-
-    alert("Order placed successfully!");
-
-    // clear cart after order
-    localStorage.removeItem("cart");
-
-    // go to profile / history
-    window.location.href = "profileinfo.html";
-  })
-  .catch(err => {
-    console.error("CHECKOUT ERROR:", err);
-  });
-} 
+  window.location.href = "checkout.html";
+}

@@ -4,12 +4,12 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 
-
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// Connect to MySQL
+// ================= MYSQL CONNECTION =================
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -19,11 +19,14 @@ const db = mysql.createConnection({
 });
 
 db.connect(err => {
-  if (err) throw err;
+  if (err) {
+    console.error("MySQL connection error:", err);
+    return;
+  }
   console.log("Connected to MySQL");
 });
 
-// GET ALL PRODUCTS
+// ================= GET PRODUCTS =================
 app.get("/products", (req, res) => {
   db.query("SELECT * FROM products", (err, result) => {
     if (err) return res.status(500).send(err);
@@ -31,42 +34,66 @@ app.get("/products", (req, res) => {
   });
 });
 
-// CHECKOUT (SAVE ORDER + ITEMS)
+// ================= CHECKOUT (FIXED) =================
 app.post("/checkout", (req, res) => {
   const { customer_name, address, cart } = req.body;
+  console.log("USER:", user);
+  console.log("ADDRESS:", user.address);
 
-  console.log("BODY:", req.body); 
+  //console.log("ADDRESS FROM FRONTEND:", req.body);
 
-  if (!cart || cart.length === 0) {
+  // validate cart
+  if (!cart || !Array.isArray(cart) || cart.length === 0) {
     return res.status(400).json({ error: "Cart is empty!" });
   }
 
-  // calculate total
-  let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // safe values (PREVENT NULL)
+  const safeName = customer_name?.trim() || "Guest";
+  const safeAddress = address?.trim() || "No address";
+
+  // calculate total safely
+  const total = cart.reduce((sum, item) => {
+    return sum + (Number(item.price) || 0) * (Number(item.quantity) || 1);
+  }, 0);
 
   // insert order
   db.query(
     "INSERT INTO orders (customer_name, address, total) VALUES (?, ?, ?)",
-    [customer_name, address, total],
+    [safeName, safeAddress, total],
     (err, result) => {
       if (err) {
-        console.log("ORDER ERROR:", err);
-        return res.status(500).send(err);
+        console.log("ORDER INSERT ERROR:", err);
+        return res.status(500).json(err);
       }
 
       const orderId = result.insertId;
 
-      // insert each product into order_items
+      // insert order items
       cart.forEach(item => {
         db.query(
           "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)",
-          [orderId, item.id, item.quantity, item.price]
+          [
+            orderId,
+            item.id || 0,
+            item.quantity || 1,
+            item.price || 0
+          ]
         );
       });
 
       console.log("ORDER SAVED:", orderId);
 
-      res.json({ message: "Order saved successfully!", orderId });
+      res.json({
+        success: true,
+        message: "Order saved successfully!",
+        orderId
+      });
     }
   );
+});
+
+// ================= START SERVER =================
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

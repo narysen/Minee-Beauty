@@ -1,37 +1,105 @@
 document.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // redirect if not logged in
   if (!user) {
     window.location.href = "contact.html";
     return;
   }
 
-  document.getElementById("name").innerText = user.name;
-  document.getElementById("username").innerText = user.username;
+  /* ================= USER INFO ================= */
+  const nameEl = document.getElementById("name");
+  const usernameEl = document.getElementById("username");
 
+  if (nameEl) nameEl.innerText = user.name || "";
+  if (usernameEl) usernameEl.innerText = user.username || "";
+
+  /* ================= AVATAR ================= */
   const avatar = document.getElementById("avatar");
   const uploadPhoto = document.getElementById("uploadPhoto");
+  const frame = document.querySelector(".avatar-frame");
 
   const savedAvatar = localStorage.getItem("userAvatar");
-  if (savedAvatar) avatar.src = savedAvatar;
+  if (avatar && savedAvatar) avatar.src = savedAvatar;
 
-  document.querySelector(".avatar-frame").onclick = () => {
-    uploadPhoto.click();
-  };
+  if (frame && uploadPhoto) {
+    frame.onclick = () => uploadPhoto.click();
+  }
 
-  uploadPhoto.addEventListener("change", (event) => {
-    const file = event.target.files[0];
+  if (uploadPhoto && avatar) {
+    uploadPhoto.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         avatar.src = e.target.result;
         localStorage.setItem("userAvatar", e.target.result);
       };
       reader.readAsDataURL(file);
-    }
-  });
+    });
+  }
+
+  /* ================= HISTORY LOAD ================= */
+  loadHistory();
 });
+
+/* ================= TOGGLE SECTIONS ================= */
+function toggleSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (!section) return;
+
+  const isHidden =
+    section.style.display === "none" || section.style.display === "";
+
+  document.querySelectorAll(".orders").forEach(sec => {
+    sec.style.display = "none";
+  });
+
+  if (isHidden) {
+    section.style.display = "block";
+
+    if (sectionId === "history-section") {
+      loadHistory();
+    }
+  }
+}
+
+/* ================= HISTORY ================= */
+function loadHistory() {
+  const list = document.getElementById("history-list");
+  if (!list) return;
+
+  let history = JSON.parse(localStorage.getItem("orders")) || [];
+
+  list.innerHTML = "";
+
+  if (!history.length) {
+    list.innerHTML = "<li>No orders yet</li>";
+    return;
+  }
+
+  history.reverse().forEach(order => {
+    const itemsText = (order.items || [])
+      .map(i => `${i.name} x${i.quantity}`)
+      .join(", ");
+
+    list.innerHTML += `
+      <li style="
+        background:#fff;
+        margin:10px 0;
+        padding:12px;
+        border-radius:10px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      ">
+        <div><b>🕒 ${new Date(order.created_at).toLocaleString()}</b></div>
+        <div>📍 ${order.address || "No address"}</div>
+        <div>💰 <b>$${Number(order.total || 0).toFixed(2)}</b></div>
+        <div>🛒 ${itemsText || "No items"}</div>
+      </li>
+    `;
+  });
+}
 
 /* ================= LOGOUT ================= */
 function logout() {
@@ -39,66 +107,4 @@ function logout() {
   localStorage.removeItem("userAvatar");
   localStorage.removeItem("addresses");
   window.location.href = "contact.html";
-}
-
-function toggleSection(sectionId) {
-  const section = document.getElementById(sectionId);
-  if (!section) return;
-
-  const isHidden =
-    section.style.display === "none" ||
-    section.style.display === "";
-
-  // close all sections first (clean UI)
-  document.querySelectorAll(".orders").forEach(sec => {
-    sec.style.display = "none";
-  });
-
-  // open selected section
-  if (isHidden) {
-    section.style.display = "block";
-
-    if (sectionId === "history-section") loadHistory();
-    if (sectionId === "address-section") loadAddresses();
-  }
-}
-
-/* ================= HISTORY ================= */
-function loadHistory() {
-  fetch("http://localhost:3000/orders")
-    .then(res => res.json())
-    .then(history => {
-      console.log("HISTORY:", history); 
-
-      const historyList = document.getElementById("history-list");
-      if (!historyList) return;
-
-      historyList.innerHTML = "";
-
-      if (!Array.isArray(history) || history.length === 0) {
-        historyList.innerHTML = "<li>No orders yet</li>";
-        return;
-      }
-
-      history.forEach(order => {
-        const li = document.createElement("li");
-
-        const itemsText = (order.items || [])
-          .map(i => `${i.product} (x${i.quantity})`)
-          .join(", ");
-
-        li.innerHTML = `
-          <strong>${new Date(order.created_at).toLocaleString()}</strong><br>
-          👤 ${order.customer_name}<br>
-          📍 ${order.address || "No address"}<br>
-          💰 $${order.total}<br>
-          🛒 ${itemsText}
-        `;
-
-        historyList.appendChild(li);
-      });
-    })
-    .catch(err => {
-      console.error("History load error:", err);
-    });
 }
