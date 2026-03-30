@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Control</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #2c3e50;
+  color: white;
+  height: 100vh;
+  padding-top: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 15px;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  background: #34495e;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 20px;
+  background: #f4f6f8;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background: #3498db;
+  color: white;
+}
+
+/* Buttons */
+button {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.delete {
+  background: red;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>Admin</h2>
+  <a href="#">Dashboard</a>
+  <a href="#">Orders</a>
+  <a href="#">Products</a>
+  <a href="#">Logout</a>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <h1>Customer Orders</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Total</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody id="ordersTable"></tbody>
+  </table>
+</div>
+
+<script>
+// FETCH ORDERS FROM BACKEND
+fetch("https://minee-beauty.onrender.com/orders")
+.then(res => res.json())
+.then(data => {
+  const table = document.getElementById("ordersTable");
+
+  data.forEach(order => {
+    table.innerHTML += `
+      <tr>
+        <td>${order.id}</td>
+        <td>${order.customer_name}</td>
+        <td>${order.address}</td>
+        <td>$${order.total}</td>
+        <td>${order.created_at}</td>
+        <td>
+          <button class="delete" onclick="deleteOrder(${order.id})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+});
+
+// DELETE ORDER (optional feature)
+function deleteOrder(id) {
+  fetch(`https://minee-beauty.onrender.com/orders/${id}`, {
+    method: "DELETE"
+  })
+  .then(() => location.reload());
+}
+</script>
+
+</body>
+</html>
