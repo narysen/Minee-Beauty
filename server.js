@@ -32,11 +32,17 @@ pool.connect()
 // ================= PRODUCTS =================
 app.get("/products", async (req, res) => {
   try {
+    console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
     const result = await pool.query("SELECT * FROM products");
     res.json(result.rows);
   } catch (err) {
-    console.log("PRODUCTS ERROR:", err.message);
-    res.status(500).json({ error: "Failed to fetch products" });
+    console.log("FULL ERROR:", err);
+    res.status(500).json({
+      message: err.message,
+      code: err.code,
+      detail: err.detail
+    });
   }
 });
 
