@@ -57,13 +57,25 @@ app.get("/orders", (req, res) => {
 app.delete("/orders/:id", (req, res) => {
   const id = req.params.id;
 
-  db.query("DELETE FROM orders WHERE id = ?", [id], (err) => {
+  // 1. delete child rows first (order_items)
+  db.query("DELETE FROM order_items WHERE order_id = ?", [id], (err) => {
     if (err) {
-      console.log("DELETE ERROR:", err);
+      console.log("DELETE ITEMS ERROR:", err);
       return res.status(500).json(err);
     }
 
-    res.json({ success: true, message: "Order deleted" });
+    // 2. delete main order
+    db.query("DELETE FROM orders WHERE id = ?", [id], (err2) => {
+      if (err2) {
+        console.log("DELETE ORDER ERROR:", err2);
+        return res.status(500).json(err2);
+      }
+
+      res.json({
+        success: true,
+        message: "Order and items deleted successfully"
+      });
+    });
   });
 });
 
