@@ -8,6 +8,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
 
 // ================= MYSQL CONNECTION =================
 const db = mysql.createConnection({
@@ -37,12 +40,8 @@ app.get("/products", (req, res) => {
 // ================= CHECKOUT (FIXED) =================
 app.post("/checkout", (req, res) => {
   const { customer_name, address, cart } = req.body;
-  console.log("USER:", user);
-  console.log("ADDRESS:", user.address);
-
-  //console.log("ADDRESS FROM FRONTEND:", req.body);
-
-  // validate cart
+  console.log("USER:", customer_name);
+  console.log("ADDRESS:", address);
   if (!cart || !Array.isArray(cart) || cart.length === 0) {
     return res.status(400).json({ error: "Cart is empty!" });
   }
