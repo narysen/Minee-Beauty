@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/favicon.png?v=999">
+  
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 8s linear infinite;
+    }
+    
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+  </style>
+</head>
+<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between">
+  
+  <!-- ==========================================
+       HEADER NAVIGATION
+       ========================================== -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <div class="flex-shrink-0">
+        <img src="./image/logo copy.png" alt="Minee Beauty Logo" class="w-[60px] cursor-pointer" id="nav-logo">
+      </div>
+
+      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Navigation Menu">
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      </button>
+
+      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
+        <ul class="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
+          <li>
+            <a href="#home" id="nav-home-trigger" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </a>
+          </li>
+
+          <li class="w-full md:w-auto">
+            <div class="relative w-full sm:w-64">
+              <!-- Search bar linked dynamically to the input stream controllers -->
+              <input type="text" id="search-input" placeholder="Search product & press Enter..." class="w-full bg-neutral-100 border border-neutral-200 text-neutral-700 py-1.5 pl-8 pr-3 rounded-md focus:outline-none focus:border-pink-400 text-sm">
+              <i id="search-icon-trigger" class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-neutral-400 text-xs cursor-pointer hover:text-pink-500 transition-colors"></i>
+            </div>
+          </li>
+
+          <li>
+            <a href="about.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li>
+            <a href="profileinfo.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-user-circle"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Banner & Marquee -->
+  <section class="relative w-full overflow-hidden">
+    <img src="./image/banner copy.png" alt="Promo Banner" class="w-full h-auto object-cover min-h-[250px]">
+    <div class="bg-pink-200 py-2 overflow-hidden w-full border-y border-pink-300">
+      <div class="animate-marquee whitespace-nowrap text-pink-700 font-semibold tracking-wide text-sm gap-8">
+        <span>Welcome to Girly World!!</span> • <span>Get 5% off your first order</span> • <span>Sign Up Now</span> •
+        <span>Welcome to Girly World!!</span> • <span>Get 5% off your first order</span> • <span>Sign Up Now</span> •
+        <span>Welcome to Girly World!!</span> • <span>Get 5% off your first order</span> • <span>Sign Up Now</span> •
+        <span>Welcome to Girly World!!</span> • <span>Get 5% off your first order</span> • <span>Sign Up Now</span> •
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MAIN STORE FRONT PAGE (CONSOLIDATED)
+       ========================================== -->
+  <main id="main-store-page" class="max-w-7xl mx-auto px-4 py-12 w-full space-y-16 flex-1">
+    
+    <!-- 1. NEW ARRIVALS / DYNAMIC SEARCH DISPLAY -->
+    <section class="w-full relative">
+      <h2 id="section-heading" class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8">New Arrival!!!</h2>
+
+      <div id="product-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        
+        <!-- Default Loading Placeholder -->
+        <div id="search-placeholder-view" class="col-span-full text-center py-20 flex flex-col items-center justify-center">
+          <div class="w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center mb-4 text-pink-500 text-2xl">
+            <i class="fa-solid fa-spinner animate-spin"></i>
+          </div>
+          <h3 class="text-neutral-700 font-bold text-lg mb-1">Loading store items...</h3>
+          <p class="text-neutral-400 text-sm max-w-xs mx-auto">Fetching the latest beauty items for you!</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. BEST IN OUR STORE SECTION -->
+    <section class="w-full">
+      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8">Best in our store!!</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <a href="Mary&May.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden border border-neutral-100 p-5 text-center transition-all duration-200 hover:shadow-md hover:border-pink-300 group">
+          <div class="overflow-hidden rounded-xl mb-4">
+            <img src="./image/mary&maysunscreen/top-ma.webp" alt="Mary & May" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105">
+          </div>
+          <h3 class="text-xl font-bold text-neutral-800 mb-2 group-hover:text-pink-500 transition-colors">Mary&May Brand</h3>
+          <p class="text-sm text-neutral-500">All about clean beauty solutions.</p>
+        </a>
+
+        <a href="skin1004.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden border border-neutral-100 p-5 text-center transition-all duration-200 hover:shadow-md hover:border-pink-300 group">
+          <div class="overflow-hidden rounded-xl mb-4">
+            <img src="./image/pink1004/top.webp" alt="Centella" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105">
+          </div>
+          <h3 class="text-xl font-bold text-neutral-800 mb-2 group-hover:text-pink-500 transition-colors">Centella</h3>
+          <p class="text-sm text-neutral-500">All product - Centella</p>
+        </a>
+
+        <a href="cosmetic.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden border border-neutral-100 p-5 text-center transition-all duration-200 hover:shadow-md hover:border-pink-300 group">
+          <div class="overflow-hidden rounded-xl mb-4">
+            <img src="./image/makeup/top-m.jpeg" alt="Make-up" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105">
+          </div>
+          <h3 class="text-xl font-bold text-neutral-800 mb-2 group-hover:text-pink-500 transition-colors">Make-Up</h3>
+          <p class="text-sm text-neutral-500">Beauty Make-Up Station.</p>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- 3. MAKE YOUR BEAUTY HERE SECTION -->
+    <section class="w-full">
+      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8">Make your beauty here</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="60" data-type="Lip Makeup" data-ingredients="Argan Kernel Oil, Shea Butter, Rosehip Fruit Oil, Camellia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/lipbalm/romand-glasting-melting-balm-01-coco-nude-3-5g.jpg.webp" alt="Lipbalm" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Romand Glasting Melting Balm 01 - Coco Nude</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(60, 'Romand Glasting Melting Balm 01 - Coco Nude', 8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="50" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d6.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Rose Petal</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$13.00</div>
+          </div>
+          <button onclick="addToCart(50, 'Dasique Shadow Palette - Rose Petal', 13.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="37" data-type="Lip Makeup" data-ingredients="Weightless Matte Lip Polymers, Vitamin E, Long-lasting Fixers">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/20.jpeg" alt="Fixing-Tint" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Etude Fixing Tint - 20</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$12.00</div>
+          </div>
+          <button onclick="addToCart(37, 'Etude Fixing Tint Mated-20', 12.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="58" data-type="Eye Makeup" data-ingredients="All-proof Fixing Formula, Black Seed Complex, Volumizing Clay Powders">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/mascara/m6.jpeg" alt="Mascara" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Rom&and All fix Mascara<br>V03 Volume Black</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.60</div>
+          </div>
+          <button onclick="addToCart(58, 'Rom&and All fix Mascara -V03 Valume Black', 7.60)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NEW STRUCTURAL CODE -->
+<div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+  <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
+    <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+  </button>
+  
+  <!-- Changed to normal hidden. Now controlled purely by your JavaScript -->
+  <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
+    <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
+      <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
+    </h3>
+    <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
+    <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
+    <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+  </div>
+</div>
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 border-t-4 border-pink-400 w-full">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
+        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
+       
+        <a href="https://maps.google.com" target="_blank" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1"><i class="fa-solid fa-map-marker-alt"></i> Google Map</a>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
+          <li><a href="#" class="hover:text-white flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
+        <p class="text-sm mb-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
+        <p class="text-sm"><a href="mailto:narysen913@gmail.com" class="hover:text-white flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+      © 2026 Minee Beauty. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       CORE SYSTEM SCRIPTS
+       ========================================== -->
+  <script src="outstock.js"></script>
+<script>
+    let searchTimeout = null;
+
+    // Custom render function updated to support promotional discount display and user limits
+    function renderProducts(products) {
+      const container = document.getElementById('product-container'); 
+      if (!container) return;
+
+      container.innerHTML = ''; // Clear existing cards
+
+      if (!products || products.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-neutral-500 py-8">No products found.</p>`;
+        return;
+      }
+
+      const now = new Date();
+
+      products.forEach(product => {
+        const imageUrl = product.image_url || './image/logo copy.png';
+        const standardPrice = parseFloat(product.price || 0);
+        const stockQuantity = product.stock !== undefined ? parseInt(product.stock) : 1;
+        const userLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : 0;
+        const isOutOfStock = stockQuantity <= 0;
+        
+        // Check if an active promotion exists
+        let hasActiveDiscount = false;
+        let finalPrice = standardPrice;
+
+        if (product.discount_price !== null && product.discount_price !== undefined && parseFloat(product.discount_price) > 0) {
+          const start = product.discount_start ? new Date(product.discount_start) : null;
+          const end = product.discount_end ? new Date(product.discount_end) : null;
+
+          const isAfterStart = !start || now >= start;
+          const isBeforeEnd = !end || now <= end;
+
+          if (isAfterStart && isBeforeEnd) {
+            hasActiveDiscount = true;
+            finalPrice = parseFloat(product.discount_price);
+          }
+        }
+
+        const formattedPrice = finalPrice.toFixed(2);
+        const formattedStandardPrice = standardPrice.toFixed(2);
+
+        const escapedTitle = (product.title || 'Product').replace(/'/g, "\\'");
+        const ingredientsText = (product.ingredients || '').replace(/"/g, '&quot;');
+
+        let priceHtml = `<div class="text-lg font-bold text-pink-600 mb-3">$${formattedPrice}</div>`;
+        if (hasActiveDiscount) {
+          priceHtml = `
+            <div class="flex items-center justify-center gap-2 mb-3">
+              <span class="text-sm text-neutral-400 line-through">$${formattedStandardPrice}</span>
+              <span class="text-lg font-bold text-pink-600">$${formattedPrice}</span>
+              <span class="bg-pink-100 text-pink-600 text-[10px] font-bold px-1.5 py-0.5 rounded">SALE</span>
+            </div>
+          `;
+        }
+
+        let overlayMarkup = isOutOfStock ? `<div class="absolute inset-0 bg-neutral-900/40 rounded-xl flex items-center justify-center z-10"><span class="bg-white/95 text-neutral-800 text-[9px] font-black px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">Sold Out</span></div>` : '';
+        
+        let actionButton = isOutOfStock 
+          ? `<button disabled class="w-full bg-neutral-200 text-neutral-400 text-sm font-semibold py-2 px-4 rounded-xl cursor-not-allowed mt-auto">Sold Out</button>`
+          : `<button onclick="handleHomeAddToCart(${product.id}, '${escapedTitle}', ${finalPrice}, '${imageUrl}', ${userLimit})" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>`;
+
+        const cardHTML = `
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative" 
+             data-id="${product.id}" 
+             data-type="${product.category || ''}" 
+             data-ingredients="${ingredientsText}">
+             
+          <div onclick="viewProductDetails(this)" class="cursor-pointer relative overflow-hidden rounded-xl mb-4">
+            ${hasActiveDiscount ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-10 animate-pulse">SALE</span>' : ''}
+            <img src="${imageUrl}" alt="${escapedTitle}" class="w-full h-48 object-contain rounded-xl group-hover:scale-102 transition-transform">
+            ${overlayMarkup}
+          </div>
+
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">
+              ${product.title}
+            </p>
+            ${priceHtml}
+          </div>
+
+          ${actionButton}
+        </div>
+        `;
+
+        container.insertAdjacentHTML('beforeend', cardHTML);
+      });
+    }
+
+    window.renderProducts = renderProducts;
+
+    // Secure Add-to-Cart handler that listens to limit_per_user rules
+    window.handleHomeAddToCart = function(id, title, price, image, limitPerUser) {
+      let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      const exactItem = cart.find(item => String(item.id) === String(id));
+      
+      const currentQty = exactItem ? exactItem.quantity : 0;
+
+      // Enforce the limit per user rule
+      if (limitPerUser > 0 && (currentQty + 1) > limitPerUser) {
+        alert(`Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`);
+        return;
+      }
+
+      if (exactItem) {
+        exactItem.quantity += 1;
+      } else {
+        cart.push({
+          id: String(id),
+          title: title,
+          price: parseFloat(price),
+          image: image,
+          quantity: 1,
+          limit_per_user: limitPerUser
+        });
+      }
+
+      localStorage.setItem('minee_cart', JSON.stringify(cart));
+      
+      // Trigger update to floating cart tray if available
+      if (typeof window.refreshFloatingCartUI === 'function') {
+        window.refreshFloatingCartUI();
+      }
+
+      const preview = document.getElementById('cart-preview');
+      if (preview) {
+        preview.style.setProperty('display', 'block', 'important');
+        preview.classList.remove('hidden');
+      }
+    };
+
+    async function performSearch() {
+      const searchField = document.getElementById('search-input');
+      const sectionHeader = document.getElementById('section-heading');
+      const query = searchField ? searchField.value.trim() : "";
+
+      try {
+        if (query.length === 0) {
+          if (sectionHeader) sectionHeader.textContent = "New Arrival!!!";
+
+          const response = await fetch(`http://localhost:3000/api/products`);
+          if (!response.ok) throw new Error("Backend request failure");
+          
+          const allProducts = await response.json();
+
+          const newlyAddedProducts = [...allProducts]
+            .sort((a, b) => b.id - a.id) 
+            .slice(0, 4);
+
+          window.renderProducts(newlyAddedProducts);
+        } else {
+          if (sectionHeader) sectionHeader.textContent = `Search Results for "${query}"`;
+
+          const response = await fetch(`http://localhost:3000/api/products?search=${encodeURIComponent(query)}`);
+          if (!response.ok) throw new Error("Search backend request failure");
+          
+          const searchResults = await response.json();
+
+          window.renderProducts(searchResults);
+        }
+        
+      } catch (error) {
+        console.error("Operation failed:", error);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      performSearch();
+
+      const searchInputEl = document.getElementById('search-input');
+      if (searchInputEl) {
+        searchInputEl.addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(performSearch, 300); 
+        });
+      }
+
+      const menuToggle = document.getElementById('menu-toggle');
+      const navMenu = document.getElementById('nav-menu');
+      if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('hidden');
+          const icon = menuToggle.querySelector('i');
+          if (icon) {
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
+          }
+        });
+      }
+    });
+    
+  </script>
+ <!--script>
+    let searchTimeout = null;
+
+    // Custom render function matching your exact card UI design
+    function renderProducts(products) {
+      const container = document.getElementById('product-container'); // Ensure your grid wrapper has this ID
+      if (!container) return;
+
+      container.innerHTML = ''; // Clear existing cards
+
+      if (!products || products.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-neutral-500 py-8">No products found.</p>`;
+        return;
+      }
+
+      products.forEach(product => {
+        const imageUrl = product.image_url || './image/logo copy.png';
+        const formattedPrice = parseFloat(product.price || 0).toFixed(2);
+        
+        // Sanitize string attributes to handle single/double quote edge cases safely
+        const escapedTitle = (product.title || 'Product').replace(/'/g, "\\'");
+        const ingredientsText = (product.ingredients || '').replace(/"/g, '&quot;');
+
+        const cardHTML = `
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="${product.id}" 
+             data-type="${product.category || ''}" 
+             data-ingredients="${ingredientsText}">
+             
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="${imageUrl}" alt="${escapedTitle}" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">
+              ${product.title}
+            </p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$${formattedPrice}</div>
+          </div>
+
+          <button onclick="addToCart(${product.id}, '${escapedTitle}', ${formattedPrice})" 
+                  class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">
+            Add to Cart
+          </button>
+        </div>
+        `;
+
+        container.insertAdjacentHTML('beforeend', cardHTML);
+      });
+    }
+
+    // Attach to global window scope so performSearch can find it smoothly
+    window.renderProducts = renderProducts;
+
+    async function performSearch() {
+      const searchField = document.getElementById('search-input');
+      const sectionHeader = document.getElementById('section-heading');
+      const query = searchField ? searchField.value.trim() : "";
+
+      if (typeof window.showLoadingSkeletons === 'function') {
+        window.showLoadingSkeletons();
+      }
+
+      try {
+        if (query.length === 0) {
+          if (sectionHeader) sectionHeader.textContent = "New Arrival!!!";
+
+          const response = await fetch(`http://localhost:3000/api/products`);
+          if (!response.ok) throw new Error("Backend request failure");
+          
+          const allProducts = await response.json();
+
+          // Sort by ID descending (newest ID first) and keep only top 4
+          const newlyAddedProducts = [...allProducts]
+            .sort((a, b) => b.id - a.id) 
+            .slice(0, 4);
+
+          window.renderProducts(newlyAddedProducts);
+        } else {
+          if (sectionHeader) sectionHeader.textContent = `Search Results for "${query}"`;
+
+          const response = await fetch(`http://localhost:3000/api/products?search=${encodeURIComponent(query)}`);
+          if (!response.ok) throw new Error("Search backend request failure");
+          
+          const searchResults = await response.json();
+
+          window.renderProducts(searchResults);
+        }
+        
+      } catch (error) {
+        console.error("Operation failed:", error);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Trigger initial fetch on load
+      performSearch();
+
+      const searchInputEl = document.getElementById('search-input');
+      if (searchInputEl) {
+        searchInputEl.addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(performSearch, 300); 
+        });
+      }
+
+      const menuToggle = document.getElementById('menu-toggle');
+      const navMenu = document.getElementById('nav-menu');
+      if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('hidden');
+          const icon = menuToggle.querySelector('i');
+          if (icon) {
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
+          }
+        });
+      }
+    });
+</script-->
+</body>
+</html>

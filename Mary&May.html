@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty - Mary&May Products</title>
+  <!-- Tailwind v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Responsive Navigation Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <img src="./image/logo copy.png" alt="Logo" class="w-[60px]">
+      </div>
+
+      <!-- Hamburger Menu Button (Mobile Only) -->
+      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      </button>
+
+      <!-- Navigation Links -->
+      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
+        <ul class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto">
+          <li>
+            <a href="index.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <!-- ADDED: WISHLIST TOP BANNER NAVIGATION LINK TRACKER -->
+          <li>
+            <a href="#" onclick="toggleWishlist()" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors relative">
+              <i class="fa-solid fa-heart text-pink-400"></i>
+              <span>Wishlist</span>
+              <span id="wishlist-count-badge" class="bg-pink-500 text-white text-[10px] font-black rounded-full px-1.5 py-0.5 ml-0.5">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li>
+            <a href="profileinfo.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-user-circle"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN PRODUCT GRIDS SECTION -->
+  <main class="max-w-7xl mx-auto px-4 py-8 w-full space-y-16">
+    
+    <!-- 1. Best Choice Collection -->
+    <section>
+      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8">Pick your best choice!!</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 1 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative" 
+             data-id="1" data-type="Sunscreen" data-ingredients="Centella Asiatica Extract, Zinc Oxide, Titanium Dioxide, Niacinamide, Adenosine, Vitamin E">
+          <button onclick="toggleWishlistItem('1', 'Mary&May Vegan Primer Glow Sun Cream', 8.50, './image/mary&maysunscreen/sun2.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-1"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&maysunscreen/sun2.webp" alt="Sunscreen" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Vegan Primer Glow Sun Cream SPF50+ PA++++ 50ml</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.50</div>
+          </div>
+          <button onclick="addToCart(1, 'Mary&May Vegan Primer Glow Sun Cream', 8.50)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="2" data-type="Serum" data-ingredients="Centella Asiatica Extract (95%), Glycerin, 1,2-Hexanediol, Arginine, Arbutin">
+          <button onclick="toggleWishlistItem('2', 'Mary&May Centella Asiatica Serum', 8.30, './image/mary&mayserum/serum2 copy.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-2"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&mayserum/serum2 copy.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Centella Asiatica Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(2, 'Mary&May Centella Asiatica Serum', 8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="3" data-type="Cream" data-ingredients="Houttuynia Cordata Extract (71.8%), Tea Tree Extract (9.7%), Panthenol, Arginine">
+          <button onclick="toggleWishlistItem('3', 'Mary&May Sensitive Shooting Gel Cream', 9.50, './image/mary&maycream/shooting.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-3"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&maycream/shooting.webp" alt="Cream" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Sensitive Shooting Gel Cream</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$9.50</div>
+          </div>
+          <button onclick="addToCart(3, 'Mary&May Sensitive Shooting Gel Cream', 9.50)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="4" data-type="Serum" data-ingredients="Hydrolyzed Collagen (95%), Adenosine, Glycerin, 1,2-Hexanediol, Water">
+          <button onclick="toggleWishlistItem('4', 'Mary&May Marine Collagen Serum', 8.30, './image/mary&mayserum/serum5 copy.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-4"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&mayserum/serum5 copy.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Marine Collagen Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(4, 'Mary&May Marine Collagen Serum', 8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Video Reel Highlights Block -->
+    <section class="border-y border-pink-100/60 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-2 rounded-2xl border border-neutral-100 shadow-xs overflow-hidden">
+          <video class="w-full rounded-xl aspect-[9/16] object-cover" autoplay muted loop playsinline>
+            <source src="./image/mary&may video/whiteserum.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="bg-white p-2 rounded-2xl border border-neutral-100 shadow-xs overflow-hidden">
+          <video class="w-full rounded-xl aspect-[9/16] object-cover" autoplay muted loop playsinline>
+            <source src="./image/mary&may video/allmini.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="bg-white p-2 rounded-2xl border border-neutral-100 shadow-xs overflow-hidden">
+          <video class="w-full rounded-xl aspect-[9/16] object-cover" autoplay muted loop playsinline>
+            <source src="./image/mary&may video/purple.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Limited Edition Section -->
+    <section>
+      <h2 class="text-2xl font-bold text-center text-neutral-800 mb-8">Limited Edition !!</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+        <!-- Product 5 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="5" data-type="Serum" data-ingredients="Idebenone, Blackberry Fruit Extract (20%), Anthocyanin, Euterpe Oleracea Fruit Extract">
+          <button onclick="toggleWishlistItem('5', 'Mary&May Idenenone+BlackBerry Complex Serum', 12.00, './image/mary&mayserum/limited/black copy.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-5"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&mayserum/limited/black copy.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Idenenone+BlackBerry Complex Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$12.00</div>
+          </div>
+          <button onclick="addToCart(5, 'Mary&May Idenenone+BlackBerry Complex Serum', 12.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 6 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="6" data-type="Serum" data-ingredients="Retinol (0.1%), Bakuchiol, Centella Asiatica Extract, Adenosine, Allantoin">
+          <button onclick="toggleWishlistItem('6', 'Mary&May Retinol 0.1% Bakuchiol Cica Serum', 12.00, './image/mary&mayserum/limited/blue copy.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-6"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&mayserum/limited/blue copy.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Retinol 0.1% Bakuchiol Cica Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$12.00</div>
+          </div>
+          <button onclick="addToCart(6, 'Mary&May Retinol 0.1% Bakuchiol Cica Serum', 12.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 7 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="7" data-type="Serum" data-ingredients="Rice Bran Extract, Niacinamide (10%), Panthenol, Ascorbic Acid, Biotin">
+          <button onclick="toggleWishlistItem('7', 'Mary&May Rice Niacin 10% Triple Vitamin Serum', 12.00, './image/mary&mayserum/limited/white copy.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-7"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&mayserum/limited/white copy.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Rice Niacin 10% Triple Vitamin Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$12.00</div>
+          </div>
+          <button onclick="addToCart(7, 'Mary&May Rice Niacin 10% Triple Vitamin Serum', 12.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. Masks & New Additions Extension Grid -->
+    <section class="border-t border-pink-100/60 pt-12">
+      <h2 class="text-2xl font-bold text-center text-neutral-800 mb-8">More Mary&May Skincare</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 8 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="8" data-type="Cream" data-ingredients="Idebenone (63%), Blackberry Fruit Extract (20%), Ceramide NP, Niacinamide, Glycerin">
+          <button onclick="toggleWishlistItem('8', 'Mary&May Idenenone+BlackBerry Intense Cream', 8.30, './image/mary&maycream/bcream.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-8"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&maycream/bcream.webp" alt="Cream" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Idebbenone Blackberry Intense Cream</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(8,'Mary&May Idenenone+BlackBerry Intense Cream',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 9 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="9" data-type="Sheet Mask" data-ingredients="Cica Extract, Houttuynia Cordata Extract, Tea Tree Leaf Extract, Hyaluronic Acid">
+          <button onclick="toggleWishlistItem('9', 'Mary&May Cica Houttuynia Tea Tree Calming Mask', 8.30, './image/mary&may mask/cica.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-9"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&may mask/cica.webp" alt="Mask" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Cica Houttuynia Tea Tree Calming Mask</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(9,'Mary&May Cica Houttuynia Tea Tree Calming Mask',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 10 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="10" data-type="Sheet Mask" data-ingredients="Hydrolyzed Collagen, Collagen Tripeptide, Copper Tripeptide-1, Adenosine, Glycerin">
+          <button onclick="toggleWishlistItem('10', 'Mary&May Collagen Peptide Vital Mask', 8.30, './image/mary&may mask/colloagen.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-10"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&may mask/colloagen.jpeg" alt="Mask" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Collagen Peptide Vital Mask</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(10,'Mary&May Collagen Peptide Vital Mask',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 11 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="11" data-type="Wash Off Mask" data-ingredients="Kaolin, Bentonite, Centella Asiatica Extract, Tea Tree Extract, Houttuynia Cordata Clay">
+          <button onclick="toggleWishlistItem('11', 'Mary&May Cica Tea Tree Shooting Wash off mask pack', 8.30, './image/mary&may mask/gray.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-11"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&may mask/gray.jpeg" alt="Mask" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Cica Tea Tree Shooting Wash off mask pack</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(11,'Mary&May Cica Tea Tree Shooting Wash off mask pack',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 12 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="12" data-type="Wash Off Mask" data-ingredients="Rose Extract, Ceramide NP, Fig Fruit Extract, Hyaluronic Acid Cross-polymer">
+          <button onclick="toggleWishlistItem('12', 'Mary&May Long-lasting moisture Wash off mask pack', 8.30, './image/mary&may mask/pink.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-12"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&may mask/pink.jpeg" alt="Mask" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Long-lasting moisture Wash off mask pack</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(12,'Mary&May Long-lasting moisture Wash off mask pack',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 13 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="13" data-type="Sun Stick" data-ingredients="Peptides (25ppm), Bakuchiol (10,000ppm), Tocopherol (Vitamin E), Silica, Eco-friendly Sun filters">
+          <button onclick="toggleWishlistItem('13', 'Mary&May Vegan Peptidebakuchiol Sun Stick', 8.30, './image/mary&maysunscreen/sun3.png')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-13"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&maysunscreen/sun3.png" alt="Sun Stick" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Vegan Peptidebakuchiol Sun Stick</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(13,'Mary&May Vegan Peptidebakuchiol Sun Stick',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 14 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="14" data-type="Eye Cream" data-ingredients="Tranexamic Acid (1,000ppm), Glutathione (1,000ppm), Niacinamide, Ascorbic Acid">
+          <button onclick="toggleWishlistItem('14', 'Mary&May Tranexamic Acid + Glutathione Eye Cream', 8.30, './image/mary&maycream/eyecream.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-14"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&maycream/eyecream.webp" alt="Eye Cream" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May - Tranexamic Acid + Glutathione Eye Cream</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(14,'Mary&May Tranexamic Acid + Glutathione Eye Cream',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 15 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="15" data-type="Sunscreen" data-ingredients="Femented Cica complex, Hyaluronic Acid, Aloe Vera Extract, Chemical SPF 50 filters">
+          <button onclick="toggleWishlistItem('15', 'Mary&May Vegan CICA Soothing Sun Screen', 8.30, './image/mary&maysunscreen/sun1.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-15"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/mary&maysunscreen/sun1.webp" alt="Sunscreen" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Mary&May Vegan CICA Soothing Sun Screen</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(15,'Mary&May Vegan CICA Soothing Sun Screen',8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- DUAL PREVIEW FLOATING CONTAINER SYSTEM (CART & WISHLIST) -->
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+    
+    <!-- WISHLIST DRAWER PREVIEW PANEL -->
+    <div id="wishlist-preview" class="hidden bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-80 overflow-y-auto mb-1 animate-fade-in">
+      <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center justify-between">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-heart text-pink-500"></i> My Favorites</span>
+        <button onclick="toggleWishlist()" class="text-neutral-400 hover:text-neutral-600 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+      </h3>
+      <ul id="wishlist-items" class="space-y-2 text-xs text-neutral-600 mb-1"></ul>
+    </div>
+
+    <!-- CART PREVIEW PANEL -->
+    <div id="cart-preview" class="hidden bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-80 overflow-y-auto mb-1">
+      <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
+        <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
+      </h3>
+      <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
+      <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
+      <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+    </div>
+
+    <!-- MAIN INTERACTIVE FOOTER TRIGGER BUTTON -->
+    <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
+      <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+    </button>
+  </div>
+
+  <!-- Unified Footer Layout -->
+  <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
+        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
+        <a href="https://maps.google.com" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
+        <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
+        <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
+        <button class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer">Unlock 5% off</button>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+      &copy; 2026 Minee Beauty. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- JS Controller Modules >
+  <script src="product.js"></script-->
+  <!-- PLACE THIS RIGHT ABOVE YOUR CLOSING </body> TAG -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initialize systems
+      refreshFloatingCartUI();
+      syncWishlistUI();
+      setupMenuToggle();
+      checkLiveDatabaseStockAndDiscounts();
+
+      // Setup main cart button toggle action path
+      const cartBtn = document.getElementById('cart-button');
+      const cartPreview = document.getElementById('cart-preview');
+      if (cartBtn && cartPreview) {
+        cartBtn.onclick = (e) => {
+          e.stopPropagation();
+          cartPreview.classList.toggle('hidden');
+          document.getElementById('wishlist-preview').classList.add('hidden'); // Close wishlist if open
+        };
+      }
+    });
+
+    // --- MOBILE MENU HAMBURGER CONTROLLER ---
+    function setupMenuToggle() {
+      const toggle = document.getElementById('menu-toggle');
+      const menu = document.getElementById('nav-menu');
+      if (toggle && menu) {
+        toggle.onclick = () => {
+          menu.classList.toggle('hidden');
+        };
+      }
+    }
+
+    // --- ADD ITEM TO CART LOGIC ---
+    window.addToCart = function(id, title, price) {
+      let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      const existingItem = cart.find(item => String(item.id) === String(id));
+
+      // Find the card element to pull the correct matching image path
+      const productCard = document.querySelector(`[data-id="${id}"]`);
+      const imgUrl = productCard ? productCard.querySelector('img').src : "./image/logo copy.png";
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: String(id),
+          title: title,
+          price: parseFloat(price),
+          image: imgUrl,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('minee_cart', JSON.stringify(cart));
+      refreshFloatingCartUI();
+
+      // Show the cart preview dropdown panel automatically on add action
+      const cartPreview = document.getElementById('cart-preview');
+      if (cartPreview) cartPreview.classList.remove('hidden');
+    };
+
+    // --- REFRESH FLOATING PANEL TOTALS COMPONENT ---
+    function refreshFloatingCartUI() {
+      const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      const totalCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      
+      const cartBtn = document.getElementById('cart-button');
+      if (cartBtn) {
+        cartBtn.innerHTML = `<i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (${totalCount})`;
+      }
+
+      const listContainer = document.getElementById('cart-items');
+      const totalContainer = document.getElementById('cart-total');
+      if (!listContainer || !totalContainer) return;
+
+      if (cartItems.length === 0) {
+        listContainer.innerHTML = `<li class="text-neutral-400 text-center py-2 text-xs italic">Your basket is empty</li>`;
+        totalContainer.innerText = `Total: $0.00`;
+        return;
+      }
+
+      listContainer.innerHTML = "";
+      let accumulatedPrice = 0;
+
+      cartItems.forEach(item => {
+        const cost = parseFloat(item.price) || 0;
+        const qty = item.quantity || 1;
+        accumulatedPrice += (cost * qty);
+        const itemImgUrl = item.image || item.img || "./image/logo copy.png";
+
+        listContainer.innerHTML += `
+          <li class="flex justify-between items-center bg-neutral-50 p-2 rounded-lg border border-neutral-100 text-[11px] gap-2">
+            <div class="flex items-center gap-2 truncate max-w-[170px]">
+              <div class="w-8 h-8 rounded-md bg-white border border-neutral-100 flex items-center justify-center shrink-0 overflow-hidden">
+                <img src="${itemImgUrl}" alt="${item.title}" class="w-full h-full object-contain">
+              </div>
+              <div class="truncate">
+                <p class="font-medium text-neutral-700 truncate">${item.title}</p>
+                <p class="text-[10px] text-neutral-400">Qty: ${qty}</p>
+              </div>
+            </div>
+            <span class="font-bold text-neutral-800 shrink-0">$${(cost * qty).toFixed(2)}</span>
+          </li>
+        `;
+      });
+
+      totalContainer.innerText = `Total: $${accumulatedPrice.toFixed(2)}`;
+    }
+
+    // --- ROUTE TO PRODUCT DETAIL VIEWS ---
+    window.viewProductDetails = function(element) {
+      const card = element.closest('[data-id]');
+      const id = card.getAttribute('data-id');
+      const type = card.getAttribute('data-type');
+      const ingredients = card.getAttribute('data-ingredients');
+      const name = card.querySelector('p').innerText;
+      const priceText = card.querySelector('.text-lg').innerText;
+      const img = card.querySelector('img').src;
+
+      const productObj = { id, name, type, price: priceText, img, ingredients };
+      localStorage.setItem('selectedProduct', JSON.stringify(productObj));
+      window.location.href = "product.html";
+    };
+
+    // --- REDIRECT RUNTIME CHECKOUT LINK ---
+    window.confirmCart = function() {
+      const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      if (cartItems.length === 0) return alert("Your cart is empty!");
+      window.location.href = "checkout.html";
+    };
+
+    // --- WISHLIST MANAGEMENT INFRASTRUCTURE ---
+    window.toggleWishlist = function() {
+      const wishlistPreview = document.getElementById('wishlist-preview');
+      if (wishlistPreview) {
+        wishlistPreview.classList.toggle('hidden');
+        document.getElementById('cart-preview').classList.add('hidden'); // Close cart if open
+      }
+    };
+
+    window.toggleWishlistItem = function(id, name, price, img) {
+      let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      const index = wishlist.findIndex(item => String(item.id) === String(id));
+
+      if (index > -1) {
+        wishlist.splice(index, 1);
+      } else {
+        wishlist.push({ id: String(id), name, price: parseFloat(price), img });
+      }
+
+      localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+      syncWishlistUI();
+    };
+
+    function syncWishlistUI() {
+      const wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      
+      // Update badge counts inside navigation elements
+      const badge = document.getElementById('wishlist-count-badge');
+      if (badge) badge.innerText = wishlist.length;
+
+      // Update structural heart color state rules globally inside grid layout variables
+      document.querySelectorAll('.fa-heart[class*="id-heart-"]').forEach(heart => {
+        heart.className = "fa-solid fa-heart text-neutral-300 transition-colors";
+      });
+
+      wishlist.forEach(item => {
+        const activeHeart = document.querySelector(`.id-heart-${item.id}`);
+        if (activeHeart) activeHeart.className = "fa-solid fa-heart text-pink-500 transition-colors";
+      });
+
+      // Populate wishlist container popup grid components
+      const listContainer = document.getElementById('wishlist-items');
+      if (!listContainer) return;
+
+      if (wishlist.length === 0) {
+        listContainer.innerHTML = `<li class="text-neutral-400 text-center py-2 italic">No favorites added yet</li>`;
+        return;
+      }
+
+      listContainer.innerHTML = wishlist.map(item => `
+        <li class="flex justify-between items-center bg-neutral-50 p-2 rounded-lg border border-neutral-100 gap-2">
+          <div class="flex items-center gap-2 truncate">
+            <img src="${item.img}" class="w-6 h-6 object-contain rounded bg-white border border-neutral-100 shrink-0">
+            <span class="truncate font-medium">${item.name}</span>
+          </div>
+          <button onclick="toggleWishlistItem('${item.id}', '', 0, '')" class="text-neutral-400 hover:text-red-500 cursor-pointer shrink-0 ml-auto">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </li>
+      `).join('');
+    }
+
+    // --- FETCH LIVE STOCK DATA & SALES STRAIGHT FROM DATABASE ENDPOINT ---
+    async function checkLiveDatabaseStockAndDiscounts() {
+      try {
+        const response = await fetch('http://localhost:3000/api/products');
+        if (!response.ok) return;
+        const dbProducts = await response.json();
+
+        dbProducts.forEach(prod => {
+          const card = document.querySelector(`[data-id="${prod.id}"]`);
+          if (!card) return;
+
+          const currentPrice = Number(prod.price);
+          const discountPrice = prod.discount_price ? Number(prod.discount_price) : null;
+          const stockQuantity = prod.stock !== undefined ? parseInt(prod.stock) : 10;
+
+          // 1. If item has a dynamic promotion discount active, inject sale price updates
+          if (discountPrice && discountPrice < currentPrice) {
+            const priceDiv = card.querySelector('.text-pink-600');
+            if (priceDiv) {
+              priceDiv.innerHTML = `
+                <span class="text-neutral-400 line-through text-xs font-normal mr-2">$${currentPrice.toFixed(2)}</span>
+                <span class="text-pink-600 font-extrabold">$${discountPrice.toFixed(2)}</span>
+              `;
+            }
+            // Add custom sale flag element onto image layout view container
+            card.classList.add('relative');
+            card.insertAdjacentHTML('afterbegin', `<span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md z-10 animate-pulse shadow-sm">Hot Sale</span>`);
+            
+            // Adjust the dynamic onclick pricing context mapping
+            const btn = card.querySelector('button[onclick^="addToCart"]');
+            if (btn) btn.setAttribute('onclick', `addToCart(${prod.id}, '${prod.title || prod.name}', ${discountPrice})`);
+          }
+
+          // 2. If item is Out of Stock, cleanly block action routes completely
+          if (stockQuantity <= 0) {
+            const imgDiv = card.querySelector('.cursor-pointer');
+            if (imgDiv) {
+              imgDiv.classList.add('relative', 'opacity-60');
+              imgDiv.insertAdjacentHTML('beforeend', `
+                <div class="absolute inset-0 flex items-center justify-center bg-neutral-900/20 rounded-xl">
+                  <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border tracking-wide uppercase">Sold Out</span>              `);
+            }
+            const actionBtn = card.querySelector('button[onclick^="addToCart"]');
+            if (actionBtn) {
+              actionBtn.disabled = true;
+              actionBtn.innerText = "Out of Stock";
+              actionBtn.className = "w-full bg-neutral-200 text-neutral-400 text-sm font-semibold py-2 px-4 rounded-xl cursor-not-allowed mt-auto shadow-none";
+              actionBtn.removeAttribute('onclick');
+            }
+          }
+        });
+      } catch (err) {
+        console.log("Running layout cleanly in local fallback framework mode without express.");
+      }
+    }
+  </script>
+
+</body>
+</html>

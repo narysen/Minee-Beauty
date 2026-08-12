@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty Panel — Corporate Admin Center</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body class="bg-[#f8fafc] text-[#334155] font-sans m-0 antialiased flex h-screen overflow-hidden">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 h-full border-r border-slate-800">
+    <div>
+      <div class="p-4 border-b border-slate-800 bg-slate-950">
+        <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-slate-800/40 transition-all duration-200 group">
+          <div class="flex-shrink-0 bg-slate-900 p-1.5 rounded-xl border border-slate-800/60 shadow-inner">
+            <img src="/favicon.png" alt="Minee Beauty Logo" class="h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105" onerror="this.src='https://placehold.co/100x100?text=Logo'"/>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-sm font-bold text-slate-100 tracking-wide truncate">Minee Beauty</span>
+            <span class="text-[10px] font-medium text-slate-500 font-mono tracking-wider uppercase">Store Management</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="p-4 space-y-1">
+        <button onclick="switchTab('tab-overview')" id="nav-tab-overview" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-white bg-slate-800 shadow-xs">
+          <i class="fa fa-home text-sm"></i> Dashboard Overview
+        </button>
+        <button onclick="switchTab('tab-inventory')" id="nav-tab-inventory" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <i class="fa fa-database text-sm"></i> Products Management
+        </button>
+        <button onclick="switchTab('tab-orders')" id="nav-tab-orders" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <i class="fa fa-user-circle text-sm"></i> Customer Order Logs
+        </button>
+        <button onclick="openCreateMode()" id="nav-tab-create" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <i class="fa-solid fa-square-plus text-sm"></i> Launch New Product
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-slate-800 bg-slate-950/40 text-[11px] text-slate-500 space-y-2">
+      <div class="flex justify-between items-center px-1">
+        <span>Server Connection:</span>
+        <span class="flex items-center gap-1 font-bold text-emerald-400"><i class="fa-solid fa-circle text-[6px] animate-pulse"></i> MySQL ONLINE</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="flex-1 flex flex-col overflow-hidden h-full">
+    <header class="bg-white border-b border-slate-100 px-8 py-4 flex justify-between items-center shrink-0">
+      <div>
+        <h2 id="current-screen-title" class="text-lg font-bold text-slate-800">Dashboard Overview</h2>
+        <p class="text-xs text-slate-400 mt-0.5 font-mono">Incoming & Outgoing Financial Stream Analysis</p>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-8 space-y-6">
+
+      <!-- TAB 1: OVERVIEW -->
+      <div id="tab-overview" class="tab-panel space-y-6">
+        <!-- FINANCIAL METRIC CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Incoming Revenue</p>
+              <h3 id="stat-incoming" class="text-2xl font-black text-slate-800 mt-1 font-mono">$0.00</h3>
+            </div>
+            <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl"><i class="fa-solid fa-arrow-trend-up text-lg"></i></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-rose-600 uppercase tracking-wider">Outgoing Expenses</p>
+              <h3 id="stat-outgoing" class="text-2xl font-black text-slate-800 mt-1 font-mono">$0.00</h3>
+            </div>
+            <div class="bg-rose-50 text-rose-600 p-3.5 rounded-xl"><i class="fa-solid fa-arrow-trend-down text-lg"></i></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-blue-600 uppercase tracking-wider">Net Balance</p>
+              <h3 id="stat-net" class="text-2xl font-black text-slate-800 mt-1 font-mono">$0.00</h3>
+            </div>
+            <div class="bg-blue-50 text-blue-600 p-3.5 rounded-xl"><i class="fa-solid fa-scale-balanced text-lg"></i></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Order Quantities</p>
+              <h3 id="stat-orders" class="text-2xl font-black text-slate-800 mt-1 font-mono">0 Invoices</h3>
+            </div>
+            <div class="bg-slate-50 text-slate-600 p-3.5 rounded-xl"><i class="fa-solid fa-file-invoice-dollar text-lg"></i></div>
+          </div>
+        </div>
+
+        <!-- CHARTS & UTILITIES -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide">Financial Progress Stream</h3>
+                <p class="text-xs text-slate-400">Incoming revenue growth metrics matrix</p>
+              </div>
+            </div>
+            <div class="relative w-full h-56">
+              <canvas id="financialStreamCanvas"></canvas>
+            </div>
+          </div>
+          
+          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-1">Fast Utilities Terminal</h3>
+              <p class="text-xs text-slate-400">Quick-fire operations</p>
+            </div>
+            <div class="space-y-2 my-4">
+              <button onclick="refreshAdminDataMatrix()" class="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer">
+                <span>Sync live Database Rows</span> <i class="fa-solid fa-arrow-rotate-left text-slate-400"></i>
+              </button>
+              <button onclick="openExpenseModal()" class="w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer">
+                <span>Record Outgoing Expense</span> <i class="fa-solid fa-minus text-rose-400"></i>
+              </button>
+              <button onclick="clearAllOrdersTerminal()" class="w-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer">
+                <span>Flush Active Order Display</span> <i class="fa-solid fa-dumpster-fire text-slate-400"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTGOING EXPENSES TABLE SECTION -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs space-y-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide">Outgoing Expenses Tracker</h3>
+              <p class="text-xs text-slate-400">Costs spent on inventory stock restocks, raw ingredients, and supplies</p>
+            </div>
+            <button onclick="openExpenseModal()" class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer shadow-xs">
+              <i class="fa-solid fa-plus mr-1"></i> Add Expense
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
+                  <th class="p-3 pl-4">Expense Description</th>
+                  <th class="p-3">Category</th>
+                  <th class="p-3">Date</th>
+                  <th class="p-3 pr-4 text-right">Amount Spent</th>
+                </tr>
+              </thead>
+              <tbody id="expenses-table-body" class="divide-y divide-slate-100 text-slate-600 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: INVENTORY MANAGEMENT -->
+      <div id="tab-inventory" class="tab-panel hidden space-y-4">
+        <div class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-xs">
+          <div class="relative flex-1 max-w-md">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="inventory-search" oninput="renderInventoryTable()" placeholder="Search items catalog by title name..." class="w-full text-xs pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors">
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="filter-category" onchange="renderInventoryTable()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 focus:outline-none text-slate-600 font-medium">
+              <option value="ALL">Display All Groups</option>
+            </select>
+            <button onclick="openCreateMode()" class="bg-[#0099ff] hover:bg-[#0077cc] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5">
+              <i class="fa-solid fa-plus"></i> Add Item
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
+                  <th class="p-4 pl-6">SKU Product Line Variant</th>
+                  <th class="p-4">Category Group</th>
+                  <th class="p-4 text-center">Unit Price</th>
+                  <th class="p-4 text-center">Warehouse Stocks</th>
+                  <th class="p-4 text-center">Availability Status</th>
+                  <th class="p-4 pr-6 text-right">Action Frameworks</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body" class="divide-y divide-slate-100 text-slate-600 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CUSTOMER ORDER LOGS -->
+      <div id="tab-orders" class="tab-panel hidden space-y-4">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
+                  <th class="p-4 pl-6">Invoice ID</th>
+                  <th class="p-4">Customer</th> 
+                  <th class="p-4">Checkout Timestamp</th>
+                  <th class="p-4">Item Allocation Summary</th>
+                  <th class="p-4 text-center">Payment Method</th>
+                  <th class="p-4 pr-6 text-right">Total Payment</th>
+                </tr>
+              </thead>
+              <tbody id="order-log-table-body" class="divide-y divide-slate-100 text-slate-600 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- EXPENSE RECORD MODAL -->
+  <div id="expense-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl relative border border-slate-100">
+      <button onclick="closeExpenseModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 cursor-pointer text-base"><i class="fa-solid fa-xmark"></i></button>
+      <div class="border-b border-slate-100 pb-3 mb-4">
+        <h3 class="text-base font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5"><i class="fa-solid fa-receipt text-rose-500"></i> Record Outgoing Expense</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Log inventory costs or supplier payments</p>
+      </div>
+      <form id="expense-form" onsubmit="handleExpenseSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Expense Title / Description</label>
+          <input type="text" id="exp-title" required placeholder="e.g., Bulk Restock Skincare Bottles" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Category Type</label>
+          <select id="exp-category" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] text-slate-600 font-medium">
+            <option value="Inventory Restock">Inventory Restock</option>
+            <option value="Raw Materials">Raw Materials</option>
+            <option value="Shipping & Logistics">Shipping & Logistics</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operational Utility">Operational Utility</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Amount Spent ($)</label>
+          <input type="number" id="exp-amount" step="0.01" min="0" required placeholder="150.00" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="submit" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-md">Save Expense</button>
+          <button type="button" onclick="closeExpenseModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors cursor-pointer">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PRODUCT CRUD MODAL -->
+  <div id="crud-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 id="form-title" class="text-sm font-bold text-slate-800 flex items-center gap-2"></h3>
+        <button onclick="closeCrudModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="product-crud-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
+        <input type="hidden" id="edit-index" value="-1">
+        <input type="hidden" id="prod-existing-img" value="">
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-slate-700">Product Title Name</label>
+          <input type="text" id="prod-name" required placeholder="e.g., Vitamin C Glow" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-slate-700">Price Amount ($)</label>
+            <input type="number" step="0.01" id="prod-price" required placeholder="24.50" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-slate-700">Warehouse Stock Count</label>
+            <input type="number" id="prod-stock" required placeholder="50" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-700">Category Classification Group</label>
+            <button type="button" onclick="promptAddNewCategory()" class="text-[11px] font-bold text-[#0099ff] hover:underline cursor-pointer"><i class="fa-solid fa-plus"></i> Add Category</button>
+          </div>
+          <select id="prod-category" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] text-slate-600 font-medium"></select>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-slate-700">Products Image File Upload</label>
+          <input type="file" id="prod-img-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#0099ff]/10 file:text-[#0099ff] cursor-pointer bg-slate-50 border border-slate-200 rounded-xl">
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeCrudModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 cursor-pointer">Dismiss</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0099ff] hover:bg-[#0077cc] cursor-pointer">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PROMOTION MODAL -->
+  <div id="promotion-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl relative border border-slate-100">
+      <button onclick="closePromotionModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 cursor-pointer text-base"><i class="fa-solid fa-xmark"></i></button>
+      <div class="border-b border-slate-100 pb-3 mb-4">
+        <h3 id="promo-form-title" class="text-base font-bold text-slate-800 uppercase tracking-wide">Configure Promotion</h3>
+        <p id="promo-base-info" class="text-xs text-slate-400 mt-0.5">Original Base Price: $0.00</p>
+      </div>
+      <form id="promotion-crud-form" onsubmit="handlePromotionSubmit(event)" class="space-y-4">
+        <input type="hidden" id="promo-prod-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Promotional Sale Price ($)</label>
+          <input type="number" id="promo-price" step="0.01" min="0" placeholder="0 for no discount" required class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="submit" class="flex-1 bg-[#0099ff] hover:bg-[#0077cc] text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-md">Apply Promotion</button>
+          <button type="button" onclick="closePromotionModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors cursor-pointer">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    const API_URL = "http://localhost:3000/api";
+
+    let currentProducts = [];
+    let currentOrders = [];
+    let currentExpenses = [];
+    let customCategories = ["Sunscreen", "Serum", "Cream", "EyesCream", "Mask", "Toner", "Lipstick", "Lipbalm", "Mascara", "Eyespalette"];
+    let financialStreamChart = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      refreshAdminDataMatrix();
+    });
+
+    async function refreshAdminDataMatrix() {
+      await loadLiveProductsFromDatabase();
+      await loadLiveAllCustomerOrders();
+      await loadLiveExpenses();
+      extractAndBuildCategories();
+      renderDashboard();
+    }
+
+    async function loadLiveProductsFromDatabase() {
+      try {
+        const response = await fetch(`${API_URL}/products`);
+        if (response.ok) currentProducts = await response.json();
+      } catch (err) { console.error("Error fetching products:", err); }
+    }
+
+    async function loadLiveAllCustomerOrders() {
+      try {
+        const response = await fetch(`${API_URL}/orders`); 
+        if (response.ok) {
+          const rawData = await response.json();
+          let groupedOrders = {};
+          rawData.forEach(row => {
+            if (!groupedOrders[row.order_id]) {
+              groupedOrders[row.order_id] = {
+                id: row.order_id,
+                customerName: row.customer_name || "Guest User",
+                customerPhone: row.customer_phone || "",
+                rawDate: row.created_at,
+                date: row.created_at ? new Date(row.created_at).toLocaleDateString() : "Unknown",
+                time: row.created_at ? new Date(row.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "",
+                method: row.payment_method || "COD",
+                items: []
+              };
+            }
+            groupedOrders[row.order_id].items.push({
+              title: row.title || "Product",
+              quantity: parseInt(row.quantity || 1, 10),
+              price: parseFloat(row.price || 0)
+            });
+          });
+          currentOrders = Object.values(groupedOrders).sort((a, b) => b.id - a.id);
+        }
+      } catch (err) { console.error("Error fetching orders:", err); }
+    }
+
+    async function loadLiveExpenses() {
+      try {
+        const response = await fetch(`${API_URL}/expenses`);
+        if (response.ok) currentExpenses = await response.json();
+      } catch (err) { console.error("Error fetching expenses:", err); }
+    }
+
+    function openExpenseModal() {
+      document.getElementById("expense-form").reset();
+      document.getElementById("expense-modal").classList.remove("hidden");
+    }
+
+    function closeExpenseModal() {
+      document.getElementById("expense-modal").classList.add("hidden");
+    }
+
+    async function handleExpenseSubmit(event) {
+      event.preventDefault();
+      const payload = {
+        title: document.getElementById("exp-title").value.trim(),
+        category: document.getElementById("exp-category").value,
+        amount: parseFloat(document.getElementById("exp-amount").value)
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/expenses`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          closeExpenseModal();
+          await refreshAdminDataMatrix();
+        } else {
+          alert("Failed to save expense.");
+        }
+      } catch (err) { console.error("Network error:", err); }
+    }
+
+    function extractAndBuildCategories() {
+      let categorySet = new Set(customCategories);
+      currentProducts.forEach(p => { if (p.category) categorySet.add(p.category.trim()); });
+      customCategories = Array.from(categorySet).sort();
+
+      const filterSelect = document.getElementById("filter-category");
+      if (filterSelect) {
+        const currentSelection = filterSelect.value;
+        filterSelect.innerHTML = `<option value="ALL">Display All Groups</option>`;
+        customCategories.forEach(cat => { filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`; });
+        filterSelect.value = currentSelection;
+      }
+
+      const formSelect = document.getElementById("prod-category");
+      if (formSelect) {
+        formSelect.innerHTML = "";
+        customCategories.forEach(cat => { formSelect.innerHTML += `<option value="${cat}">${cat}</option>`; });
+      }
+    }
+
+    function promptAddNewCategory() {
+      const newCat = prompt("Enter new category name:");
+      if (newCat && newCat.trim() !== "") {
+        const cleanCat = newCat.trim();
+        if (!customCategories.includes(cleanCat)) customCategories.push(cleanCat);
+        extractAndBuildCategories();
+        document.getElementById("prod-category").value = cleanCat;
+      }
+    }
+
+    function switchTab(targetTabId) {
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+      document.getElementById(targetTabId).classList.remove('hidden');
+
+      document.querySelectorAll('nav button').forEach(btn => {
+        btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50";
+      });
+      const activeNav = document.getElementById(`nav-${targetTabId}`);
+      if (activeNav) activeNav.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-white bg-slate-800 shadow-xs";
+
+      const titlesDict = { 'tab-overview': 'Dashboard Overview', 'tab-inventory': 'Inventory Distribution Management', 'tab-orders': 'Customer Order Audit Logs' };
+      document.getElementById("current-screen-title").innerText = titlesDict[targetTabId] || "Admin Desk";
+    }
+
+    function renderDashboard() {
+      renderMetricsSummary();
+      renderInventoryTable();
+      renderOrderHistoryLogs();
+      renderExpensesTable();
+      renderFinancialProgressStream();
+    }
+
+    function renderMetricsSummary() {
+      document.getElementById("stat-products").innerText = `${currentProducts.length} Items`;
+      document.getElementById("stat-orders").innerText = `${currentOrders.length} Invoices`;
+
+      let totalIncoming = 0;
+      currentOrders.forEach(order => {
+        order.items.forEach(i => { totalIncoming += (parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10)); });
+      });
+
+      let totalOutgoing = 0;
+      currentExpenses.forEach(exp => { totalOutgoing += parseFloat(exp.amount || 0); });
+
+      let netBalance = totalIncoming - totalOutgoing;
+
+      document.getElementById("stat-incoming").innerText = `$${totalIncoming.toFixed(2)}`;
+      document.getElementById("stat-outgoing").innerText = `$${totalOutgoing.toFixed(2)}`;
+      
+      const netElem = document.getElementById("stat-net");
+      netElem.innerText = `$${netBalance.toFixed(2)}`;
+      netElem.className = `text-2xl font-black mt-1 font-mono ${netBalance >= 0 ? 'text-blue-600' : 'text-rose-600'}`;
+    }
+
+    function renderExpensesTable() {
+      const tbody = document.getElementById("expenses-table-body");
+      if (!tbody) return;
+
+      if (currentExpenses.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 font-medium">No outgoing expenses recorded yet.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      currentExpenses.forEach(exp => {
+        const formattedDate = exp.expense_date ? new Date(exp.expense_date).toLocaleDateString() : "Recent";
+        html += `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="p-3 pl-4 font-bold text-slate-800">${exp.title}</td>
+            <td class="p-3"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-bold">${exp.category}</span></td>
+            <td class="p-3 text-slate-500">${formattedDate}</td>
+            <td class="p-3 pr-4 text-right font-mono font-bold text-rose-600">-$${parseFloat(exp.amount).toFixed(2)}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function renderFinancialProgressStream() {
+      const canvasElement = document.getElementById("financialStreamCanvas");
+      if (!canvasElement) return;
+
+      const revenueMap = {};
+      const sortedAscOrders = [...currentOrders].sort((a, b) => new Date(a.rawDate || 0) - new Date(b.rawDate || 0));
+
+      sortedAscOrders.forEach(order => {
+        let orderTotal = 0;
+        order.items.forEach(item => { orderTotal += (parseFloat(item.price || 0) * parseInt(item.quantity || 1, 10)); });
+        const dateKey = order.date || "Unknown";
+        if (!revenueMap[dateKey]) revenueMap[dateKey] = 0;
+        revenueMap[dateKey] += orderTotal;
+      });
+
+      const labels = Object.keys(revenueMap);
+      const dataPoints = Object.values(revenueMap);
+      let cumulativeSum = 0;
+      const cumulativeData = dataPoints.map(val => { cumulativeSum += val; return cumulativeSum; });
+
+      const ctx = canvasElement.getContext("2d");
+      if (financialStreamChart) {
+        financialStreamChart.data.labels = labels.length >  0 ? labels : ["No Data"];
+        financialStreamChart.data.datasets[0].data = dataPoints.length > 0 ? dataPoints : [0];
+        financialStreamChart.data.datasets[1].data = cumulativeData.length > 0 ? cumulativeData : [0];
+        financialStreamChart.update();
+        return;
+      }
+
+      financialStreamChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.length > 0 ? labels : ["No Data"],
+          datasets: [
+            { label: 'Daily Revenue ($)', data: dataPoints.length > 0 ? dataPoints : [0], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.05)', borderWidth: 2, fill: true, tension: 0.3 },
+            { label: 'Cumulative Stream ($)', data: cumulativeData.length > 0 ? cumulativeData : [0], borderColor: '#0099ff', borderWidth: 2, borderDash: [4, 4], fill: false, tension: 0.3 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+          scales: { y: { ticks: { font: { size: 10 } }, grid: { color: '#f1f5f9' } }, x: { ticks: { font: { size: 10 } }, grid: { display: false } } }
+        }
+      });
+    }
+
+    function renderInventoryTable() {
+      const tbody = document.getElementById("inventory-table-body");
+      if (!tbody) return;
+
+      const searchTerm = document.getElementById("inventory-search").value.toLowerCase();
+      const selectedCategory = document.getElementById("filter-category").value;
+
+      const filtered = currentProducts.filter(p => {
+        const matchesSearch = p.title.toLowerCase().includes(searchTerm) || (p.brand && p.brand.toLowerCase().includes(searchTerm));
+        const matchesCat = (selectedCategory === "ALL" || p.category === selectedCategory);
+        return matchesSearch && matchesCat;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">No inventory items matched criteria.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      filtered.forEach(p => {
+        const stockCount = parseInt(p.stock, 10) || 0;
+        let badgeHtml = stockCount > 5 ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600">In Stock (${stockCount})</span>` : stockCount > 0 ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600">Low Stock (${stockCount})</span>` : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600">Sold Out</span>`;
+
+        html += `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="p-4 pl-6 flex items-center gap-3">
+              <img src="${p.image_url}" alt="${p.title}" class="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-xs" onerror="this.src='http://localhost:3000/image/logo copy.png'">
+              <div>
+                <p class="font-bold text-slate-800">${p.title}</p>
+                <p class="text-[10px] text-slate-400 font-mono">ID: ${p.id} | SKU: ${p.sku || 'N/A'}</p>
+              </div>
+            </td>
+            <td class="p-4"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-bold">${p.category || 'General'}</span></td>
+            <td class="p-4 text-center font-mono font-bold text-slate-700">$${parseFloat(p.price).toFixed(2)}</td>
+            <td class="p-4 text-center font-mono">${stockCount}</td>
+            <td class="p-4 text-center">${badgeHtml}</td>
+            <td class="p-4 pr-6 text-right space-x-1">
+              <button onclick="openPromotionModal(${p.id})" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 p-2 rounded-lg cursor-pointer" title="Configure Promotion"><i class="fa-solid fa-tags"></i></button>
+              <button onclick="openEditMode(${p.id})" class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg cursor-pointer" title="Edit Product"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="deleteProduct(${p.id})" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg cursor-pointer" title="Delete Product"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function renderOrderHistoryLogs() {
+      const tbody = document.getElementById("order-log-table-body");
+      if (!tbody) return;
+
+      if (currentOrders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">No order transaction logs registered yet.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      currentOrders.forEach(order => {
+        let itemsListStr = order.items.map(i => `${i.title} (x${i.quantity})`).join(', ');
+        let orderTotal = 0;
+        order.items.forEach(i => { orderTotal += (parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10)); });
+
+        html += `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="p-4 pl-6 font-mono font-bold text-slate-700">#${order.id}</td>
+            <td class="p-4"><p class="font-bold text-slate-800">${order.customerName}</p><p class="text-[10px] text-slate-400 font-mono">${order.customerPhone}</p></td>
+            <td class="p-4"><p class="text-slate-700">${order.date}</p><p class="text-[10px] text-slate-400 font-mono">${order.time}</p></td>
+            <td class="p-4 max-w-xs truncate text-slate-500" title="${itemsListStr}">${itemsListStr}</td>
+            <td class="p-4 text-center"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-bold">${order.method}</span></td>
+            <td class="p-4 pr-6 text-right font-mono font-bold text-emerald-600">$${orderTotal.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function openCreateMode() {
+      document.getElementById("edit-index").value = "-1";
+      document.getElementById("form-title").innerHTML = `<i class="fa-solid fa-plus text-[#0099ff]"></i> Launch New Product Item`;
+      document.getElementById("product-crud-form").reset();
+      document.getElementById("prod-existing-img").value = "";
+      extractAndBuildCategories();
+      document.getElementById("crud-modal").classList.remove("hidden");
+    }
+
+    function openEditMode(id) {
+      const product = currentProducts.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById("edit-index").value = product.id;
+      document.getElementById("form-title").innerHTML = `<i class="fa-solid fa-pen text-[#0099ff]"></i> Edit Product Item (ID: ${product.id})`;
+      document.getElementById("prod-name").value = product.title || "";
+      document.getElementById("prod-price").value = product.price || "";
+      document.getElementById("prod-stock").value = product.stock || 0;
+      extractAndBuildCategories();
+      document.getElementById("prod-category").value = product.category || customCategories[0];
+      document.getElementById("prod-existing-img").value = product.image_url || "";
+      document.getElementById("prod-img-file").value = "";
+      document.getElementById("crud-modal").classList.remove("hidden");
+    }
+
+    function closeCrudModal() { document.getElementById("crud-modal").classList.add("hidden"); }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      const editId = document.getElementById("edit-index").value;
+      const isEditing = editId !== "-1";
+
+      const formData = new FormData();
+      formData.append("title", document.getElementById("prod-name").value.trim());
+      formData.append("price", document.getElementById("prod-price").value);
+      formData.append("stock", document.getElementById("prod-stock").value);
+      formData.append("category", document.getElementById("prod-category").value);
+      formData.append("brand", "Minee Beauty Core");
+      formData.append("description", document.getElementById("prod-name").value + " standard formula.");
+
+      const fileInput = document.getElementById("prod-img-file");
+      if (fileInput.files.length > 0) {
+        formData.append("image_file", fileInput.files[0]);
+      } else {
+        formData.append("image_url", document.getElementById("prod-existing-img").value);
+      }
+
+      const endpoint = isEditing ? `${API_URL}/products/${editId}` : `${API_URL}/products`;
+      const method = isEditing ? "PUT" : "POST";
+
+      try {
+        const response = await fetch(endpoint, { method: method, body: formData });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          closeCrudModal();
+          await refreshAdminDataMatrix();
+          switchTab('tab-inventory');
+        } else {
+          alert("Error saving product.");
+        }
+      } catch (err) { console.error("Error saving product:", err); }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm("Are you sure you want to permanently delete this product?")) return;
+      try {
+        const response = await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
+        const result = await response.json();
+        if (response.ok && result.success) await refreshAdminDataMatrix();
+      } catch (err) { console.error("Error deleting product:", err); }
+    }
+
+    function openPromotionModal(id) {
+      const product = currentProducts.find(p => p.id === id);
+      if (!product) return;
+      document.getElementById("promo-prod-id").value = product.id;
+      document.getElementById("promo-form-title").innerHTML = `<i class="fa-solid fa-tags text-[#0099ff]"></i> Configure Promotion: ${product.title}`;
+      document.getElementById("promo-base-info").innerText = `Original Base Price: $${parseFloat(product.price).toFixed(2)}`;
+      document.getElementById("promo-price").value = product.discount_price !== null ? product.discount_price : "";
+      document.getElementById("promotion-modal").classList.remove("hidden");
+    }
+
+    function closePromotionModal() { document.getElementById("promotion-modal").classList.add("hidden"); }
+
+    async function handlePromotionSubmit(event) {
+      event.preventDefault();
+      const productId = document.getElementById("promo-prod-id").value;
+      const product = currentProducts.find(p => p.id === Number(productId));
+      if (!product) return;
+
+      const discountPrice = document.getElementById("promo-price").value;
+      const payload = {
+        title: product.title, price: product.price, stock: product.stock, category: product.category,
+        brand: product.brand, description: product.description, ingredients: product.ingredients,
+        image_url: product.image_url, discount_price: discountPrice !== "" ? discountPrice : null
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/products/${productId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          closePromotionModal();
+          await refreshAdminDataMatrix();
+        }
+      } catch (err) { console.error("Promotion error:", err); }
+    }
+
+    async function clearAllOrdersTerminal() {
+      if (!confirm("Flush all order logs?")) return;
+      try {
+        const response = await fetch(`${API_URL}/orders`, { method: "DELETE" });
+        const result = await response.json();
+        if (response.ok && result.success) await refreshAdminDataMatrix();
+      } catch (err) { console.error("Flush orders error:", err); }
+    }
+  </script>
+</body>
+</html>

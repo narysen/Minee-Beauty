@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty - Authentication</title>
+  <!-- Tailwind v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  
+  <!-- FREE LEAFLET MAPS CSS & JS (No Keys Needed) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    /* Fix Leaflet map z-index collision with form inputs */
+    .leaflet-container { z-index: 1 !important; }
+  </style>
+</head>
+<body class="text-neutral-800 font-sans min-h-screen flex flex-col justify-between relative antialiased">
+
+  <!-- FULL SCREEN FIXED BACKDROP CANVAS -->
+  <div class="fixed inset-0 z-0">
+    <img src="./image/banner copy.png" alt="Banner Backdrop" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-pink-950/20 backdrop-blur-xs"></div>
+  </div>
+
+  <!-- Responsive Navigation Header Bar -->
+  <header class="bg-white/90 backdrop-blur-md shadow-xs sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <div class="flex-shrink-0">
+        <img src="./image/logo copy.png" alt="Logo" class="w-[60px]">
+      </div>
+
+      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      </button>
+
+      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
+        <ul class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto">
+          <li>
+            <a href="index.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li>
+            <a href="profileinfo.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-user-circle"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- AUTHENTICATION FORM WRAPPER -->
+  <main class="max-w-md w-full mx-auto px-4 py-16 flex-1 flex items-center justify-center relative z-10">
+    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-6 md:p-8 w-full transition-all duration-300 border border-white/40">
+      
+      <div class="text-center mb-6">
+        <h2 id="formTitle" class="text-2xl font-bold text-neutral-800 tracking-wide">Create Account</h2>
+        <p id="formSubtitle" class="text-sm text-neutral-400 mt-1">Fill your information.</p>
+      </div>
+
+      <form id="authForm" class="space-y-4">
+        <!-- Full Name Group -->
+        <div id="name-group">
+          <label class="block text-xs font-bold text-neutral-500 mb-1 uppercase tracking-wider">Full Name</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"><i class="fa-solid fa-user text-xs"></i></span>
+            <input type="text" id="name" placeholder="Enter your name" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors">
+          </div>
+        </div>
+
+        <!-- Email Group -->
+        <div>
+          <label class="block text-xs font-bold text-neutral-500 mb-1 uppercase tracking-wider">Email Address</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"><i class="fa-solid fa-envelope text-xs"></i></span>
+            <input type="email" id="email" placeholder="Enter your email" required class="w-full bg-neutral-50 border border-neutral-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors">
+          </div>
+        </div>
+
+        <!-- Phone Group -->
+        <div id="phone-group">
+          <label class="block text-xs font-bold text-neutral-500 mb-1 uppercase tracking-wider">Phone Number</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"><i class="fa-solid fa-phone text-xs"></i></span>
+            <input type="tel" id="phone" placeholder="0xx xxx xxx" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors">
+          </div>
+        </div>
+
+        <!-- Address Group with REAL STREET NAME ADDRESS -->
+        <div id="address-group">
+          <label class="block text-xs font-bold text-neutral-500 mb-1 uppercase tracking-wider">Delivery Location </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"><i class="fa-solid fa-location-dot text-xs"></i></span>
+            <input id="address" type="text" placeholder="Click to choose location on map" onclick="initInteractiveMap()" readonly class="w-full bg-neutral-50 border border-pink-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors cursor-pointer placeholder-pink-500 font-medium animate-pulse">
+          </div>
+          
+          <!-- INTERACTIVE MAP CANVAS BOX -->
+          <div id="map-container" class="hidden mt-3 overflow-hidden rounded-2xl border border-neutral-200 shadow-inner relative">
+            <div id="map" class="w-full h-56 bg-neutral-100"></div>
+            <div class="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-xs text-[10px] text-neutral-700 p-1.5 rounded-lg border border-neutral-200 text-center font-medium pointer-events-none shadow-xs">
+            </div>
+          </div>
+          
+          <p class="text-[10px] text-pink-500 mt-1 font-medium"><i class="fa-solid fa far-map-marked-alt"></i> Click the map to set your address. </p>
+        </div>
+          
+        <!-- Password Group -->
+        <div>
+          <label class="block text-xs font-bold text-neutral-500 mb-1 uppercase tracking-wider">Password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"><i class="fa-solid fa-lock text-xs"></i></span>
+            <input type="password" id="password" placeholder="••••••••" required class="w-full bg-neutral-50 border border-neutral-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors">
+          </div>
+        </div>
+
+        <!-- Submission Trigger -->
+        <button type="submit" id="submitBtn" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-pink-500/15 mt-2">
+          Create Account
+        </button>
+
+        <!-- Switch Layout Mode Trigger -->
+        <div class="text-center text-sm text-neutral-500 pt-2 border-t border-neutral-100 mt-4">
+          <span id="switchText">Already have an account?</span>
+          <button type="button" onclick="switchForm()" id="switchLink" class="text-pink-500 hover:text-pink-600 font-bold ml-1 cursor-pointer focus:outline-none">Sign In</button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Unified Store Footer Platform Layout -->
+  <footer class="bg-neutral-900/95 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400 relative z-10 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
+        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
+        <a href="https://maps.google.com" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
+        <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
+        <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
+        <button class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer">Unlock 5% off</button>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+      &copy; 2026 Minee Beauty. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    let isRegister = true;
+    let locationLoaded = false;
+    let leafletMap = null;
+    let mapMarker = null;
+
+    // Mobile Responsive Navigation Toggle Engine
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('hidden');
+      if (navMenu.classList.contains('hidden')) {
+        menuIcon.className = 'fa-solid fa-bars';
+      } else {
+        menuIcon.className = 'fa-solid fa-xmark';
+      }
+    });
+
+    // Initialize Leaflet Map
+    function initInteractiveMap() {
+      const addressInput = document.getElementById("address");
+      const mapContainer = document.getElementById("map-container");
+
+      if (leafletMap !== null) return;
+
+      addressInput.placeholder = "Loading interactive selector...";
+      addressInput.classList.remove("animate-pulse");
+      mapContainer.classList.remove("hidden");
+
+      let defaultLat = 11.5564;
+      let defaultLng = 104.9282;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            setupLeafletEngine(position.coords.latitude, position.coords.longitude);
+          },
+          function(error) {
+            setupLeafletEngine(defaultLat, defaultLng);
+          }
+        );
+      } else {
+        setupLeafletEngine(defaultLat, defaultLng);
+      }
+    }
+
+    // Build Map Layout Tiles & Add Interactive Pin Drop Controls
+    function setupLeafletEngine(startLat, startLng) {
+      leafletMap = L.map('map').setView([startLat, startLng], 15);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(leafletMap);
+
+      mapMarker = L.marker([startLat, startLng], { draggable: true }).addTo(leafletMap);
+      fetchRealAddress(startLat, startLng);
+      locationLoaded = true;
+
+      // Event 1: Pin drag finishes moving
+      mapMarker.on('dragend', function(event) {
+        let changedPos = mapMarker.getLatLng();
+        fetchRealAddress(changedPos.lat, changedPos.lng);
+      });
+
+      // Event 2: User taps/clicks fresh spot on the map layout
+      leafletMap.on('click', function(event) {
+        let clickedCoords = event.latlng;
+        mapMarker.setLatLng(clickedCoords);
+        fetchRealAddress(clickedCoords.lat, clickedCoords.lng);
+      });
+    }
+
+    // Dynamic Address Search API Call (Reverse Geocoding)
+    function fetchRealAddress(lat, lng) {
+      const addressInput = document.getElementById("address");
+      addressInput.value = " Finding street name...";
+
+      // Call free public OpenStreetMap geocoder API
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.display_name) {
+            // Shorten the address slightly so it fits inside a form input perfectly
+            let cleanAddress = data.display_name;
+            addressInput.value = ` ${cleanAddress}`;
+          } else {
+            // Fallback securely if the specific spot doesn't have a registered road name
+            addressInput.value = ` Coordinates: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+          }
+        })
+        .catch(error => {
+          // Fallback if the free lookup network times out
+          addressInput.value = ` Coordinates: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        });
+    }
+
+    // Auth Submission Splitter Routing Control
+    document.getElementById("authForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (isRegister) {
+        registerUser();
+      } else {
+        loginUser();
+      }
+    });
+
+    function registerUser() {
+      const addressVal = document.getElementById("address").value.trim();
+      
+      if (!locationLoaded || !addressVal || addressVal.includes("Finding street name...")) {
+        alert(" Registration Stopped!\nPlease pick your location point on the map first.");
+        return;
+      }
+
+      let user = {
+        name: document.getElementById("name").value.trim() || "Customer",
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim() || "No phone added",
+        address: addressVal,
+        password: document.getElementById("password").value
+      };
+
+      localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
+      localStorage.setItem("currentUser", JSON.stringify(user));
+
+      alert(" Register successful! Welcome to Minee Beauty.");
+      window.location.href = "index.html";
+    }
+
+    function loginUser() {
+      let email = document.getElementById("email").value.trim();
+      let password = document.getElementById("password").value;
+      let user = JSON.parse(localStorage.getItem(`account_${email}`));
+
+      if (!user) {
+        alert("No account found matching this email!");
+        return;
+      }
+
+      if (email === user.email && password === user.password) {
+        alert("Login successful! Welcome back.");
+        window.location.href = "index.html";
+      } else {
+        alert("Wrong email or password!");
+      }
+    }
+
+    function switchForm() {
+      isRegister = !isRegister;
+      
+      const title = document.getElementById("formTitle");
+      const subtitle = document.getElementById("formSubtitle");
+      const btn = document.getElementById("submitBtn");
+      const switchText = document.getElementById("switchText");
+      const switchLink = document.getElementById("switchLink");
+      
+      const nameGroup = document.getElementById("name-group");
+      const phoneGroup = document.getElementById("phone-group");
+      const addressGroup = document.getElementById("address-group");
+
+      document.getElementById("map-container").classList.add("hidden");
+      if(leafletMap) {
+        leafletMap.remove();
+        leafletMap = null;
+      }
+      document.getElementById("address").placeholder = "Click to choose location on map";
+      document.getElementById("address").classList.add("animate-pulse");
+
+      if (isRegister) {
+        title.innerText = "Create Account";
+        subtitle.innerText = "Please fill in your details to get started.";
+        btn.innerText = "Create Account";
+        switchText.innerText = "Already have an account?";
+        switchLink.innerText = "Sign In";
+
+        nameGroup.classList.remove("hidden");
+        phoneGroup.classList.remove("hidden");
+        addressGroup.classList.remove("hidden");
+      } else {
+        title.innerText = "Sign In";
+        subtitle.innerText = "Welcome back! Please access your credentials.";
+        btn.innerText = "Sign In";
+        switchText.innerText = "Don't have an account yet?";
+        switchLink.innerText = "Create Account";
+
+        nameGroup.classList.add("hidden");
+        phoneGroup.classList.add("hidden");
+        addressGroup.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>

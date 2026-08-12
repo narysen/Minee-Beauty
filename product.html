@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Minee Beauty</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between relative">
+
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-pink-500 hover:text-pink-600 font-bold text-lg flex items-center gap-2 transition-colors">
+        <i class="fa-solid fa-arrow-left"></i> Back to Home
+      </a>
+      <span class="font-semibold text-neutral-500">Minee Beauty Details</span>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-12 w-full flex-grow">
+    <div id="detail-card-container" class="bg-white rounded-3xl border border-neutral-100 p-6 md:p-12 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-12 items-center" data-id="">
+      
+      <div class="bg-neutral-50 rounded-2xl p-6 flex justify-center items-center border border-neutral-100">
+        <img id="detail-image" src="" alt="Product Image" class="max-h-96 object-contain">
+      </div>
+
+      <div class="flex flex-col h-full justify-center">
+        <span id="detail-type" class="text-xs font-bold tracking-wider text-pink-500 uppercase bg-pink-50 px-3 py-1 rounded-full w-max mb-3">Category</span>
+        <h1 id="detail-title" class="text-2xl md:text-4xl font-bold text-neutral-800 mb-2">Loading Product Title...</h1>
+        <div id="detail-price" class="text-2xl font-extrabold text-pink-600 mb-6">$0.00</div>
+        
+        <div class="space-y-4 border-t border-neutral-100 pt-6">
+          <div>
+            <h3 class="text-sm font-bold text-neutral-800 mb-1"><i class="fa-solid fa-flask text-pink-400 mr-1"></i> Ingredients Structure</h3>
+            <p id="detail-ingredients" class="text-neutral-600 text-sm leading-relaxed bg-neutral-50 p-3 rounded-xl border border-neutral-100">Loading ingredient formulas...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 mt-8 pt-6 border-t border-neutral-100">
+          
+          <button id="detail-wishlist-btn" class="flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer">
+            <i id="detail-heart-icon" class="fa-solid fa-heart text-lg transition-colors"></i>
+            <span class="text-[10px] font-medium mt-0.5">Wishlist</span>
+          </button>
+
+          <button id="add-to-cart-btn" class="flex-1 h-12 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-xl text-sm transition-all active:scale-95 shadow-md hover:shadow-lg cursor-pointer">
+            Add to Cart
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section class="max-w-6xl mx-auto px-4 pb-24 w-full">
+    <h2 class="text-2xl font-bold text-neutral-800 mb-6 flex items-center gap-2">
+      <span class="w-2 h-6 bg-pink-400 rounded-full"></span> Related Products You May Like
+    </h2>
+    <div id="related-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    </div>
+  </section>
+
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
+      <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+    </button>
+    
+    <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
+      <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
+        <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
+      </h3>
+      <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
+      <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
+      <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+    </div>
+  </div>
+
+  <!--script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const savedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
+      const cartBtn = document.getElementById('cart-button');
+      const cartPreview = document.getElementById('cart-preview');
+
+      // មុខងារបង្ហាញ និងលាក់ Cart Tray ដោយប្រើប្រាស់ Direct CSS
+      function showCartPreview() {
+        if (!cartPreview) return;
+        cartPreview.style.setProperty('display', 'block', 'important');
+        cartPreview.classList.remove('hidden'); 
+      }
+
+      function hideCartPreview() {
+        if (!cartPreview) return;
+        cartPreview.style.setProperty('display', 'none', 'important');
+      }
+
+      if (cartBtn && cartPreview) {
+        cartPreview.style.setProperty('display', 'none', 'important');
+
+        cartBtn.onclick = (e) => {
+          e.stopPropagation();
+          if (cartPreview.style.display === 'none') {
+            showCartPreview();
+          } else {
+            hideCartPreview();
+          }
+        };
+
+        document.addEventListener('click', (e) => {
+          if (!cartPreview.contains(e.target) && e.target !== cartBtn) {
+            hideCartPreview();
+          }
+        });
+      }
+
+      // មុខងារ Render ទិន្នន័យទំនិញនៅក្នុងកន្ត្រកអណ្តែត (Floating Cart)
+      window.refreshFloatingCartUI = function() {
+        const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
+        const totalCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+        
+        if (cartBtn) {
+          cartBtn.innerHTML = `<i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (${totalCount})`;
+        }
+
+        const listContainer = document.getElementById('cart-items');
+        const totalContainer = document.getElementById('cart-total');
+        if (!listContainer || !totalContainer) return;
+
+        if (cartItems.length === 0) {
+          listContainer.innerHTML = `<li class="text-neutral-400 text-center py-2 text-xs italic">Your basket is empty</li>`;
+          totalContainer.innerText = `Total: $0.00`;
+          return;
+        }
+
+        listContainer.innerHTML = "";
+        let accumulatedPrice = 0;
+
+        cartItems.forEach(item => {
+          const cost = parseFloat(item.price) || 0;
+          const qty = item.quantity || 1;
+          accumulatedPrice += (cost * qty);
+          const itemImgUrl = item.image || item.img || "./image/logo copy.png";
+
+          listContainer.innerHTML += `
+            <li class="flex justify-between items-center bg-neutral-50 p-2 rounded-lg border border-neutral-100 text-[11px] gap-2">
+              <div class="flex items-center gap-2 truncate max-w-[130px]">
+                <div class="w-8 h-8 rounded-md bg-white border border-neutral-100 flex items-center justify-center shrink-0 overflow-hidden">
+                  <img src="${itemImgUrl}" alt="${item.title}" class="w-full h-full object-contain">
+                </div>
+                <div class="truncate">
+                  <p class="font-medium text-neutral-700 truncate">${item.title || 'Skincare Item'}</p>
+                  <p class="text-[10px] text-neutral-400">$${cost.toFixed(2)}</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-1 bg-neutral-200/60 px-1 py-0.5 rounded-md shrink-0">
+                <button onclick="event.stopPropagation(); handleInlineQtyChange('${item.id}', -1);" class="hover:text-pink-600 font-extrabold px-1 text-[10px] cursor-pointer">-</button>
+                <span class="font-bold text-[10px] px-0.5 text-center min-w-[8px]">${qty}</span>
+                <button onclick="event.stopPropagation(); handleInlineQtyChange('${item.id}', 1);" class="hover:text-pink-600 font-extrabold px-1 text-[10px] cursor-pointer">+</button>
+              </div>
+
+              <span class="font-bold text-neutral-800 shrink-0">$${(cost * qty).toFixed(2)}</span>
+            </li>
+          `;
+        });
+
+        totalContainer.innerText = `Total: $${accumulatedPrice.toFixed(2)}`;
+      };
+
+      // មុខងារបូកដកចំនួនទំនិញនៅក្នុង Cart Inline
+      window.handleInlineQtyChange = function(id, balance) {
+        let storageCart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+        let target = storageCart.find(i => String(i.id) === String(id));
+        if (!target) return;
+        
+        target.quantity = (target.quantity || 1) + balance;
+        if (target.quantity <= 0) {
+          storageCart = storageCart.filter(i => String(i.id) !== String(id));
+        }
+        localStorage.setItem('minee_cart', JSON.stringify(storageCart));
+        refreshFloatingCartUI();
+      };
+
+      refreshFloatingCartUI();
+
+      // ចាប់ផ្តើមទាញយកទិន្នន័យលម្អិតពី MySQL API Server
+      if (savedProduct) {
+        let currentProduct = savedProduct;
+        let databaseProductsList = []; 
+
+        const imageWrapper = document.getElementById('detail-image').parentElement;
+        const mainAddToCartBtn = document.getElementById('add-to-cart-btn');
+        const cardBox = document.getElementById('detail-card-container');
+
+        if (imageWrapper) imageWrapper.classList.add('relative');
+        if (cardBox) cardBox.setAttribute('data-id', String(savedProduct.id));
+
+        try {
+          const response = await fetch('http://localhost:3000/api/products');
+          databaseProductsList = await response.json();
+          
+          const dbProduct = databaseProductsList.find(prod => String(prod.id) === String(savedProduct.id));
+          
+          if (dbProduct) {
+            const currentPrice = Number(dbProduct.price);
+            const discountPrice = dbProduct.discount_price ? Number(dbProduct.discount_price) : null;
+            const stockQuantity = dbProduct.stock !== undefined ? parseInt(dbProduct.stock) : 0;
+            const userLimit = dbProduct.limit_per_user !== undefined ? parseInt(dbProduct.limit_per_user) : 0;
+
+            if (cardBox) {
+              cardBox.setAttribute('data-stock', stockQuantity);
+              cardBox.setAttribute('data-limit', userLimit);
+            }
+
+            currentProduct = {
+              id: dbProduct.id,
+              name: dbProduct.title || dbProduct.name,
+              type: dbProduct.category || dbProduct.type || "Skincare Essential",
+              price: typeof dbProduct.price === 'number' ? `$${dbProduct.price.toFixed(2)}` : dbProduct.price,
+              img: dbProduct.image_url || dbProduct.image || dbProduct.img || "./image/logo copy.png", 
+              ingredients: dbProduct.ingredients,
+              stock: stockQuantity,
+              discount_price: discountPrice
+            };
+
+            // គ្រប់គ្រងការបញ្ចុះតម្លៃ (Dynamic Discount)
+            if (discountPrice && discountPrice < currentPrice) {
+              document.getElementById('detail-price').innerHTML = `
+                <div class="flex items-center gap-3">
+                  <span class="text-neutral-400 line-through text-sm font-normal">$${currentPrice.toFixed(2)}</span>
+                  <span class="text-pink-600 font-extrabold text-2xl md:text-3xl">$${discountPrice.toFixed(2)}</span>
+                </div>
+              `;
+              if (imageWrapper) {
+                imageWrapper.innerHTML += `<span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-black px-3 py-1 rounded-lg z-10 animate-pulse shadow-md">Hot Sale</span>`;
+              }
+            }
+
+            // គ្រប់គ្រងចំនួនស្តុកទំនិញ (Stock Management)
+            if (stockQuantity <= 0) {
+              if (imageWrapper) {
+                imageWrapper.innerHTML += `
+                  <div class="absolute inset-0 bg-neutral-900/40 rounded-2xl flex items-center justify-center z-10 backdrop-blur-[1px]">
+                    <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-1.5 rounded-xl shadow-lg border border-neutral-100 tracking-wider uppercase">Sold Out</span>
+                  </div>
+                `;
+              }
+              if (mainAddToCartBtn) {
+                mainAddToCartBtn.disabled = true;
+                mainAddToCartBtn.innerText = "Sold Out (Out of Stock)";
+                mainAddToCartBtn.className = "flex-1 h-12 bg-neutral-200 text-neutral-400 font-semibold rounded-xl text-sm cursor-not-allowed shadow-none";
+              }
+            }
+          }
+        } catch (err) {
+          console.warn("Failed to patch fresh live rows, using storage cache alternative:", err);
+        }
+
+        // បញ្ចូលទិន្នន័យទៅលើ Layout HTML
+        document.getElementById('detail-title').innerText = currentProduct.name;
+        document.getElementById('detail-type').innerText = currentProduct.type;
+        
+        if (!currentProduct.discount_price || Number(currentProduct.discount_price) >= parseFloat(currentProduct.price.replace('$', ''))) {
+          document.getElementById('detail-price').innerText = currentProduct.price; 
+        }
+        
+        document.getElementById('detail-ingredients').innerText = currentProduct.ingredients && currentProduct.ingredients.trim() !== "" 
+          ? currentProduct.ingredients 
+          : "No specific ingredient formulas declared for this product profile.";
+        
+        document.getElementById('detail-image').src = currentProduct.img;
+        document.getElementById('detail-image').alt = currentProduct.name;
+
+        const dynamicFinalPriceNum = currentProduct.discount_price ? Number(currentProduct.discount_price) : parseFloat(currentProduct.price.replace('$', ''));
+
+        // ភ្ជាប់ Event ពេលចុចប៊ូតុង Add to Cart (បើមិនអស់ស្តុក)
+        if (currentProduct.stock === undefined || currentProduct.stock > 0) {
+          mainAddToCartBtn.onclick = function() {
+            let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+            const exactItem = cart.find(item => String(item.id) === String(currentProduct.id));
+            if (exactItem) { 
+              exactItem.quantity += 1; 
+            } else { 
+              cart.push({ 
+                id: String(currentProduct.id), 
+                title: currentProduct.name, 
+                price: dynamicFinalPriceNum, 
+                image: currentProduct.img,
+                quantity: 1 
+              }); 
+            }
+            localStorage.setItem('minee_cart', JSON.stringify(cart));
+            refreshFloatingCartUI();
+            setTimeout(() => { showCartPreview(); }, 50);
+          };
+        }
+
+        // ភ្ជាប់ Event សម្រាប់ប៊ូតុង Wishlist
+        const wishlistBtn = document.getElementById('detail-wishlist-btn');
+        if (wishlistBtn) {
+          wishlistBtn.onclick = function() {
+            let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+            const index = wishlist.findIndex(item => String(item.id) === String(currentProduct.id));
+            if (index > -1) {
+              wishlist.splice(index, 1);
+            } else {
+              wishlist.push({ id: String(currentProduct.id), name: currentProduct.name, price: dynamicFinalPriceNum, img: currentProduct.img });
+            }
+            localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+            updateMainHeartUI(currentProduct.id);
+          };
+        }
+
+        updateMainHeartUI(currentProduct.id);
+        
+        // ទាញយកផលិតផលដែលពាក់ព័ន្ធ (Related Items)
+        loadDynamicRelatedItems(currentProduct.id, currentProduct.type, databaseProductsList);
+      } else {
+        document.querySelector('main').innerHTML = `
+          <div class="text-center py-24 bg-white rounded-2xl border border-neutral-100 max-w-md mx-auto my-12 shadow-xs">
+            <i class="fa-solid fa-circle-exclamation text-4xl text-neutral-300 mb-3"></i>
+            <p class="text-neutral-500 font-medium">No skincare context profile found.</p>
+            <a href="index.html" class="mt-4 text-pink-500 hover:text-pink-600 font-semibold underline inline-block text-sm">Return to Shop</a>
+          </div>`;
+      }
+    });
+
+    // មុខងារទាញយក និងបង្ហាញផលិតផលដែលពាក់ព័ន្ធ (រួមជាមួយការត្រួតពិនិត្យស្តុក)
+    function loadDynamicRelatedItems(currentId, currentCategory, allProducts) {
+      const relatedGrid = document.getElementById('related-grid');
+      if (!relatedGrid) return;
+      
+      if (!allProducts || allProducts.length === 0) {
+        relatedGrid.innerHTML = "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No recommendations available right now.</p>";
+        return;
+      }
+
+      let filtered = allProducts.filter(prod => 
+        String(prod.id) !== String(currentId) && 
+        String(prod.category || prod.type || "").toLowerCase() === String(currentCategory || "").toLowerCase()
+      );
+
+      if (filtered.length < 3) {
+        const extraItems = allProducts.filter(prod => String(prod.id) !== String(currentId) && !filtered.some(r => r.id === prod.id));
+        filtered = [...filtered, ...extraItems];
+      }
+
+      const recommendations = filtered.slice(0, 3);
+
+      if (recommendations.length === 0) {
+        relatedGrid.innerHTML = "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No similar items found.</p>";
+        return;
+      }
+
+      relatedGrid.innerHTML = recommendations.map((prod, index) => {
+        const title = prod.title || prod.name || "Skincare Item";
+        
+        // Accurate stock checking from database row
+        const stockQuantity = prod.stock !== undefined ? parseInt(prod.stock) : 1;
+        const isOutOfStock = stockQuantity <= 0;
+        
+        const originalPrice = Number(prod.price);
+        const promoPrice = prod.discount_price ? Number(prod.discount_price) : null;
+        const isOnSale = (promoPrice && promoPrice < originalPrice);
+        
+        const displayPriceText = isOnSale ? `$${promoPrice.toFixed(2)}` : `$${originalPrice.toFixed(2)}`;
+        const rawPriceNum = isOnSale ? promoPrice : originalPrice;
+        
+        const img = prod.image_url || prod.image || prod.img || './image/logo copy.png';
+        const ingredientsText = (prod.ingredients || "").replace(/'/g, "\\'");
+        const escapedTitle = title.replace(/'/g, "\\'");
+
+        let badgeMarkup = isOnSale ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-10 animate-pulse shadow-xs">SALE</span>` : '';
+        let overlayMarkup = isOutOfStock ? `<div class="absolute inset-0 bg-neutral-900/40 rounded-xl flex items-center justify-center z-10"><span class="bg-white/95 text-neutral-800 text-[9px] font-black px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">Sold Out</span></div>` : '';
+        
+        let relatedButton = isOutOfStock 
+          ? `<button disabled class="w-full mt-4 bg-neutral-200 text-neutral-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed">Sold Out</button>`
+          : `<button onclick="handleRelatedAddToCartFallback('${prod.id}', \`${escapedTitle}\`, ${rawPriceNum}, '${img}')" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 rounded-xl transition-all active:scale-95 shadow-sm hover:shadow cursor-pointer">Add to Cart</button>`;
+
+        return `
+          <div class="bg-white rounded-2xl border border-neutral-100 p-4 shadow-sm hover:shadow-md transition-all duration-700 ease-out transform opacity-0 translate-y-4 related-card flex flex-col justify-between relative"
+               style="transition-delay: ${index * 150}ms" data-id="${prod.id}">
+            
+            ${badgeMarkup}
+
+            <button onclick="event.stopPropagation(); toggleRelatedWishlist('${prod.id}', \`${escapedTitle}\`, ${rawPriceNum}, '${img}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-neutral-50/80 backdrop-blur-xs flex items-center justify-center hover:bg-white text-neutral-400 shadow-xs border border-neutral-100/50 cursor-pointer active:scale-90 transition-all z-10">
+              <i class="fa-solid fa-heart text-xs id-heart-${prod.id} transition-colors"></i>
+            </button>
+
+            <div onclick="viewProductDetail('${prod.id}', \`${escapedTitle}\`, '${currentCategory}', '${displayPriceText}', '${img}', \`${ingredientsText}\`)" 
+                 class="bg-neutral-50 rounded-xl p-4 flex justify-center items-center h-48 mb-4 cursor-pointer overflow-hidden group relative">
+              <img src="${img}" alt="${title}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+              ${overlayMarkup}
+            </div>
+            
+            <div class="text-left flex-grow">
+              <span class="text-[10px] font-bold text-pink-500 uppercase tracking-wider">${currentCategory}</span>
+              <h3 class="font-bold text-neutral-800 text-sm mt-1 line-clamp-2 min-h-[40px]">${title}</h3>
+              <div class="text-pink-600 font-extrabold mt-2 text-base">${displayPriceText}</div>
+            </div>
+            
+            ${relatedButton}
+          </div>
+        `;
+      }).join('');
+
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.related-card');
+        cards.forEach(card => {
+          card.classList.remove('opacity-0', 'translate-y-4');
+          card.classList.add('opacity-100', 'translate-y-0');
+        });
+      }, 50);
+    }
+
+    // មុខងារជំនួយសម្រាប់ Related Cards (ការពារមិនឱ្យបន្ថែមទំនិញអស់ស្តុកចូល Cart)
+    window.handleRelatedAddToCartFallback = function(id, name, price, img) {
+      const clickedCard = document.querySelector(`.related-card[data-id="${id}"]`);
+      if (clickedCard && clickedCard.querySelector('.bg-neutral-900\\/40')) {
+        alert("Sorry, this item is currently Sold Out.");
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      const exactItem = cart.find(item => String(item.id) === String(id));
+      if (exactItem) { 
+        exactItem.quantity += 1; 
+      } else { 
+        cart.push({ id: String(id), title: name, price: parseFloat(price), image: img, quantity: 1 }); 
+      }
+      localStorage.setItem('minee_cart', JSON.stringify(cart));
+      refreshFloatingCartUI();
+      
+      const preview = document.getElementById('cart-preview');
+      if (preview) {
+        preview.style.setProperty('display', 'block', 'important');
+        preview.classList.remove('hidden');
+      }
+    };
+
+    window.toggleRelatedWishlist = function(id, name, price, img) {
+      let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      const index = wishlist.findIndex(item => String(item.id) === String(id));
+      if (index > -1) {
+        wishlist.splice(index, 1);
+      } else {
+        wishlist.push({ id: String(id), name: name, price: parseFloat(price), img: img });
+      }
+      localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+    };
+
+    window.viewProductDetail = function(id, name, type, price, img, ingredients) {
+      const productObj = { id, name, type, price, img, ingredients: ingredients || "" };
+      localStorage.setItem('selectedProduct', JSON.stringify(productObj));
+      window.location.reload(); 
+    };
+
+    window.confirmCart = function() {
+      const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+      window.location.href = "checkout.html"; 
+    };
+
+    function updateMainHeartUI(id) {
+      const heartIcon = document.getElementById('detail-heart-icon');
+      const heartBtn = document.getElementById('detail-wishlist-btn');
+      if (!heartIcon || !heartBtn) return;
+      
+      const storeWishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      const isSaved = storeWishlist.some(item => String(item.id) === String(id));
+      
+      if (isSaved) {
+        heartIcon.className = "fa-solid fa-heart text-lg text-pink-500";
+        heartBtn.className = "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-pink-200 bg-pink-50 text-pink-500 transition-all active:scale-95 cursor-pointer";
+      } else {
+        heartIcon.className = "fa-solid fa-heart text-lg text-neutral-400";
+        heartBtn.className = "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer";
+      }
+    }
+  </script-->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const savedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
+      const cartBtn = document.getElementById('cart-button');
+      const cartPreview = document.getElementById('cart-preview');
+
+      // មុខងារបង្ហាញ និងលាក់ Cart Tray ដោយប្រើប្រាស់ Direct CSS
+      function showCartPreview() {
+        if (!cartPreview) return;
+        cartPreview.style.setProperty('display', 'block', 'important');
+        cartPreview.classList.remove('hidden'); 
+      }
+
+      function hideCartPreview() {
+        if (!cartPreview) return;
+        cartPreview.style.setProperty('display', 'none', 'important');
+      }
+
+      if (cartBtn && cartPreview) {
+        cartPreview.style.setProperty('display', 'none', 'important');
+
+        cartBtn.onclick = (e) => {
+          e.stopPropagation();
+          if (cartPreview.style.display === 'none') {
+            showCartPreview();
+          } else {
+            hideCartPreview();
+          }
+        };
+
+        document.addEventListener('click', (e) => {
+          if (!cartPreview.contains(e.target) && e.target !== cartBtn) {
+            hideCartPreview();
+          }
+        });
+      }
+
+      // មុខងារ Render ទិន្នន័យទំនិញនៅក្នុងកន្ត្រកអណ្តែត (Floating Cart)
+      window.refreshFloatingCartUI = function() {
+        const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
+        const totalCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+        
+        if (cartBtn) {
+          cartBtn.innerHTML = `<i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (${totalCount})`;
+        }
+
+        const listContainer = document.getElementById('cart-items');
+        const totalContainer = document.getElementById('cart-total');
+        if (!listContainer || !totalContainer) return;
+
+        if (cartItems.length === 0) {
+          listContainer.innerHTML = `<li class="text-neutral-400 text-center py-2 text-xs italic">Your basket is empty</li>`;
+          totalContainer.innerText = `Total: $0.00`;
+          return;
+        }
+
+        listContainer.innerHTML = "";
+        let accumulatedPrice = 0;
+
+        cartItems.forEach(item => {
+          const cost = parseFloat(item.price) || 0;
+          const qty = item.quantity || 1;
+          accumulatedPrice += (cost * qty);
+          const itemImgUrl = item.image || item.img || "./image/logo copy.png";
+
+          listContainer.innerHTML += `
+            <li class="flex justify-between items-center bg-neutral-50 p-2 rounded-lg border border-neutral-100 text-[11px] gap-2">
+              <div class="flex items-center gap-2 truncate max-w-[130px]">
+                <div class="w-8 h-8 rounded-md bg-white border border-neutral-100 flex items-center justify-center shrink-0 overflow-hidden">
+                  <img src="${itemImgUrl}" alt="${item.title}" class="w-full h-full object-contain">
+                </div>
+                <div class="truncate">
+                  <p class="font-medium text-neutral-700 truncate">${item.title || 'Skincare Item'}</p>
+                  <p class="text-[10px] text-neutral-400">$${cost.toFixed(2)}</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-1 bg-neutral-200/60 px-1 py-0.5 rounded-md shrink-0">
+                <button onclick="event.stopPropagation(); handleInlineQtyChange('${item.id}', -1);" class="hover:text-pink-600 font-extrabold px-1 text-[10px] cursor-pointer">-</button>
+                <span class="font-bold text-[10px] px-0.5 text-center min-w-[8px]">${qty}</span>
+                <button onclick="event.stopPropagation(); handleInlineQtyChange('${item.id}', 1);" class="hover:text-pink-600 font-extrabold px-1 text-[10px] cursor-pointer">+</button>
+              </div>
+
+              <span class="font-bold text-neutral-800 shrink-0">$${(cost * qty).toFixed(2)}</span>
+            </li>
+          `;
+        });
+
+        totalContainer.innerText = `Total: $${accumulatedPrice.toFixed(2)}`;
+      };
+
+      // មុខងារបូកដកចំនួនទំនិញនៅក្នុង Cart Inline (រួមជាមួយការទប់ស្កាត់ limit_per_user)
+      window.handleInlineQtyChange = function(id, balance) {
+        let storageCart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+        let target = storageCart.find(i => String(i.id) === String(id));
+        if (!target) return;
+        
+        const newQty = (target.quantity || 1) + balance;
+        
+        // Check if user is trying to increase past the allowed limit
+        if (balance > 0 && target.limit_per_user && target.limit_per_user > 0) {
+          if (newQty > target.limit_per_user) {
+            alert(`Sorry, you can only buy a maximum of ${target.limit_per_user} units of this product.`);
+            return;
+          }
+        }
+
+        target.quantity = newQty;
+        if (target.quantity <= 0) {
+          storageCart = storageCart.filter(i => String(i.id) !== String(id));
+        }
+        localStorage.setItem('minee_cart', JSON.stringify(storageCart));
+        refreshFloatingCartUI();
+      };
+
+      refreshFloatingCartUI();
+
+      // ចាប់ផ្តើមទាញយកទិន្នន័យលម្អិតពី MySQL API Server
+      if (savedProduct) {
+        let currentProduct = savedProduct;
+        let databaseProductsList = []; 
+
+        const imageWrapper = document.getElementById('detail-image').parentElement;
+        const mainAddToCartBtn = document.getElementById('add-to-cart-btn');
+        const cardBox = document.getElementById('detail-card-container');
+
+        if (imageWrapper) imageWrapper.classList.add('relative');
+        if (cardBox) cardBox.setAttribute('data-id', String(savedProduct.id));
+
+        try {
+          const response = await fetch('http://localhost:3000/api/products');
+          databaseProductsList = await response.json();
+          
+          const dbProduct = databaseProductsList.find(prod => String(prod.id) === String(savedProduct.id));
+          
+          if (dbProduct) {
+            const currentPrice = Number(dbProduct.price);
+            const discountPrice = dbProduct.discount_price ? Number(dbProduct.discount_price) : null;
+            const stockQuantity = dbProduct.stock !== undefined ? parseInt(dbProduct.stock) : 0;
+            const userLimit = dbProduct.limit_per_user !== undefined ? parseInt(dbProduct.limit_per_user) : 0;
+
+            if (cardBox) {
+              cardBox.setAttribute('data-stock', stockQuantity);
+              cardBox.setAttribute('data-limit', userLimit);
+            }
+
+            currentProduct = {
+              id: dbProduct.id,
+              name: dbProduct.title || dbProduct.name,
+              type: dbProduct.category || dbProduct.type || "Skincare Essential",
+              price: typeof dbProduct.price === 'number' ? `$${dbProduct.price.toFixed(2)}` : dbProduct.price,
+              img: dbProduct.image_url || dbProduct.image || dbProduct.img || "./image/logo copy.png", 
+              ingredients: dbProduct.ingredients,
+              stock: stockQuantity,
+              limit_per_user: userLimit,
+              discount_price: discountPrice
+            };
+
+            // គ្រប់គ្រងការបញ្ចុះតម្លៃ (Dynamic Discount)
+            if (discountPrice && discountPrice < currentPrice) {
+              document.getElementById('detail-price').innerHTML = `
+                <div class="flex items-center gap-3">
+                  <span class="text-neutral-400 line-through text-sm font-normal">$${currentPrice.toFixed(2)}</span>
+                  <span class="text-pink-600 font-extrabold text-2xl md:text-3xl">$${discountPrice.toFixed(2)}</span>
+                </div>
+              `;
+              if (imageWrapper) {
+                imageWrapper.innerHTML += `<span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-black px-3 py-1 rounded-lg z-10 animate-pulse shadow-md">Hot Sale</span>`;
+              }
+            }
+
+            // គ្រប់គ្រងចំនួនស្តុកទំនិញ (Stock Management)
+            if (stockQuantity <= 0) {
+              if (imageWrapper) {
+                imageWrapper.innerHTML += `
+                  <div class="absolute inset-0 bg-neutral-900/40 rounded-2xl flex items-center justify-center z-10 backdrop-blur-[1px]">
+                    <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-1.5 rounded-xl shadow-lg border border-neutral-100 tracking-wider uppercase">Sold Out</span>
+                  </div>
+                `;
+              }
+              if (mainAddToCartBtn) {
+                mainAddToCartBtn.disabled = true;
+                mainAddToCartBtn.innerText = "Sold Out (Out of Stock)";
+                mainAddToCartBtn.className = "flex-1 h-12 bg-neutral-200 text-neutral-400 font-semibold rounded-xl text-sm cursor-not-allowed shadow-none";
+              }
+            }
+          }
+        } catch (err) {
+          console.warn("Failed to patch fresh live rows, using storage cache alternative:", err);
+        }
+
+        // បញ្ចូលទិន្នន័យទៅលើ Layout HTML
+        document.getElementById('detail-title').innerText = currentProduct.name;
+        document.getElementById('detail-type').innerText = currentProduct.type;
+        
+        if (!currentProduct.discount_price || Number(currentProduct.discount_price) >= parseFloat(currentProduct.price.replace('$', ''))) {
+          document.getElementById('detail-price').innerText = currentProduct.price; 
+        }
+        
+        document.getElementById('detail-ingredients').innerText = currentProduct.ingredients && currentProduct.ingredients.trim() !== "" 
+          ? currentProduct.ingredients 
+          : "No specific ingredient formulas declared for this product profile.";
+        
+        document.getElementById('detail-image').src = currentProduct.img;
+        document.getElementById('detail-image').alt = currentProduct.name;
+
+        const dynamicFinalPriceNum = currentProduct.discount_price ? Number(currentProduct.discount_price) : parseFloat(currentProduct.price.replace('$', ''));
+
+        // ភ្ជាប់ Event ពេលចុចប៊ូតុង Add to Cart (ត្រួតពិនិត្យ limit_per_user)
+        if (currentProduct.stock === undefined || currentProduct.stock > 0) {
+          mainAddToCartBtn.onclick = function() {
+            let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+            const exactItem = cart.find(item => String(item.id) === String(currentProduct.id));
+            
+            const currentQtyInCart = exactItem ? exactItem.quantity : 0;
+            const limitPerUser = currentProduct.limit_per_user || 0;
+
+            // Enforce limit rule
+            if (limitPerUser > 0 && (currentQtyInCart + 1) > limitPerUser) {
+              alert(`Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`);
+              return;
+            }
+
+            if (exactItem) { 
+              exactItem.quantity += 1; 
+            } else { 
+              cart.push({ 
+                id: String(currentProduct.id), 
+                title: currentProduct.name, 
+                price: dynamicFinalPriceNum, 
+                image: currentProduct.img,
+                quantity: 1,
+                limit_per_user: limitPerUser
+              }); 
+            }
+            localStorage.setItem('minee_cart', JSON.stringify(cart));
+            refreshFloatingCartUI();
+            setTimeout(() => { showCartPreview(); }, 50);
+          };
+        }
+
+        // ភ្ជាប់ Event សម្រាប់ប៊ូតុង Wishlist
+        const wishlistBtn = document.getElementById('detail-wishlist-btn');
+        if (wishlistBtn) {
+          wishlistBtn.onclick = function() {
+            let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+            const index = wishlist.findIndex(item => String(item.id) === String(currentProduct.id));
+            if (index > -1) {
+              wishlist.splice(index, 1);
+            } else {
+              wishlist.push({ id: String(currentProduct.id), name: currentProduct.name, price: dynamicFinalPriceNum, img: currentProduct.img });
+            }
+            localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+            updateMainHeartUI(currentProduct.id);
+          };
+        }
+
+        updateMainHeartUI(currentProduct.id);
+        
+        // ទាញយកផលិតផលដែលពាក់ព័ន្ធ (Related Items)
+        loadDynamicRelatedItems(currentProduct.id, currentProduct.type, databaseProductsList);
+      } else {
+        document.querySelector('main').innerHTML = `
+          <div class="text-center py-24 bg-white rounded-2xl border border-neutral-100 max-w-md mx-auto my-12 shadow-xs">
+            <i class="fa-solid fa-circle-exclamation text-4xl text-neutral-300 mb-3"></i>
+            <p class="text-neutral-500 font-medium">No skincare context profile found.</p>
+            <a href="index.html" class="mt-4 text-pink-500 hover:text-pink-600 font-semibold underline inline-block text-sm">Return to Shop</a>
+          </div>`;
+      }
+    });
+
+    // មុខងារទាញយក និងបង្ហាញផលិតផលដែលពាក់ព័ន្ធ (រួមជាមួយការត្រួតពិនិត្យស្តុក)
+    function loadDynamicRelatedItems(currentId, currentCategory, allProducts) {
+      const relatedGrid = document.getElementById('related-grid');
+      if (!relatedGrid) return;
+      
+      if (!allProducts || allProducts.length === 0) {
+        relatedGrid.innerHTML = "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No recommendations available right now.</p>";
+        return;
+      }
+
+      let filtered = allProducts.filter(prod => 
+        String(prod.id) !== String(currentId) && 
+        String(prod.category || prod.type || "").toLowerCase() === String(currentCategory || "").toLowerCase()
+      );
+
+      if (filtered.length < 3) {
+        const extraItems = allProducts.filter(prod => String(prod.id) !== String(currentId) && !filtered.some(r => r.id === prod.id));
+        filtered = [...filtered, ...extraItems];
+      }
+
+      const recommendations = filtered.slice(0, 3);
+
+      if (recommendations.length === 0) {
+        relatedGrid.innerHTML = "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No similar items found.</p>";
+        return;
+      }
+
+      relatedGrid.innerHTML = recommendations.map((prod, index) => {
+        const title = prod.title || prod.name || "Skincare Item";
+        
+        // Accurate stock checking from database row
+        const stockQuantity = prod.stock !== undefined ? parseInt(prod.stock) : 1;
+        const userLimit = prod.limit_per_user !== undefined ? parseInt(prod.limit_per_user) : 0;
+        const isOutOfStock = stockQuantity <= 0;
+        
+        const originalPrice = Number(prod.price);
+        const promoPrice = prod.discount_price ? Number(prod.discount_price) : null;
+        const isOnSale = (promoPrice && promoPrice < originalPrice);
+        
+        const displayPriceText = isOnSale ? `$${promoPrice.toFixed(2)}` : `$${originalPrice.toFixed(2)}`;
+        const rawPriceNum = isOnSale ? promoPrice : originalPrice;
+        
+        const img = prod.image_url || prod.image || prod.img || './image/logo copy.png';
+        const ingredientsText = (prod.ingredients || "").replace(/'/g, "\\'");
+        const escapedTitle = title.replace(/'/g, "\\'");
+
+        let badgeMarkup = isOnSale ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-10 animate-pulse shadow-xs">SALE</span>` : '';
+        let overlayMarkup = isOutOfStock ? `<div class="absolute inset-0 bg-neutral-900/40 rounded-xl flex items-center justify-center z-10"><span class="bg-white/95 text-neutral-800 text-[9px] font-black px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">Sold Out</span></div>` : '';
+        
+        let relatedButton = isOutOfStock 
+          ? `<button disabled class="w-full mt-4 bg-neutral-200 text-neutral-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed">Sold Out</button>`
+          : `<button onclick="handleRelatedAddToCartFallback('${prod.id}', \`${escapedTitle}\`, ${rawPriceNum}, '${img}', ${userLimit})" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 rounded-xl transition-all active:scale-95 shadow-sm hover:shadow cursor-pointer">Add to Cart</button>`;
+
+        return `
+          <div class="bg-white rounded-2xl border border-neutral-100 p-4 shadow-sm hover:shadow-md transition-all duration-700 ease-out transform opacity-0 translate-y-4 related-card flex flex-col justify-between relative"
+               style="transition-delay: ${index * 150}ms" data-id="${prod.id}">
+            
+            ${badgeMarkup}
+
+            <button onclick="event.stopPropagation(); toggleRelatedWishlist('${prod.id}', \`${escapedTitle}\`, ${rawPriceNum}, '${img}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-neutral-50/80 backdrop-blur-xs flex items-center justify-center hover:bg-white text-neutral-400 shadow-xs border border-neutral-100/50 cursor-pointer active:scale-90 transition-all z-10">
+              <i class="fa-solid fa-heart text-xs id-heart-${prod.id} transition-colors"></i>
+            </button>
+
+            <div onclick="viewProductDetail('${prod.id}', \`${escapedTitle}\`, '${currentCategory}', '${displayPriceText}', '${img}', \`${ingredientsText}\`)" 
+                 class="bg-neutral-50 rounded-xl p-4 flex justify-center items-center h-48 mb-4 cursor-pointer overflow-hidden group relative">
+              <img src="${img}" alt="${title}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+              ${overlayMarkup}
+            </div>
+            
+            <div class="text-left flex-grow">
+              <span class="text-[10px] font-bold text-pink-500 uppercase tracking-wider">${currentCategory}</span>
+              <h3 class="font-bold text-neutral-800 text-sm mt-1 line-clamp-2 min-h-[40px]">${title}</h3>
+              <div class="text-pink-600 font-extrabold mt-2 text-base">${displayPriceText}</div>
+            </div>
+            
+            ${relatedButton}
+          </div>
+        `;
+      }).join('');
+
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.related-card');
+        cards.forEach(card => {
+          card.classList.remove('opacity-0', 'translate-y-4');
+          card.classList.add('opacity-100', 'translate-y-0');
+        });
+      }, 50);
+    }
+
+    // មុខងារជំនួយសម្រាប់ Related Cards (ត្រួតពិនិត្យ limit_per_user)
+    window.handleRelatedAddToCartFallback = function(id, name, price, img, limitPerUser) {
+      const clickedCard = document.querySelector(`.related-card[data-id="${id}"]`);
+      if (clickedCard && clickedCard.querySelector('.bg-neutral-900\\/40')) {
+        alert("Sorry, this item is currently Sold Out.");
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      const exactItem = cart.find(item => String(item.id) === String(id));
+      
+      const currentQty = exactItem ? exactItem.quantity : 0;
+      if (limitPerUser > 0 && (currentQty + 1) > limitPerUser) {
+        alert(`Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`);
+        return;
+      }
+
+      if (exactItem) { 
+        exactItem.quantity += 1; 
+      } else { 
+        cart.push({ 
+          id: String(id), 
+          title: name, 
+          price: parseFloat(price), 
+          image: img, 
+          quantity: 1,
+          limit_per_user: limitPerUser 
+        }); 
+      }
+      localStorage.setItem('minee_cart', JSON.stringify(cart));
+      refreshFloatingCartUI();
+      
+      const preview = document.getElementById('cart-preview');
+      if (preview) {
+        preview.style.setProperty('display', 'block', 'important');
+        preview.classList.remove('hidden');
+      }
+    };
+
+    window.toggleRelatedWishlist = function(id, name, price, img) {
+      let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      const index = wishlist.findIndex(item => String(item.id) === String(id));
+      if (index > -1) {
+        wishlist.splice(index, 1);
+      } else {
+        wishlist.push({ id: String(id), name: name, price: parseFloat(price), img: img });
+      }
+      localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+    };
+
+    window.viewProductDetail = function(id, name, type, price, img, ingredients) {
+      const productObj = { id, name, type, price, img, ingredients: ingredients || "" };
+      localStorage.setItem('selectedProduct', JSON.stringify(productObj));
+      window.location.reload(); 
+    };
+
+    window.confirmCart = function() {
+      const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
+      if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+      window.location.href = "checkout.html"; 
+    };
+
+    function updateMainHeartUI(id) {
+      const heartIcon = document.getElementById('detail-heart-icon');
+      const heartBtn = document.getElementById('detail-wishlist-btn');
+      if (!heartIcon || !heartBtn) return;
+      
+      const storeWishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      const isSaved = storeWishlist.some(item => String(item.id) === String(id));
+      
+      if (isSaved) {
+        heartIcon.className = "fa-solid fa-heart text-lg text-pink-500";
+        heartBtn.className = "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-pink-200 bg-pink-50 text-pink-500 transition-all active:scale-95 cursor-pointer";
+      } else {
+        heartIcon.className = "fa-solid fa-heart text-lg text-neutral-400";
+        heartBtn.className = "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty - Skin1004 Products</title>
+  <!-- Tailwind v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Responsive Navigation Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <img src="./image/logo copy.png" alt="Logo" class="w-[60px]">
+      </div>
+
+      <!-- Hamburger Menu Button (Mobile Only) -->
+      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      </button>
+
+      <!-- Navigation Links -->
+      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
+        <ul class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto">
+          <li>
+            <a href="index.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li>
+            <a href="profileinfo.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-user-circle"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN PRODUCT GRIDS SECTION -->
+  <main class="max-w-7xl mx-auto px-4 py-8 w-full space-y-16">
+    
+    <!-- 1. Madagasca Centella Pore Care -->
+    <section>
+      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8">Madagasca Centella Pore Care</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 16 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative" 
+             data-id="16" data-type="Clay Mask" data-ingredients="Centella Asiatica Extract, Kaolin, Bentonite, Phaseolus Angularis Seed Powder">
+          <button onclick="toggleWishlistItem('16', 'Poremizing Quick Clay Stick Mask', 7.30, './image/pink1004/claymask.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-16"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/pink1004/claymask.jpeg" alt="Claymask" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Poremizing Quick Clay Stick Mask</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.30</div>
+          </div>
+          <button onclick="addToCart(16, 'Skin1004 Poremizing Quick Clay Stick Mask', 7.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 17 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="17" data-type="serum centella" data-ingredients="Centella Asiatica Extract (50%), Himalayan Pink Salt, Peptides, Aloe Barbadensis Leaf Extract">
+          <button onclick="toggleWishlistItem('17', 'Poremizing Fresh Ampoule', 7.30, './image/pink1004/fresh_ampoule.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-17"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/pink1004/fresh_ampoule.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Poremizing Fresh Ampoule</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.30</div>
+          </div>
+          <button onclick="addToCart(17, 'Skin1004 Poremizing Fresh Ampoule', 7.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 18 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="18" data-type="Cream" data-ingredients="Centella Asiatica Extract, Himalayan Pink Salt, Sea Water, Niacinamide, Adenosine">
+          <button onclick="toggleWishlistItem('18', 'Poremizing Light Gel Cream', 8.50, './image/pink1004/gelcream.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-18"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/pink1004/gelcream.jpeg" alt="Cream" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Poremizing Light Gel Cream</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.50</div>
+          </div>
+          <button onclick="addToCart(18, 'Skin1004 Poremizing Light Gel Cream', 8.50)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 19 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="19" data-type="Foam" data-ingredients="Centella Asiatica Extract, Himalayan Pink Salt, Papain, Kaolin, Lauric Acid">
+          <button onclick="toggleWishlistItem('19', 'Poremizing Fresh Ampoule Foam', 7.30, './image/pink1004/foam.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-19"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/pink1004/foam.webp" alt="Foam" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Poremizing Fresh Ampoule Foam</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.30</div>
+          </div>
+          <button onclick="addToCart(19, 'Skin1004 Poremizing Fresh Ampoule', 7.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. Madagasca Centella Tea-Trica Acne Care -->
+    <section class="border-t border-pink-100/60 pt-12">
+      <h2 class="text-2xl font-bold text-center text-neutral-800 mb-8">Madagasca Centella Tea-Trica Acne Care</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 20 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="20" data-type="Cream" data-ingredients="Lactobacillus/Centella Asiatica Extract Ferment Filtrate, Macadamia Seed Oil, Ceramide NP">
+          <button onclick="toggleWishlistItem('20', 'Madagasca Centella Probio-Enrich Cream', 8.30, './image/green/b5_cream.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-20"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/green/b5_cream.jpeg" alt="Cream" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Madagasca Centella Probio-Enrich Cream</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(20, 'Skin1004 Madagasca Centella Probio-Enrich Cream', 8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 21 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="21" data-type="Foam" data-ingredients="Melaleuca Alternifolia (Tea Tree) Leaf Water, Centella Asiatica Extract, Salicylic Acid (BHA)">
+          <button onclick="toggleWishlistItem('21', 'Tea-Trica BHA Foam', 7.50, './image/green/foam.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-21"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/green/foam.jpeg" alt="Foam" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Tea-Trica BHA Foam</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.50</div>
+          </div>
+          <button onclick="addToCart(21, 'Skin1004 Tea-Trica BHA Foam', 7.50)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 22 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="22" data-type="Ampoule" data-ingredients="Centella Asiatica Extract (55%), Melaleuca Alternifolia (Tea Tree) Leaf Water, Pine Tree Complex">
+          <button onclick="toggleWishlistItem('22', 'Tea-Trica Relief Ampoule', 7.90, './image/green/serum.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-22"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/green/serum.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Tea-Trica Relief Ampoule</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.90</div>
+          </div>
+          <button onclick="addToCart(22, 'Skin1004 Tea-Trica Relief Ampoule', 7.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 23 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="23" data-type="Toner" data-ingredients="Melaleuca Alternifolia (Tea Tree) Leaf Water, Centella Asiatica Extract, CS-Sebum Cleaner">
+          <button onclick="toggleWishlistItem('23', 'Tea-Trica Purifying Toner', 7.90, './image/green/toner.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-23"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/green/toner.jpeg" alt="Toner" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Tea-Trica Purifying Toner</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.90</div>
+          </div>
+          <button onclick="addToCart(23, 'Skin1004 Tea-Trica Purifying Toner', 7.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. Madagasca Centella Hyalu-Cica Complete Skincare -->
+    <section class="border-t border-pink-100/60 pt-12">
+      <h2 class="text-2xl font-bold text-center text-neutral-800 mb-8">Madagasca Centella Hyalu-Cica Complete Skincare</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 24 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="24" data-type="Serum" data-ingredients="Centella Asiatica Extract, Hyaluronic Acid, Niacinamide, Ivy Leaf Extract, Adenosine">
+          <button onclick="toggleWishlistItem('24', 'Skin1004 Hyalu-Cica Blue Serum', 7.90, './image/blue/blue_serum.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-24"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/blue/blue_serum.webp" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Skin1004 Hyalu-Cica Blue Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.90</div>
+          </div>
+          <button onclick="addToCart(24, 'Skin1004 Hyalu-Cica Blue Serum', 7.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 25 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="25" data-type="Sleeping Pack" data-ingredients="Centella Asiatica Extract, Hyaluronic Acid, Melatonin, Okra Fruit Extract, Ceramide NP">
+          <button onclick="toggleWishlistItem('25', 'Madagascar Centella Hyalu-Cica Sleeping Pack 100ml', 7.90, './image/blue/bfoam.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-25"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/blue/bfoam.webp" alt="Sleeping Pack" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Madagascar Centella Hyalu-Cica Sleeping Pack 100ml</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$7.90</div>
+          </div>
+          <button onclick="addToCart(25, 'Skin1004 Madagascar Centella Hyalu-Cica Sleeping Pack 100ml', 7.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 26 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="26" data-type="Serum" data-ingredients="Centella Asiatica Extract (92%), Hyaluronic Acid, Betula Alba Juice, Aloe Barbadensis Leaf Extract">
+          <button onclick="toggleWishlistItem('26', 'Madagasca Centella Hyalu-Cica First Ampoule', 8.90, './image/blue/firstampoule.jpeg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-26"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/blue/firstampoule.jpeg" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Madagasca Centella Hyalu-Cica First Ampoule</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.90</div>
+          </div>
+          <button onclick="addToCart(26, 'Skin1004 Madagasca Centella Hyallu-Cica First Ampole ', 8.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 27 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="27" data-type="Sunscreen" data-ingredients="Centella Asiatica Extract, Hyaluronic Acid, Chemical Sun Filters, Niacinamide, Adenosine">
+          <button onclick="toggleWishlistItem('27', 'Madagasca Centella Hyalu-Cica Water Fit Sun Serum', 8.90, './image/blue/skin_1004_hyalu_cica_moisture_cream_1.jpg.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-27"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/blue/skin_1004_hyalu_cica_moisture_cream_1.jpg.webp" alt="Sunscreen" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Madagasca Centella Hyalu-Cica Water Fit Sun Serum</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.90</div>
+          </div>
+          <button onclick="addToCart(27, 'Skin1004 Madagasca Centella Hyallu-Cica Water Fit Sun Serum ', 8.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. Madagasca Centella Probio-Cica Nourishing -->
+    <section class="border-t border-pink-100/60 pt-12">
+      <h2 class="text-2xl font-bold text-center text-neutral-800 mb-8">Madagasca Centella Probio-Cica Nourishing</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 28 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="28" data-type="Ampoule" data-ingredients="Lactobacillus/Centella Asiatica Extract Ferment Filtrate, Phytosterols, Ceramide NP">
+          <button onclick="toggleWishlistItem('28', 'Probio Cica Intensive Ampoule', 8.90, './image/brown/Product-page-sizes_11dfd86d-b8a4-4ebc-9a97-a9466f8755cd_grande.jpg.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-28"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/brown/Product-page-sizes_11dfd86d-b8a4-4ebc-9a97-a9466f8755cd_grande.jpg.webp" alt="Serum" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Probio Cica Intensive Ampoule</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.90</div>
+          </div>
+          <button onclick="addToCart(28, 'Skin1004 Probio Cica Intensive Ampoul ', 8.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 29 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="29" data-type="Sunscreen" data-ingredients="Lactobacillus/Centella Asiatica Extract Ferment Filtrate, Bakuchiol, Macadamia Integrifolia Seed Oil">
+          <button onclick="toggleWishlistItem('29', 'Probio Cica Glow Sun Ampoule', 8.90, '/image/brown/skin1004-madagascar-centella-probio-cica-bakuchiol-eye-cream-20mleye-cream_1024x1024.jpg.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-29"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="/image/brown/skin1004-madagascar-centella-probio-cica-bakuchiol-eye-cream-20mleye-cream_1024x1024.jpg.webp" alt="Sunscreen" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Probio Cica Glow Sun Ampoule</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.90</div>
+          </div>
+          <button onclick="addToCart(29, 'Skin1004 Probio Cica Glow Sun Ampoul ', 8.90)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 30 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="30" data-type="Toner" data-ingredients="Lactobacillus/Centella Asiatica Extract Ferment Filtrate, Centella Asiatica Extract, Trehalose, Panthenol">
+          <button onclick="toggleWishlistItem('30', 'Probio Cica Essence Toner', 8.60, './image/brown/SKIN1004-Madagascar-Centella-Probio-Cica-Essence-Toner.webp')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-30"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/brown/SKIN1004-Madagascar-Centella-Probio-Cica-Essence-Toner.webp" alt="Toner" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Probio Cica Essence Toner</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.60</div>
+          </div>
+          <button onclick="addToCart(30, 'Skin1004 Probio Cica Essence Toner ', 8.60)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 31 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group relative"
+             data-id="31" data-type="Cream" data-ingredients="Lactobacillus/Centella Asiatica Extract Ferment Filtrate, Macadamia Seed Oil, Ceramide NP, Glycerin">
+          <button onclick="toggleWishlistItem('31', 'Madagasca Centella Probio-Enrich Cream', 8.30, './image/brown/545416816923_1.jpg')" class="absolute top-3 right-3 z-10 bg-white/80 hover:bg-white text-neutral-400 hover:text-pink-500 w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-colors cursor-pointer border border-neutral-100/60">
+            <i class="fa-solid fa-heart id-heart-31"></i>
+          </button>
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/brown/545416816923_1.jpg" alt="Cream" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Madagasca Centella Probio-Enrich Cream</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$8.30</div>
+          </div>
+          <button onclick="addToCart(31, 'Skin1004 Madagasca Centella Probio-Enrich Cream', 8.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- CART STRUCTURAL CODE -->
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
+      <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+    </button>
+    
+    <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
+      <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
+        <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
+      </h3>
+      <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
+      <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
+      <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+    </div>
+  </div>
+
+  <!-- Unified Footer Layout -->
+  <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
+        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
+        <a href="https://maps.google.com" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
+        <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
+        <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
+        <button class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer">Unlock 5% off</button>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+      &copy; 2026 Minee Beauty. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- JS Controller Modules -->
+  <script src="product.js"></script>
+  <script src="outstock.js"></script>
+</body>
+</html>

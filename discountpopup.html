@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty - About</title>
+  <!-- Tailwind v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between relative antialiased">
+
+  <!-- Responsive Navigation Header Bar -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <img src="./image/logo copy.png" alt="Logo" class="w-[60px]">
+      </div>
+
+      <!-- Hamburger Menu Button (Mobile Only) -->
+      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      </button>
+
+      <!-- Navigation Links -->
+      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
+        <ul class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto">
+          <li>
+            <a href="index.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="product.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>Products</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="flex items-center gap-2 text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li>
+            <a href="contact.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-envelope"></i>
+              <span>Contact</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Dummy Main Content Section (So you can see the popup layer correctly) -->
+  <main class="max-w-7xl w-full mx-auto px-4 py-16 flex-1 flex flex-col items-center justify-center text-center relative z-10">
+    <div class="bg-white rounded-3xl border border-neutral-100 shadow-sm p-8 max-w-2xl">
+      <h1 class="text-3xl font-bold text-neutral-800 mb-4">About Minee Beauty</h1>
+      <p class="text-neutral-600 leading-relaxed">
+        Welcome to our sanctuary of beauty and care. We are dedicated to providing you with premium skincare solutions that celebrate your unique skin type. Dive in to look through our choices and unlock your best glow!
+      </p>
+    </div>
+  </main>
+
+  <!-- TAILWIND V4 DISCOUNT POPUP OVERLAY LAYOUT -->
+  <div id="discountPopup" class="hidden fixed inset-0 z-100 flex items-center justify-center px-4 transition-all duration-300">
+    <!-- Dark background glass glaze mask sheet shadow overlay -->
+    <div id="popupOverlay" class="absolute inset-0 bg-neutral-900/50 backdrop-blur-xs opacity-0 transition-opacity duration-300"></div>
+    
+    <!-- Popup content dialogue card frame block panel layout -->
+    <div id="popupBox" class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-sm w-full relative z-10 text-center transform scale-90 opacity-0 transition-all duration-300 border border-pink-100">
+      
+      <!-- Close Exit Button Element -->
+      <button id="closePopup" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 text-2xl font-bold cursor-pointer transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-50 focus:outline-none" aria-label="Close Popup">
+        &times;
+      </button>
+
+      <!-- Visual Pop Icon Graphics Context -->
+      <div class="w-16 h-16 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center text-3xl mx-auto mb-4 animate-bounce">
+        🎉
+      </div>
+
+      <!-- Dialogue Texts Elements -->
+      <h2 class="text-2xl font-bold text-neutral-800 tracking-wide">Special Discount</h2>
+      <p class="text-neutral-600 text-sm mt-2 leading-relaxed">
+        Get an exclusive <span class="text-pink-500 font-bold text-base bg-pink-50 px-2 py-0.5 rounded-md">10% OFF</span> savings coupon applied automatically on your very first order today!
+      </p>
+
+      <!-- Action Submission Buttons Panel Router -->
+      <button id="shopNowBtn" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 mt-6 transform hover:-translate-y-0.5 active:translate-y-0">
+        <span>Shop Active Offers Now</span>
+        <i class="fa-solid fa-arrow-right text-xs"></i>
+      </button>
+
+      <button id="noThanksBtn" class="text-xs text-neutral-400 hover:text-neutral-500 font-medium transition-colors mt-3 block mx-auto underline cursor-pointer">
+        No thanks, I'll browse regular prices
+      </button>
+    </div>
+  </div>
+
+  <!-- Unified Footer Platform Layout -->
+  <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400 mt-12 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
+        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
+        <a href="https://maps.google.com" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
+        <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
+        <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+      &copy; 2026 Minee Beauty. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Script Modules Interactions Controller logic handling -->
+  <script>
+    // 1. Mobile Responsive Navigation Toggle Control
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('hidden');
+      menuIcon.className = navMenu.classList.contains('hidden') ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+    });
+
+    // 2. Animated Pop-up Windows Overlay Controls System
+    const popup = document.getElementById("discountPopup");
+    const overlay = document.getElementById("popupOverlay");
+    const box = document.getElementById("popupBox");
+    
+    const closeBtn = document.getElementById("closePopup");
+    const noThanksBtn = document.getElementById("noThanksBtn");
+    const shopNowBtn = document.getElementById("shopNowBtn");
+
+    // Close function layout animations wrap helper
+    function closePopupAnimation() {
+      // Fade/Scale out cleanly
+      overlay.classList.add("opacity-0");
+      box.classList.add("scale-90", "opacity-0");
+      box.classList.remove("scale-100", "opacity-100");
+      
+      setTimeout(() => {
+        popup.classList.add("hidden");
+      }, 300); // sync with class durations
+    }
+
+    // Trigger listeners configurations
+    closeBtn.addEventListener("click", closePopupAnimation);
+    noThanksBtn.addEventListener("click", closePopupAnimation);
+    overlay.addEventListener("click", closePopupAnimation);
+
+    shopNowBtn.addEventListener("click", function() {
+      window.location.href = "cosmetic.html";
+    });
+
+    // Display Popup overlay with subtle transition timer entry
+    window.addEventListener("load", function() {
+      popup.classList.remove("hidden");
+      
+      // Let layout thread draw framework first, then animate transitions
+      setTimeout(() => {
+        overlay.classList.remove("opacity-0");
+        box.classList.remove("scale-90", "opacity-0");
+        box.classList.add("scale-100", "opacity-100");
+      }, 50);
+    });
+  </script>
+</body>
+</html>

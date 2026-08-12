@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - Minee Beauty</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link class="rounded-full" rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body class="bg-[#f5f5f5] text-[#333] font-sans m-0 antialiased min-h-screen relative pb-12">
+
+  <div class="bg-gradient-to-r from-[#0099ff] to-[#28c4e7] text-white px-5 pt-8 pb-5 rounded-b-[20px]">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <div class="relative w-[100px] h-[100px] rounded-full overflow-hidden cursor-pointer shrink-0 shadow-[0_4px_10px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform group" onclick="document.getElementById('uploadPhoto').click()">
+          <img src="./image/profiile.jpeg" id="avatar" class="w-full h-full object-cover block transition-all duration-300">
+          <div class="absolute inset-0 bg-black/35 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-2xl">
+            <i class="fa-solid fa-camera"></i>
+          </div>
+        </div>
+        <div class="ml-[15px]">
+          <h2 id="name" class="m-0 mb-1.5 text-2xl font-semibold">Name</h2>
+          <p id="username" class="m-0 text-sm opacity-80">@username</p>
+        </div>
+      </div>
+      <a href="index.html" class="bg-white/20 hover:bg-white/30 text-white font-medium text-xs px-4 py-2 rounded-xl transition-colors backdrop-blur-xs">
+        <i class="fa-solid fa-arrow-left mr-1"></i> Back Shop
+      </a>
+    </div>
+  </div>
+
+  <input type="file" id="uploadPhoto" class="hidden" accept="image/*">
+
+  <div class="flex justify-around bg-white my-5 mx-5 py-3.5 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.05)] text-xs md:text-sm">
+    <div onclick="toggleProfileTabs('history-section')" class="text-center text-[#555] font-medium transition-all hover:-translate-y-0.5 hover:text-[#0099ff] cursor-pointer flex-1 border-r border-neutral-100">
+      <i class="fa-solid fa-clock text-xl block mb-1 text-sky-500"></i>History
+    </div>
+    <div onclick="toggleProfileTabs('wishlist-section')" class="text-center text-[#555] font-medium transition-all hover:-translate-y-0.5 hover:text-pink-500 cursor-pointer flex-1 border-r border-neutral-100">
+      <i class="fas fa-heart text-xl block mb-1 text-pink-500"></i>Wishlist
+    </div>
+    <div onclick="toggleProfileTabs('address-section')" class="text-center text-[#555] font-medium transition-all hover:-translate-y-0.5 hover:text-[#0099ff] cursor-pointer flex-1 border-r border-neutral-100">
+      <i class="fa-solid fa-location-dot text-xl block mb-1 text-emerald-500"></i>Address
+    </div>
+    <div onclick="logout()" class="text-center text-[#555] font-medium transition-all hover:-translate-y-0.5 hover:text-red-500 cursor-pointer flex-1">
+      <i class="fa-solid fa-arrow-right-from-bracket text-xl block mb-1 text-neutral-400 group-hover:text-red-500"></i>Logout
+    </div>
+  </div>
+
+  <div id="history-section" class="profile-tab-block mx-5 mb-5 bg-white p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]" style="display:none;">
+    <div class="mb-2.5 flex justify-between items-center">
+      <h3 class="m-0 text-lg font-semibold text-neutral-800">Order History</h3>
+      <span class="text-[10px] text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-full font-medium">Click order to view invoice</span>
+    </div>
+    <ul id="history-list" class="list-none p-0 m-0 space-y-2"></ul>
+  </div>
+
+  <div id="wishlist-section" class="profile-tab-block mx-5 mb-5 bg-white p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]" style="display:none;">
+    <h3 class="m-0 text-lg font-semibold text-neutral-800 mb-3 border-b border-neutral-50 pb-2">My Saved Items</h3>
+    <div id="wishlist-grid-display" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      </div>
+  </div>
+
+  <div id="address-section" class="profile-tab-block mx-5 mb-5 bg-white p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]" style="display:none;">
+    <div class="flex justify-between items-center mb-3 border-b border-gray-100 pb-2">
+      <h3 class="m-0 text-lg font-semibold text-neutral-800">Saved Addresses</h3>
+      <button onclick="addAddress()" class="bg-[#0099ff] hover:bg-[#0077cc] text-white text-xs font-semibold px-3 py-1.5 rounded-md transition-colors cursor-pointer">
+        Add New
+      </button>
+    </div>
+    <ul id="address-list" class="list-none p-0 m-0"></ul>
+  </div>
+
+  <div id="invoice-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 transition-all">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto border border-neutral-100">
+      <button onclick="closeInvoiceModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 p-2 cursor-pointer text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="invoice-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="profileinfo.js"></script>
+  <script>
+    // 1. Replaces old toggle function to cleanly manage showing only ONE section layout box smoothly
+    function toggleProfileTabs(targetSectionId) {
+      document.querySelectorAll('.profile-tab-block').forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      const target = document.getElementById(targetSectionId);
+      if(target) target.style.display = 'block';
+
+      // If user opened wishlist, execute rendering refresh loop right now
+      if (targetSectionId === 'wishlist-section') {
+        renderProfileWishlistItems();
+      }
+    }
+
+    // 2. Draws wishlisted items straight out of localStorage shared values
+    function renderProfileWishlistItems() {
+      const container = document.getElementById("wishlist-grid-display");
+      if(!container) return;
+
+      const wishlistData = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      container.innerHTML = "";
+
+      if(wishlistData.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 text-center py-8 text-neutral-400 text-sm italic">
+            <i class="fa-solid fa-heart-broken block text-neutral-300 text-2xl mb-1.5"></i>
+            No cosmetics saved to your favorites yet.
+          </div>`;
+        return;
+      }
+
+      wishlistData.forEach(item => {
+        container.innerHTML += `
+          <div class="flex items-center justify-between border border-neutral-100 p-3 rounded-xl bg-neutral-50/50 gap-4">
+            <div class="flex items-center gap-3 max-w-[75%]">
+              <img src="${item.img}" class="w-12 h-12 object-contain bg-white rounded-lg border border-neutral-100 shrink-0">
+              <div class="truncate">
+                <p class="font-bold text-xs text-neutral-700 truncate">${item.name}</p>
+                <span class="text-pink-600 text-xs font-black tracking-tight">$${parseFloat(item.price).toFixed(2)}</span>
+              </div>
+            </div>
+            <button onclick="removeWishlistItemProfile('${item.id}')" class="text-neutral-300 hover:text-red-500 p-2 text-sm cursor-pointer transition-colors shrink-0">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    // 3. Allows deletion directly within profile page sync arrays
+    window.removeWishlistItemProfile = function(id) {
+      let currentList = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+      currentList = currentList.filter(item => String(item.id) !== String(id));
+      localStorage.setItem("minee_wishlist", JSON.stringify(currentList));
+      
+      // Instantly redraw list view container
+      renderProfileWishlistItems();
+    };
+
+    // Change old function binding layout configurations to hook our unified tab control logic instead
+    window.toggleSection = toggleProfileTabs;
+  </script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minee Beauty - Dasique Collection</title>
+  <!-- Tailwind v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+</head>
+<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Responsive Navigation Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <img src="./image/logo copy.png" alt="Logo" class="w-[60px]">
+      </div>
+
+      <!-- Hamburger Menu Button (Mobile Only) -->
+      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      </button>
+
+      <!-- Navigation Links -->
+      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
+        <ul class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto">
+          <li>
+            <a href="index.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li>
+            <a href="profileinfo.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
+              <i class="fa-solid fa-user-circle"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN PRODUCT GRIDS SECTION -->
+  <main class="max-w-7xl mx-auto px-4 py-8 w-full space-y-16">
+    
+    <section id="products">
+      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8">Dasique Shadow Palette Collection</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Product 45 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="45" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Candy Berry</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$13.00</div>
+          </div>
+          <button onclick="addToCart(45, 'Dasique Shadow Palette - Candy Berry', 13.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 46 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="46" data-type="Eye Makeup" data-ingredients="Vegan Certified Minerals, Soft Focus Polymers, Premium Pearl Shimmers">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasiquee.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Violet Knit | Vegan</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$12.30</div>
+          </div>
+          <button onclick="addToCart(46, 'Dasique Shadow Palette - Violet Knit | Vegan', 12.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 47 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="47" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d9.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Peach Blending</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$11.30</div>
+          </div>
+          <button onclick="addToCart(47, 'Dasique Shadow Palette - Peach Blending', 11.30)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 48 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="48" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d4.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Muted Nuts</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$12.50</div>
+          </div>
+          <button onclick="addToCart(48, 'Dasique Shadow Palette - Muted Nuts', 12.50)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 49-->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="49" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d5.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Blueberry Sorbet</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$10.70</div>
+          </div>
+          <button onclick="addToCart(49, 'Dasique Shadow Palette - Blueberry Sorbet', 10.70)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 50 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="50" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d6.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Rose Petal</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$13.00</div>
+          </div>
+          <button onclick="addToCart(50, 'Dasique Shadow Palette - Rose Petal', 13.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 51 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="51" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d8.webp" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Berry Smoothie</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$10.50</div>
+          </div>
+          <!-- Note: Preserved your exact 13.00 click parameter from original HTML markup -->
+          <button onclick="addToCart(51, 'Dasique Shadow Palette - Berry Smoothie', 13.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+        <!-- Product 52 -->
+        <div class="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col justify-between text-center hover:shadow-md transition-shadow group" 
+             data-id="52" data-type="Eye Makeup" data-ingredients="Mica, Talc, Silica, Ultra-fine Pigment Powders, Macadamia Ternifolia Seed Oil">
+          <div onclick="viewProductDetails(this)" class="cursor-pointer">
+            <img src="./image/makeup/oneye/dasique/d7.jpeg" alt="Palette" class="w-full h-48 object-contain mb-4 rounded-xl group-hover:scale-102 transition-transform">
+            <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Cherry Blossom</p>
+            <div class="text-lg font-bold text-pink-600 mb-3">$13.00</div>
+          </div>
+          <button onclick="addToCart(52, 'Dasique Shadow Palette - Cherry Blossom', 13.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+<!-- NEW STRUCTURAL CODE -->
+<div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+  <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
+    <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+  </button>
+  
+  <!-- Changed to normal hidden. Now controlled purely by your JavaScript -->
+  <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
+    <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
+      <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
+    </h3>
+    <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
+    <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
+    <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+  </div>
+</div>
+  <!-- Unified Footer Layout -->
+  <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
+        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
+        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
+        <a href="https://maps.google.com" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
+          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
+        <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
+        <!-- Fixed the broken "email:" tag to "mailto:" down here -->
+        <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
+        <button class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer">Unlock 5% off</button>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+      &copy; 2026 Minee Beauty. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- JS Controller Modules -->
+  <script src="product.js"></script>
+  <script src="outstock.js"></script>
+</body>
+</html>
