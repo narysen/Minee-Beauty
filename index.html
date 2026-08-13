@@ -255,9 +255,7 @@
       ? 'http://localhost:3000/api'
       : 'https://minee-beauty-store.onrender.com/api';
 
-    // Helper function to check if the user is registered/logged in
     function isUserRegistered() {
-      // Adjust this key or condition depending on how your profile/registration saves user state (e.g. localStorage)
       const currentUser = localStorage.getItem('currentUser') || localStorage.getItem('minee_user') || localStorage.getItem('isRegistered');
       return currentUser !== null && currentUser !== undefined && currentUser !== "";
     }
@@ -370,7 +368,6 @@
     window.renderProducts = renderProducts;
 
     window.handleHomeAddToCart = function(id, title, price, image, limitPerUser) {
-      // Registration restriction check rule
       if (!isUserRegistered()) {
         alert("Please register or log in first before adding items to your cart!");
         window.location.href = "profileinfo.html";
@@ -392,6 +389,7 @@
       } else {
         cart.push({
           id: String(id),
+          product_id: String(id),
           title: title,
           price: parseFloat(price),
           image: image,
@@ -423,7 +421,6 @@
       performSearch();
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Close mobile menu if open
       const navMenu = document.getElementById('nav-menu');
       const menuToggle = document.getElementById('menu-toggle');
       if (navMenu && navMenu.classList.contains('mobile-open')) {
@@ -443,13 +440,11 @@
         clearTimeout(searchTimeout);
         performSearch();
 
-        // Smoothly scroll down to results section
         const sectionHeading = document.getElementById('section-heading');
         if (sectionHeading) {
           sectionHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Only close the mobile popup dropdown so the main header bar stays visible for the next search
         const navMenu = document.getElementById('nav-menu');
         const menuToggle = document.getElementById('menu-toggle');
         if (navMenu && navMenu.classList.contains('mobile-open')) {
@@ -467,6 +462,7 @@
     async function performSearch() {
       const searchField = document.getElementById('search-input');
       const sectionHeader = document.getElementById('section-heading');
+      const container = document.getElementById('product-container');
       const query = searchField ? searchField.value.trim() : "";
 
       try {
@@ -478,8 +474,16 @@
           
           const allProducts = await response.json();
 
+          if (!allProducts || allProducts.length === 0) {
+            container.innerHTML = `
+              <div class="col-span-full text-center py-12">
+                <p class="text-neutral-500 text-sm">No products found in database. Add one from your admin panel!</p>
+              </div>`;
+            return;
+          }
+
           const newlyAddedProducts = [...allProducts]
-            .sort((a, b) => b.id - a.id) 
+            .sort((a, b) => Number(b.id) - Number(a.id)) 
             .slice(0, 4);
 
           window.renderProducts(newlyAddedProducts);
@@ -490,12 +494,17 @@
           if (!response.ok) throw new Error("Search backend request failure");
           
           const searchResults = await response.json();
-
           window.renderProducts(searchResults);
         }
         
       } catch (error) {
         console.error("Operation failed:", error);
+        if (container) {
+          container.innerHTML = `
+            <div class="col-span-full text-center py-12 text-red-500 text-sm">
+              Failed to load products from server. Please check your connection.
+            </div>`;
+        }
       }
     }
 
@@ -525,7 +534,6 @@
         });
       }
 
-      // Fixed robust toggle wiring for Cart Button
       const cartBtn = document.getElementById('cart-button');
       const cartPreview = document.getElementById('cart-preview');
       const wishlistPreview = document.getElementById('wishlist-preview');
