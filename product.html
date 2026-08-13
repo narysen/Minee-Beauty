@@ -75,13 +75,17 @@
       <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
     </div>
   </div>
-
-  <script>
+<script>
     document.addEventListener("DOMContentLoaded", async () => {
       const savedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
       const cartBtn = document.getElementById('cart-button');
       const cartPreview = document.getElementById('cart-preview');
       const backLinkElement = document.getElementById('back-link');
+
+      // --- DYNAMIC API BASE URL CONFIGURATION ---
+      const API_BASE = window.location.hostname === "localhost"
+        ? "http://localhost:3000/api"
+        : "/api";
 
       // --- DYNAMIC BACK LINK BY CATEGORY ---
       if (backLinkElement && savedProduct) {
@@ -217,7 +221,7 @@
         if (cardBox) cardBox.setAttribute('data-id', String(savedProduct.id));
 
         try {
-          const response = await fetch('http://localhost:3000/api/products');
+          const response = await fetch(`${API_BASE}/products`);
           databaseProductsList = await response.json();
           
           const dbProduct = databaseProductsList.find(prod => String(prod.id) === String(savedProduct.id));
@@ -519,5 +523,5 @@
       }
     }
   </script>
-</body>
-</html>
+  </body>
+  </html>

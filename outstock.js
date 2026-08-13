@@ -20,6 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://minee-beauty-store.onrender.com';
+
+// Example usage:
+fetch(`${API_URL}/api/products`)
+    .then(res => res.json())
+    .then(data => console.log(data));
     // --- MOBILE MENU HAMBURGER CONTROLLER ---
     function setupMenuToggle() {
       const toggle = document.getElementById('menu-toggle');
@@ -207,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- FETCH LIVE STOCK DATA & SALES STRAIGHT FROM DATABASE ENDPOINT ---
     async function checkLiveDatabaseStockAndDiscounts() {
       try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch(`${API_BASE}/products`);
         if (!response.ok) return;
         const dbProducts = await response.json();
 

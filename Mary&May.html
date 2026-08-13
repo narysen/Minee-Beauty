@@ -374,11 +374,12 @@
       &copy; 2026 Minee Beauty. All rights reserved.
     </div>
   </footer>
+<script>
+    // --- DYNAMIC API BASE URL CONFIGURATION ---
+    const API_BASE = window.location.hostname === "localhost"
+      ? "http://localhost:3000/api"
+      : "/api";
 
-  <!-- JS Controller Modules >
-  <script src="product.js"></script-->
-  <!-- PLACE THIS RIGHT ABOVE YOUR CLOSING </body> TAG -->
-  <script>
     document.addEventListener("DOMContentLoaded", () => {
       // Initialize systems
       refreshFloatingCartUI();
@@ -573,7 +574,7 @@
     // --- FETCH LIVE STOCK DATA & SALES STRAIGHT FROM DATABASE ENDPOINT ---
     async function checkLiveDatabaseStockAndDiscounts() {
       try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch(`${API_BASE}/products`);
         if (!response.ok) return;
         const dbProducts = await response.json();
 
@@ -610,7 +611,9 @@
               imgDiv.classList.add('relative', 'opacity-60');
               imgDiv.insertAdjacentHTML('beforeend', `
                 <div class="absolute inset-0 flex items-center justify-center bg-neutral-900/20 rounded-xl">
-                  <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border tracking-wide uppercase">Sold Out</span>              `);
+                  <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border tracking-wide uppercase">Sold Out</span>
+                </div>
+              `);
             }
             const actionBtn = card.querySelector('button[onclick^="addToCart"]');
             if (actionBtn) {
@@ -626,6 +629,5 @@
       }
     }
   </script>
-
 </body>
 </html>

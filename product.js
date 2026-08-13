@@ -1,6 +1,15 @@
 let productsDatabase = [];
 let cart = [];
-// Fetch live items directly out of your local MySQL server instance 
+
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://minee-beauty-store.onrender.com';
+
+// Example usage:
+fetch(`${API_URL}/api/products`)
+    .then(res => res.json())
+    .then(data => console.log(data));
+// Fetch live items directly out of your local or production database instance 
 async function fetchProductsFromDatabase() {
  
   const productContainer = document.getElementById('product-container'); 
@@ -28,7 +37,7 @@ async function fetchProductsFromDatabase() {
     let isFirstOrder = true;
 
     try {
-      const orderCheck = await fetch(`http://localhost:3000/api/orders/${encodeURIComponent(userQueryKey)}`);
+      const orderCheck = await fetch(`${API_BASE}/orders/${encodeURIComponent(userQueryKey)}`);
       const orders = await orderCheck.json();
       isFirstOrder = (Array.isArray(orders) && orders.length === 0);
     } catch (e) {
@@ -97,7 +106,6 @@ window.renderProducts = function(filteredResults) {
         </div>
       `;
     } else {
-      // Always show standard price explicitly when there's no active promo if preferred
       priceHtml = `<div class="text-pink-600 font-extrabold mt-2">$${formattedStandardPrice}</div>`;
     }
 
@@ -128,6 +136,7 @@ window.renderProducts = function(filteredResults) {
     `;
   }).join('');
 };
+
 function showPanel(panelElement) {
   if (!panelElement) return;
   panelElement.classList.remove('opacity-0', 'scale-95', 'pointer-events-none', 'hidden');
@@ -144,7 +153,6 @@ function addProductToCart(productId) {
   const lookupId = String(productId);
   const now = new Date();
 
-  // Locate product database data safely (with fallback check if database hasn't loaded yet)
   let product = (typeof productsDatabase !== 'undefined' && productsDatabase) 
     ? productsDatabase.find(p => String(p.id) === lookupId) 
     : null;
@@ -169,7 +177,6 @@ function addProductToCart(productId) {
     };
   }
 
-  //  Determine if the promotional discount windows are active right now
   let activePromoPrice = null;
   if (product.discount_price && product.discount_start && product.discount_end) {
     const startTime = new Date(product.discount_start);
@@ -182,29 +189,23 @@ function addProductToCart(productId) {
     activePromoPrice = Number(product.discount_price);
   }
 
-  //  Establish the runtime transactional limit parameters
   const finalPrice = activePromoPrice !== null ? activePromoPrice : Number(product.price);
   const maxStock = product.stock !== undefined ? parseInt(product.stock) : (itemContainer?.getAttribute('data-stock') ? parseInt(itemContainer.getAttribute('data-stock')) : 3);
-  
-  // Set the structural limit per user based on admin records
   const userPurchaseLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : (itemContainer?.getAttribute('data-limit') ? parseInt(itemContainer.getAttribute('data-limit')) : 0);
 
   const existingItem = cart.find(item => String(item.id) === lookupId);
   const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
 
-  //Limit Per User Check
   if (userPurchaseLimit > 0 && currentQuantityInCart >= userPurchaseLimit) {
     alert(`Restriction Notice: The administration has limited purchase bounds for "${product.title}" to a maximum of ${userPurchaseLimit} per user.`);
     return;
   }
 
-  // Standard Physical Stock Level Pool Guard
   if (currentQuantityInCart >= maxStock) {
     alert(`Sorry! We only have ${maxStock} items available in our total live inventory pool right now.`);
     return;
   }
 
-  // Push data safely to the cart array structure
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
@@ -221,7 +222,6 @@ function addProductToCart(productId) {
   if (typeof updateCartUIDraw === "function") updateCartUIDraw();
 }
 
-// Make sure your shortcut wrapper global window function handles incoming clicks cleanly
 window.addToCart = function(id) {
   addProductToCart(String(id));
 };
@@ -346,6 +346,23 @@ function syncWishlistUI() {
       `;
     });
   }
+
+  document.querySelectorAll('[data-id]').forEach(card => {
+    const cardId = card.getAttribute('data-id');
+    const icon = card.querySelector(`.id-heart-${cardId}`);
+    if (!icon) return;
+
+    const isSaved = storeWishlist.some(item => String(item.id) === String(cardId));
+    if (isSaved) {
+      icon.classList.remove('text-neutral-400');
+      icon.classList.add('text-pink-500');
+    } else {
+      icon.classList.remove('text-pink-500');
+      icon.classList.add('text-neutral-400');
+    }
+  });
+}
+
 let activeCategory = 'all'; 
 let searchDebounceTimeout = null;
 
@@ -381,35 +398,17 @@ async function fetchFilteredProducts(searchKeyword, categorySelection) {
       category: categorySelection
     });
 
-    const response = await fetch(`http://localhost:3000/api/products?${params.toString()}`);
+    const response = await fetch(`${API_BASE}/products?${params.toString()}`);
     if (!response.ok) throw new Error('Database server sync was unsuccessful');
     
     productsDatabase = await response.json();
-    console.log(`Live Filter: Loaded ${productsDatabase.length} items out of MySQL database.`);
+    console.log(`Live Filter: Loaded ${productsDatabase.length} items out of database.`);
 
-    // Pass the newly parsed array data down to our engine
     window.renderProducts(productsDatabase);
     syncWishlistUI();
   } catch (error) {
     console.error('Failed querying active search rows from backend:', error);
   }
-}
-fetchProductsFromDatabase();
-///
-  document.querySelectorAll('[data-id]').forEach(card => {
-    const cardId = card.getAttribute('data-id');
-    const icon = card.querySelector(`.id-heart-${cardId}`);
-    if (!icon) return;
-
-    const isSaved = storeWishlist.some(item => String(item.id) === String(cardId));
-    if (isSaved) {
-      icon.classList.remove('text-neutral-400');
-      icon.classList.add('text-pink-500');
-    } else {
-      icon.classList.remove('text-pink-500');
-      icon.classList.add('text-neutral-400');
-    }
-  });
 }
 
 function updateCartUIDraw() {
