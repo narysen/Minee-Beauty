@@ -465,7 +465,7 @@ function updateCartUIDraw() {
       cartTotal.innerHTML = `
         <div class="text-right space-y-0.5 text-xs">
           <div class="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md inline-block font-medium mb-1">
-            ✨ First Order Discount Applied (5%)
+            First Order Discount Applied (5%)
           </div>
           <p class="text-neutral-500 font-normal text-[11px]">Subtotal: $${rawCalculatedTotal.toFixed(2)}</p>
           <p class="text-neutral-800 font-bold">Est. Total: $${finalEstimatedTotal.toFixed(2)}</p>

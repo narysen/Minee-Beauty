@@ -11,8 +11,8 @@
 
   <header class="bg-white shadow-sm sticky top-0 z-50">
     <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="index.html" class="text-pink-500 hover:text-pink-600 font-bold text-lg flex items-center gap-2 transition-colors">
-        <i class="fa-solid fa-arrow-left"></i> Back to Home
+      <a id="back-link" href="cosmetic.html" class="text-pink-500 hover:text-pink-600 font-bold text-lg flex items-center gap-2 transition-colors">
+        <i class="fa-solid fa-arrow-left"></i> Back to Store
       </a>
       <span class="font-semibold text-neutral-500">Minee Beauty Details</span>
     </nav>
@@ -75,11 +75,26 @@
       <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
     </div>
   </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       const savedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
       const cartBtn = document.getElementById('cart-button');
       const cartPreview = document.getElementById('cart-preview');
+      const backLinkElement = document.getElementById('back-link');
+
+      // --- DYNAMIC BACK LINK BY CATEGORY ---
+      if (backLinkElement && savedProduct) {
+        const categoryName = String(savedProduct.type || savedProduct.category || "").toLowerCase();
+        
+        if (categoryName.includes('skincare') || categoryName.includes('skin')) {
+          backLinkElement.href = "skincare.html";
+          backLinkElement.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Skincare`;
+        } else {
+          backLinkElement.href = "cosmetic.html";
+          backLinkElement.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Cosmetic`;
+        }
+      }
 
       function showCartPreview() {
         if (!cartPreview) return;
@@ -173,7 +188,6 @@
         
         const newQty = (target.quantity || 1) + balance;
         
-        // Check if user is trying to increase past the allowed limit
         if (balance > 0 && target.limit_per_user && target.limit_per_user > 0) {
           if (newQty > target.limit_per_user) {
             alert(`Sorry, you can only buy a maximum of ${target.limit_per_user} units of this product.`);
@@ -286,7 +300,6 @@
             const currentQtyInCart = exactItem ? exactItem.quantity : 0;
             const limitPerUser = currentProduct.limit_per_user || 0;
 
-            // Enforce limit rule
             if (limitPerUser > 0 && (currentQtyInCart + 1) > limitPerUser) {
               alert(`Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`);
               return;
@@ -333,7 +346,7 @@
           <div class="text-center py-24 bg-white rounded-2xl border border-neutral-100 max-w-md mx-auto my-12 shadow-xs">
             <i class="fa-solid fa-circle-exclamation text-4xl text-neutral-300 mb-3"></i>
             <p class="text-neutral-500 font-medium">No skincare context profile found.</p>
-            <a href="index.html" class="mt-4 text-pink-500 hover:text-pink-600 font-semibold underline inline-block text-sm">Return to Shop</a>
+            <a href="cosmetic.html" class="mt-4 text-pink-500 hover:text-pink-600 font-semibold underline inline-block text-sm">Return to Shop</a>
           </div>`;
       }
     });
@@ -367,7 +380,6 @@
       relatedGrid.innerHTML = recommendations.map((prod, index) => {
         const title = prod.title || prod.name || "Skincare Item";
         
-        // Accurate stock checking from database row
         const stockQuantity = prod.stock !== undefined ? parseInt(prod.stock) : 1;
         const userLimit = prod.limit_per_user !== undefined ? parseInt(prod.limit_per_user) : 0;
         const isOutOfStock = stockQuantity <= 0;

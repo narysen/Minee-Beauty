@@ -12,7 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
         cartBtn.onclick = (e) => {
           e.stopPropagation();
           cartPreview.classList.toggle('hidden');
-          document.getElementById('wishlist-preview').classList.add('hidden'); // Close wishlist if open
+          const wishlistPreview = document.getElementById('wishlist-preview');
+          if (wishlistPreview) {
+            wishlistPreview.classList.add('hidden'); // Close wishlist if open
+          }
         };
       }
     });
@@ -28,8 +31,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // --- ADD ITEM TO CART LOGIC ---
+    // --- ADD ITEM TO CART LOGIC (WITH AUTH CHECK) ---
     window.addToCart = function(id, title, price) {
+      // Check if user is logged in (Modify 'minee_user' to match your login system key if needed)
+      const isLoggedIn = localStorage.getItem('minee_user') !== null;
+
+      if (!isLoggedIn) {
+        alert("Please log in or create an account to add items to your cart!");
+        // Optional: Uncomment below if you have a login page URL
+        // window.location.href = "login.html";
+        return;
+      }
+
       let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
       const existingItem = cart.find(item => String(item.id) === String(id));
 
@@ -108,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- ROUTE TO PRODUCT DETAIL VIEWS ---
     window.viewProductDetails = function(element) {
       const card = element.closest('[data-id]');
+      if (!card) return;
       const id = card.getAttribute('data-id');
       const type = card.getAttribute('data-type');
       const ingredients = card.getAttribute('data-ingredients');
@@ -130,9 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- WISHLIST MANAGEMENT INFRASTRUCTURE ---
     window.toggleWishlist = function() {
       const wishlistPreview = document.getElementById('wishlist-preview');
+      const cartPreview = document.getElementById('cart-preview');
       if (wishlistPreview) {
         wishlistPreview.classList.toggle('hidden');
-        document.getElementById('cart-preview').classList.add('hidden'); // Close cart if open
+        if (cartPreview) cartPreview.classList.add('hidden'); // Close cart if open
       }
     };
 
@@ -229,7 +244,9 @@ document.addEventListener("DOMContentLoaded", () => {
               imgDiv.classList.add('relative', 'opacity-60');
               imgDiv.insertAdjacentHTML('beforeend', `
                 <div class="absolute inset-0 flex items-center justify-center bg-neutral-900/20 rounded-xl">
-                  <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border tracking-wide uppercase">Sold Out</span>              `);
+                  <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border tracking-wide uppercase">Sold Out</span>              
+                </div>
+              `);
             }
             const actionBtn = card.querySelector('button[onclick^="addToCart"]');
             if (actionBtn) {

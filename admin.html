@@ -349,7 +349,10 @@
   </div>
 
   <script>
-    const API_URL = "http://localhost:3000/api";
+    // Dynamic API Base URL supporting local testing and Render production deployment
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000/api'
+      : 'https://minee-beauty-store.onrender.com/api';
 
     let currentProducts = [];
     let currentOrders = [];
@@ -620,9 +623,9 @@
               label: 'Cumulative Stream ($)',
               data: cumulativeData.length > 0 ? cumulativeData : [0],
               borderColor: '#10b981',
+              backgroundColor: 'transparent',
               borderWidth: 2,
               borderDash: [4, 4],
-              fill: false,
               tension: 0.3
             }
           ]
@@ -630,12 +633,10 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
-          },
+          plugins: { legend: { display: true, position: 'bottom' } },
           scales: {
-            y: { ticks: { font: { size: 10 } }, grid: { color: '#f1f5f9' } },
-            x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+            x: { grid: { display: false } }
           }
         }
       });
@@ -645,51 +646,49 @@
       const tbody = document.getElementById("inventory-table-body");
       if (!tbody) return;
 
-      const searchTerm = document.getElementById("inventory-search").value.toLowerCase();
-      const selectedCategory = document.getElementById("filter-category").value;
+      const searchTerm = document.getElementById("inventory-search") ? document.getElementById("inventory-search").value.toLowerCase() : "";
+      const selectedCategory = document.getElementById("filter-category") ? document.getElementById("filter-category").value : "ALL";
 
       const filtered = currentProducts.filter(p => {
-        const matchesSearch = p.title.toLowerCase().includes(searchTerm) || (p.brand && p.brand.toLowerCase().includes(searchTerm));
-        const matchesCat = (selectedCategory === "ALL" || p.category === selectedCategory);
-        return matchesSearch && matchesCat;
+        const titleMatch = (p.title || "").toLowerCase().includes(searchTerm) || (p.sku || "").toLowerCase().includes(searchTerm);
+        const categoryMatch = selectedCategory === "ALL" || (p.category || "").trim() === selectedCategory;
+        return titleMatch && categoryMatch;
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">No inventory items matched your criteria criteria.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No matching products found in database inventory.</td></tr>`;
         return;
       }
 
-      let html = "";
-      filtered.forEach((p, index) => {
-        const stockCount = parseInt(p.stock, 10) || 0;
-        let badgeHtml = stockCount > 5 
+      tbody.innerHTML = "";
+      filtered.forEach((p, idx) => {
+        const skuText = p.sku || `MB-${Math.floor(10 + Math.random() * 90)}`;
+        const stockCount = parseInt(p.stock !== undefined ? p.stock : (p.quantity || 10), 10);
+        const statusHtml = stockCount > 0 
           ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600">In Stock (${stockCount})</span>`
-          : stockCount > 0 
-          ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600">Low Stock (${stockCount})</span>`
-          : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600">Sold Out</span>`;
+          : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600">Out of Stock</span>`;
 
-        html += `
+        tbody.innerHTML += `
           <tr class="hover:bg-slate-50/80 transition-colors">
             <td class="p-4 pl-6 flex items-center gap-3">
-              <img src="${p.image_url}" alt="${p.title}" class="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-xs" onerror="this.src='http://localhost:3000/image/logo copy.png'">
+              <img src="${p.image || 'https://placehold.co/100x100?text=Item'}" alt="" class="w-10 h-10 rounded-xl object-cover border border-slate-100 bg-slate-50">
               <div>
-                <p class="font-bold text-slate-800">${p.title}</p>
-                <p class="text-[10px] text-slate-400 font-mono">ID: ${p.id} | SKU: ${p.sku || 'N/A'}</p>
+                <p class="font-bold text-slate-800">${p.title || 'Untitled Item'}</p>
+                <p class="text-[10px] font-mono text-slate-400">SKU: ${skuText}</p>
               </div>
             </td>
-            <td class="p-4"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-bold">${p.category || 'General'}</span></td>
-            <td class="p-4 text-center font-mono font-bold text-slate-700">$${parseFloat(p.price).toFixed(2)}</td>
+            <td class="p-4"><span class="px-2.5 py-1 bg-slate-100 rounded-lg text-slate-600 font-medium">${p.category || 'General'}</span></td>
+            <td class="p-4 text-center font-mono font-bold text-slate-800">$${parseFloat(p.price || 0).toFixed(2)}</td>
             <td class="p-4 text-center font-mono">${stockCount}</td>
-            <td class="p-4 text-center">${badgeHtml}</td>
+            <td class="p-4 text-center">${statusHtml}</td>
             <td class="p-4 pr-6 text-right space-x-1">
-              <button onclick="openPromotionModal(${p.id})" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 p-2 rounded-lg transition-colors cursor-pointer" title="Configure Promotion"><i class="fa-solid fa-tags"></i></button>
-              <button onclick="openEditMode(${p.id})" class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg transition-colors cursor-pointer" title="Edit Product"><i class="fa-solid fa-pen"></i></button>
-              <button onclick="deleteProduct(${p.id})" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg transition-colors cursor-pointer" title="Delete Product"><i class="fa-solid fa-trash"></i></button>
+              <button onclick="openPromotionModal(${p.id})" class="p-2 text-slate-400 hover:text-amber-500 bg-slate-50 hover:bg-amber-50 rounded-lg transition-all cursor-pointer" title="Configure Promotion"><i class="fa-solid fa-tags"></i></button>
+              <button onclick="openEditMode(${p.id})" class="p-2 text-slate-400 hover:text-[#0099ff] bg-slate-50 hover:bg-blue-50 rounded-lg transition-all cursor-pointer" title="Edit Product"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="deleteProductRow(${p.id})" class="p-2 text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 rounded-lg transition-all cursor-pointer" title="Delete Product"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         `;
       });
-      tbody.innerHTML = html;
     }
 
     function renderOrderHistoryLogs() {
@@ -697,44 +696,36 @@
       if (!tbody) return;
 
       if (currentOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">No order transaction logs registered yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No customer orders recorded in database yet.</td></tr>`;
         return;
       }
 
-      let html = "";
+      tbody.innerHTML = "";
       currentOrders.forEach(order => {
-        let itemsListStr = order.items.map(i => `${i.title} (x${i.quantity})`).join(', ');
         let orderTotal = 0;
-        order.items.forEach(i => {
+        let itemsHtml = order.items.map(i => {
           orderTotal += (parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10));
-        });
+          return `<span class="inline-block bg-slate-100 px-2 py-0.5 rounded mr-1 mb-1 text-[11px]">${i.title} (x${i.quantity})</span>`;
+        }).join('');
 
-        html += `
+        tbody.innerHTML += `
           <tr class="hover:bg-slate-50/80 transition-colors">
-            <td class="p-4 pl-6 font-mono font-bold text-slate-700">#${order.id}</td>
-            <td class="p-4">
-              <p class="font-bold text-slate-800">${order.customerName}</p>
-              <p class="text-[10px] text-slate-400 font-mono">${order.customerPhone}</p>
-            </td>
-            <td class="p-4">
-              <p class="text-slate-700">${order.date}</p>
-              <p class="text-[10px] text-slate-400 font-mono">${order.time}</p>
-            </td>
-            <td class="p-4 max-w-xs truncate text-slate-500" title="${itemsListStr}">${itemsListStr}</td>
-            <td class="p-4 text-center"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-bold">${order.method}</span></td>
-            <td class="p-4 pr-6 text-right font-mono font-bold text-emerald-600">$${orderTotal.toFixed(2)}</td>
+            <td class="p-4 pl-6 font-mono font-bold text-slate-700">#INV-${order.id}</td>
+            <td class="p-4 font-bold text-slate-800">${order.customerName} <br><span class="text-[10px] font-mono font-normal text-slate-400">${order.customerPhone}</span></td>
+            <td class="p-4 text-slate-500 text-[11px]">${order.date} <span class="font-mono">${order.time}</span></td>
+            <td class="p-4 max-w-xs">${itemsHtml}</td>
+            <td class="p-4 text-center"><span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[10px] font-bold uppercase">${order.method}</span></td>
+            <td class="p-4 pr-6 text-right font-mono font-black text-slate-800">$${orderTotal.toFixed(2)}</td>
           </tr>
         `;
       });
-      tbody.innerHTML = html;
     }
 
     function openCreateMode() {
+      document.getElementById("form-title").innerText = "Launch New Product Record";
       document.getElementById("edit-index").value = "-1";
-      document.getElementById("form-title").innerHTML = `<i class="fa-solid fa-plus text-[#0099ff]"></i> Launch New Product Item`;
       document.getElementById("product-crud-form").reset();
       document.getElementById("prod-existing-img").value = "";
-      extractAndBuildCategories();
       document.getElementById("crud-modal").classList.remove("hidden");
     }
 
@@ -742,17 +733,13 @@
       const product = currentProducts.find(p => p.id === id);
       if (!product) return;
 
+      document.getElementById("form-title").innerText = "Modify Product Record";
       document.getElementById("edit-index").value = product.id;
-      document.getElementById("form-title").innerHTML = `<i class="fa-solid fa-pen text-[#0099ff]"></i> Edit Product Item (ID: ${product.id})`;
       document.getElementById("prod-name").value = product.title || "";
-      document.getElementById("prod-price").value = product.price || "";
-      document.getElementById("prod-stock").value = product.stock || 0;
-      
-      extractAndBuildCategories();
+      document.getElementById("prod-price").value = product.price || 0;
+      document.getElementById("prod-stock").value = product.stock !== undefined ? product.stock : 10;
       document.getElementById("prod-category").value = product.category || customCategories[0];
-      document.getElementById("prod-existing-img").value = product.image_url || "";
-      document.getElementById("prod-img-file").value = "";
-
+      document.getElementById("prod-existing-img").value = product.image || "";
       document.getElementById("crud-modal").classList.remove("hidden");
     }
 
@@ -760,79 +747,17 @@
       document.getElementById("crud-modal").classList.add("hidden");
     }
 
-    async function handleFormSubmit(event) {
-      event.preventDefault();
-      const editId = document.getElementById("edit-index").value;
-      const isEditing = editId !== "-1";
-
-      const formData = new FormData();
-      formData.append("title", document.getElementById("prod-name").value.trim());
-      formData.append("price", document.getElementById("prod-price").value);
-      formData.append("stock", document.getElementById("prod-stock").value);
-      formData.append("category", document.getElementById("prod-category").value);
-      formData.append("brand", "Minee Beauty Core");
-      formData.append("description", document.getElementById("prod-name").value + " standard formula.");
-
-      const fileInput = document.getElementById("prod-img-file");
-      if (fileInput.files.length > 0) {
-        formData.append("image_file", fileInput.files[0]);
-      } else {
-        formData.append("image_url", document.getElementById("prod-existing-img").value);
-      }
-
-      const endpoint = isEditing ? `${API_URL}/products/${editId}` : `${API_URL}/products`;
-      const method = isEditing ? "PUT" : "POST";
-
-      try {
-        const response = await fetch(endpoint, {
-          method: method,
-          body: formData
-        });
-
-        const result = await response.json();
-        if (response.ok && result.success) {
-          closeCrudModal();
-          await refreshAdminDataMatrix();
-          switchTab('tab-inventory');
-        } else {
-          alert("Error saving product: " + (result.message || result.error || "Unknown error"));
-        }
-      } catch (err) {
-        console.error("Network or execution error:", err);
-        alert("Failed to connect to the backend server.");
-      }
-    }
-
-    async function deleteProduct(id) {
-      if (!confirm("Are you sure you want to permanently delete this product?")) return;
-
-      try {
-        const response = await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
-        const result = await response.json();
-        if (response.ok && result.success) {
-          await refreshAdminDataMatrix();
-        } else {
-          alert("Failed to delete product: " + (result.message || result.error));
-        }
-      } catch (err) {
-        console.error("Error deleting product:", err);
-        alert("Server communication failure.");
-      }
-    }
-
     function openPromotionModal(id) {
       const product = currentProducts.find(p => p.id === id);
       if (!product) return;
 
       document.getElementById("promo-prod-id").value = product.id;
-      document.getElementById("promo-form-title").innerHTML = `<i class="fa-solid fa-tags text-[#0099ff]"></i> Configure Promotion: ${product.title}`;
-      document.getElementById("promo-base-info").innerText = `Original Base Price: $${parseFloat(product.price).toFixed(2)}`;
+      document.getElementById("promo-base-info").innerText = `Original Base Price: $${parseFloat(product.price || 0).toFixed(2)} — ${product.title || ''}`;
+      document.getElementById("promo-price").value = product.sale_price !== undefined && product.sale_price !== null ? product.sale_price : "";
+      document.getElementById("promo-start").value = product.sale_start ? product.sale_start.substring(0, 16) : "";
+      document.getElementById("promo-end").value = product.sale_end ? product.sale_end.substring(0, 16) : "";
+      document.getElementById("promo-limit").value = product.sale_limit !== undefined ? product.sale_limit : 0;
       
-      document.getElementById("promo-price").value = product.discount_price !== null ? product.discount_price : "";
-      document.getElementById("promo-start").value = product.discount_start ? product.discount_start.replace(' ', 'T').substring(0, 16) : "";
-      document.getElementById("promo-end").value = product.discount_end ? product.discount_end.replace(' ', 'T').substring(0, 16) : "";
-      document.getElementById("promo-limit").value = product.limit_per_user !== undefined ? product.limit_per_user : 0;
-
       document.getElementById("promotion-modal").classList.remove("hidden");
     }
 
@@ -842,65 +767,129 @@
 
     async function handlePromotionSubmit(event) {
       event.preventDefault();
-      const productId = document.getElementById("promo-prod-id").value;
-      const product = currentProducts.find(p => p.id === Number(productId));
+      const id = document.getElementById("promo-prod-id").value;
+      const salePrice = parseFloat(document.getElementById("promo-price").value) || 0;
+      const saleStart = document.getElementById("promo-start").value || null;
+      const saleEnd = document.getElementById("promo-end").value || null;
+      const saleLimit = parseInt(document.getElementById("promo-limit").value) || 0;
+
+      const product = currentProducts.find(p => p.id == id);
       if (!product) return;
 
-      const discountPrice = document.getElementById("promo-price").value;
-      const discountStart = document.getElementById("promo-start").value;
-      const discountEnd = document.getElementById("promo-end").value;
-      const limitPerUser = document.getElementById("promo-limit").value;
-
-      // Preserve existing details during update
-      const payload = {
+      const promoPayload = {
         title: product.title,
         price: product.price,
-        stock: product.stock,
+        stock: product.stock !== undefined ? product.stock : 10,
         category: product.category,
-        brand: product.brand,
-        description: product.description,
-        ingredients: product.ingredients,
-        image_url: product.image_url,
-        discount_price: discountPrice !== "" ? discountPrice : null,
-        discount_start: discountStart ? discountStart.replace('T', ' ') + ':00' : null,
-        discount_end: discountEnd ? discountEnd.replace('T', ' ') + ':00' : null,
-        limit_per_user: limitPerUser !== "" ? limitPerUser : 0
+        image: product.image,
+        sale_price: salePrice > 0 ? salePrice : null,
+        sale_start: saleStart,
+        sale_end: saleEnd,
+        sale_limit: saleLimit
       };
 
       try {
-        const response = await fetch(`${API_URL}/products/${productId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        const response = await fetch(`${API_URL}/products/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(promoPayload)
         });
 
-        const result = await response.json();
-        if (response.ok && result.success) {
+        if (response.ok) {
           closePromotionModal();
           await refreshAdminDataMatrix();
         } else {
-          alert("Failed to apply promotion: " + (result.message || result.error));
+          alert("Failed to apply promotion settings to database.");
         }
       } catch (err) {
-        console.error("Promotion network error:", err);
-        alert("Failed to communicate with the server.");
+        console.error("Error submitting promotion:", err);
+        alert("Connection error while updating promotion.");
+      }
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const editId = parseInt(document.getElementById("edit-index").value, 10);
+      const title = document.getElementById("prod-name").value.trim();
+      const price = parseFloat(document.getElementById("prod-price").value);
+      const stock = parseInt(document.getElementById("prod-stock").value, 10);
+      const category = document.getElementById("prod-category").value;
+      const fileInput = document.getElementById("prod-img-file");
+      
+      let imageUrl = document.getElementById("prod-existing-img").value || "https://placehold.co/300x300?text=Minee+Beauty";
+
+      if (fileInput.files && fileInput.files[0]) {
+        imageUrl = await convertFileToDataUri(fileInput.files[0]);
+      }
+
+      const productPayload = {
+        title,
+        price,
+        stock,
+        category,
+        image: imageUrl
+      };
+
+      try {
+        let response;
+        if (editId === -1) {
+          response = await fetch(`${API_URL}/products`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productPayload)
+          });
+        } else {
+          response = await fetch(`${API_URL}/products/${editId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productPayload)
+          });
+        }
+
+        if (response.ok) {
+          closeCrudModal();
+          await refreshAdminDataMatrix();
+        } else {
+          alert("Failed to save product to database server.");
+        }
+      } catch (err) {
+        console.error("Error submitting product form:", err);
+        alert("Connection error while saving product.");
+      }
+    }
+
+    function convertFileToDataUri(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function deleteProductRow(id) {
+      if (!confirm("Are you sure you want to delete this product from the database?")) return;
+
+      try {
+        const response = await fetch(`${API_URL}/products/${id}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          await refreshAdminDataMatrix();
+        } else {
+          alert("Failed to delete product from database.");
+        }
+      } catch (err) {
+        console.error("Error deleting product:", err);
+        alert("Connection error while deleting product.");
       }
     }
 
     async function clearAllOrdersTerminal() {
-      if (!confirm("Are you sure you want to flush all order logs? This action cannot be undone.")) return;
-      try {
-        const response = await fetch(`${API_URL}/orders`, { method: "DELETE" });
-        const result = await response.json();
-        if (response.ok && result.success) {
-          await refreshAdminDataMatrix();
-          alert("All orders flushed successfully!");
-        } else {
-          alert("Failed to flush orders.");
-        }
-      } catch (err) {
-        console.error("Flush orders error:", err);
-      }
+      if (!confirm("Are you sure you want to flush all order logs?")) return;
+      currentOrders = [];
+      renderOrderHistoryLogs();
+      renderMetricsSummary();
     }
   </script>
 </body>

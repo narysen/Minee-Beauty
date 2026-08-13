@@ -131,7 +131,6 @@
             <p class="text-sm font-medium text-neutral-700 min-h-[40px] mb-2 group-hover:text-pink-500 transition-colors">Dasique Shadow Palette - Berry Smoothie</p>
             <div class="text-lg font-bold text-pink-600 mb-3">$10.50</div>
           </div>
-          <!-- Note: Preserved your exact 13.00 click parameter from original HTML markup -->
           <button onclick="addToCart(51, 'Dasique Shadow Palette - Berry Smoothie', 13.00)" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-colors cursor-pointer mt-auto">Add to Cart</button>
         </div>
 
@@ -150,22 +149,21 @@
     </section>
   </main>
 
-<!-- NEW STRUCTURAL CODE -->
-<div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
-  <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
-    <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
-  </button>
-  
-  <!-- Changed to normal hidden. Now controlled purely by your JavaScript -->
-  <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
-    <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
-      <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
-    </h3>
-    <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
-    <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
-    <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+  <!-- Cart Drawer/Preview Wrapper -->
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
+      <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+    </button>
+    <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
+      <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
+        <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
+      </h3>
+      <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
+      <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
+      <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
+    </div>
   </div>
-</div>
+
   <!-- Unified Footer Layout -->
   <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
@@ -186,7 +184,6 @@
       <div>
         <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
         <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
-        <!-- Fixed the broken "email:" tag to "mailto:" down here -->
         <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
         <button class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer">Unlock 5% off</button>
       </div>
@@ -199,5 +196,21 @@
   <!-- JS Controller Modules -->
   <script src="product.js"></script>
   <script src="outstock.js"></script>
+  <script>
+    // Mobile Responsive Navbar Toggle Button Action (Using inline display control to prevent Tailwind specificity conflicts)
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    menuToggle.addEventListener('click', () => {
+      if (navMenu.style.display === 'block') {
+        navMenu.style.display = '';
+        menuIcon.className = 'fa-solid fa-bars';
+      } else {
+        navMenu.style.display = 'block';
+        menuIcon.className = 'fa-solid fa-xmark';
+      }
+    });
+  </script>
 </body>
 </html>

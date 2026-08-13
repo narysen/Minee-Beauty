@@ -97,7 +97,6 @@
   <!-- INFINITE SMOOTH RUNNING MARQUEE NOTIFICATION BANNER -->
   <div class="bg-neutral-900 text-pink-300 py-2 overflow-hidden border-y border-pink-500/20 shadow-inner">
     <div class="animate-marquee whitespace-nowrap text-xs md:text-sm font-semibold tracking-widest uppercase gap-16">
-      <!-- Original text group string segments looped for continuous render -->
       <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
       <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
       <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
@@ -109,7 +108,7 @@
   <main class="max-w-7xl mx-auto px-4 py-12 w-full space-y-16">
 
     <!-- TOP SELLING PRODUCT BRANDS GALLERY CATEGORY -->
-    <section>
+    <section id="products">
       <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8 flex items-center justify-center gap-2">
         Top Selling in Store ⋆🐾°
       </h2>
@@ -239,14 +238,20 @@
   <!-- JS Controller Modules -->
   <script src="product.js"></script>
   <script>
-    // 1. Mobile Responsive Navbar Toggle Button Action
+    // 1. Mobile Responsive Navbar Toggle Button Action (Fixed using style display block/none)
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     const menuIcon = document.getElementById('menu-icon');
 
     menuToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('hidden');
-      menuIcon.className = navMenu.classList.contains('hidden') ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+      // Toggle directly via inline display styles to bypass Tailwind class specificity clashes
+      if (navMenu.style.display === 'block') {
+        navMenu.style.display = '';
+        menuIcon.className = 'fa-solid fa-bars';
+      } else {
+        navMenu.style.display = 'block';
+        menuIcon.className = 'fa-solid fa-xmark';
+      }
     });
 
     // 2. Built-in Automated Header Carousel Rotator Logic
@@ -254,23 +259,22 @@
     let currentSlideIndex = 0;
 
     function showNextSlide() {
-      // Fade out current slide layout configuration profiles
       slides[currentSlideIndex].classList.replace('opacity-100', 'opacity-0');
       slides[currentSlideIndex].classList.replace('z-10', 'z-0');
       
-      // Compute incremental pointer position index offset
       currentSlideIndex = (currentSlideIndex + 1) % slides.length;
       
-      // Fade into next view frame target elements smoothly
       slides[currentSlideIndex].classList.replace('opacity-0', 'opacity-100');
       slides[currentSlideIndex].classList.replace('z-0', 'z-10');
     }
-    // Automatically advance image frame sets every 4.5 seconds securely
     setInterval(showNextSlide, 4500);
 
-    // 3. Fallback Route Action Redirector
+    // 3. Fixed Order Now Scroll Action
     function goShopping() {
-      window.location.href = '#products';
+      const productSection = document.getElementById('products');
+      if (productSection) {
+        productSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   </script>
 </body>

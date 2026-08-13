@@ -1,11 +1,8 @@
-// FIXED: Shifted port to 3000 to cleanly match your Express Server setup
 const API_URL = "http://localhost:3000/api";
 
-// FIXED: Maps to "minee_cart" to match the local storage tracker used in product.js
 let checkoutCart = JSON.parse(localStorage.getItem("minee_cart")) || [];
 let selectedMethod = "Cash on Delivery";
 
-// --- RENDER CHECKOUT PAGE ---
 async function renderCheckoutPage() {
   const cartItemsContainer = document.getElementById("checkout-cart-items");
   const cartTotalContainer = document.getElementById("checkout-cart-total");
@@ -19,10 +16,8 @@ async function renderCheckoutPage() {
     return;
   }
 
-  // Use an array to assemble strings cleanly instead of spamming += on innerHTML
   let itemsHTML = "";
   
-  // Try to load fresh database rows to match accurate non-discount/discount properties
   let databaseProductsList = [];
   try {
     const res = await fetch(`${API_URL}/products`);
@@ -32,7 +27,6 @@ async function renderCheckoutPage() {
   }
 
   checkoutCart.forEach(item => {
-    // Look up product row properties in the database to see if it has an original vs discount price setup
     const dbMatch = databaseProductsList.find(p => String(p.id) === String(item.id));
     
     let originalPrice = Number(item.price);
@@ -47,7 +41,6 @@ async function renderCheckoutPage() {
         originalPrice = dbPrice;
         finalItemPrice = dbDiscount;
         hasItemDiscount = true;
-        // Make sure our running session calculations reflect the correct live database pricing layout row
         item.price = dbDiscount; 
       }
     }
@@ -55,7 +48,6 @@ async function renderCheckoutPage() {
     const rowTotal = finalItemPrice * item.quantity;
     total += rowTotal;
 
-    // Build responsive text nodes separating original vs discounted columns beautifully
     itemsHTML += `
       <div class="flex items-center py-3 px-1 border-b border-neutral-100/60 last:border-0">
         <div class="flex-[2_2_0%] font-medium text-xs truncate max-w-[180px]">
@@ -64,7 +56,6 @@ async function renderCheckoutPage() {
         </div>
         <div class="flex-1 text-center text-neutral-500 text-xs">x${item.quantity}</div>
         
-        <!-- 🔥 SHOW ORIGINAL VS DISCOUNTED PRICES SIDE BY SIDE -->
         <div class="flex-[1.5_1.5_0%] text-right text-xs">
           ${hasItemDiscount ? `
             <span class="text-neutral-400 line-through block text-[10px]">$${originalPrice.toFixed(2)}</span>
@@ -83,21 +74,18 @@ async function renderCheckoutPage() {
   const user = JSON.parse(localStorage.getItem("currentUser"));
   const userQueryKey = user && user.name ? user.name : "Guest";
 
-  // DEFAULT TO TRUE: If they are a new guest or server is loading, give them the discount benefit
   let isFirstOrder = true;
 
-  // Ask the Express backend if this user has ordered anything before to calculate discount
   if (userQueryKey !== "Guest") {
     try {
       const response = await fetch(`${API_URL}/orders/${encodeURIComponent(userQueryKey)}`);
       if (response.ok) {
         const orders = await response.json();
-        // If the database returns an array with 1 or more items, it is NOT their first order anymore
         isFirstOrder = (Array.isArray(orders) && orders.length === 0);
       }
     } catch (err) {
       console.warn("Backend connection missed. Defaulting to true for testing first order layout.");
-      isFirstOrder = true; // ✅ FIXED: Fallback to true so you can see it work locally!
+      isFirstOrder = true; 
     }
   }
 
@@ -221,7 +209,7 @@ window.finishAssumedOrder = async function() {
     
   } catch (err) {
     console.error("Express registration sequence error details:", err);
-    alert("⚠️ Checkout saved locally, but database insertion failed. Check if node server is active.");
+    alert(" Checkout saved locally, but database insertion failed. Check if node server is active.");
   }
 
   // SHOWS HISTORY ON PROFILE INFO: Saves order records with exact time
