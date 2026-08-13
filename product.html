@@ -82,11 +82,10 @@
       const cartPreview = document.getElementById('cart-preview');
       const backLinkElement = document.getElementById('back-link');
 
-      // --- DYNAMIC API BASE URL CONFIGURATION ---
-      const API_BASE = window.location.hostname === "localhost"
-        ? "http://localhost:3000/api"
-        : "/api";
-
+     // Change this block in your product.html:
+const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000/api"
+  : "/api";
       // --- DYNAMIC BACK LINK BY CATEGORY ---
       if (backLinkElement && savedProduct) {
         const categoryName = String(savedProduct.type || savedProduct.category || "").toLowerCase();

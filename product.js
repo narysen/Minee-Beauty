@@ -151,6 +151,14 @@ function hidePanel(panelElement) {
 }
 
 function addProductToCart(productId) {
+  const currentUser = localStorage.getItem('currentUser') || localStorage.getItem('minee_user') || localStorage.getItem('isRegistered');
+  
+  if (!currentUser) {
+    alert("Please register or log in first before adding items to your cart!");
+    window.location.href = "profileinfo.html";
+    return;
+  }
+
   const lookupId = String(productId);
   const now = new Date();
 
