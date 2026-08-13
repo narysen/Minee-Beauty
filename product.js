@@ -1,14 +1,15 @@
 let productsDatabase = [];
 let cart = [];
 
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
-    : 'https://minee-beauty-store.onrender.com';
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : 'https://minee-beauty-store.onrender.com/api';
 
 // Example usage:
-fetch(`${API_URL}/api/products`)
+fetch(`${API_URL}/products`)
     .then(res => res.json())
     .then(data => console.log(data));
+
 // Fetch live items directly out of your local or production database instance 
 async function fetchProductsFromDatabase() {
  
@@ -37,7 +38,7 @@ async function fetchProductsFromDatabase() {
     let isFirstOrder = true;
 
     try {
-      const orderCheck = await fetch(`${API_BASE}/orders/${encodeURIComponent(userQueryKey)}`);
+      const orderCheck = await fetch(`${window.API_URL}/orders/${encodeURIComponent(userQueryKey)}`);
       const orders = await orderCheck.json();
       isFirstOrder = (Array.isArray(orders) && orders.length === 0);
     } catch (e) {
@@ -398,7 +399,7 @@ async function fetchFilteredProducts(searchKeyword, categorySelection) {
       category: categorySelection
     });
 
-    const response = await fetch(`${API_BASE}/products?${params.toString()}`);
+    const response = await fetch(`${window.API_URL}/products?${params.toString()}`);
     if (!response.ok) throw new Error('Database server sync was unsuccessful');
     
     productsDatabase = await response.json();
