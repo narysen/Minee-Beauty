@@ -59,14 +59,10 @@ db.getConnection((err, connection) => {
 });
 
 // ==========================================
-// AUTO-INITIALIZE TABLES & SEED DATA FOR RENDER
+// AUTO-INITIALIZE TABLES FOR RENDER / PRODUCTION
 // ==========================================
 const initDatabase = () => {
     const queries = [
-        `CREATE TABLE IF NOT EXISTS categories (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL UNIQUE
-        );`,
         `CREATE TABLE IF NOT EXISTS products (
             id INT AUTO_INCREMENT PRIMARY KEY,
             sku VARCHAR(50) DEFAULT NULL,
@@ -108,19 +104,15 @@ const initDatabase = () => {
             expense_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`,
-        `INSERT IGNORE INTO categories (name) VALUES 
-        ('Sunscreen'), ('Serum'), ('Cream'), ('Sheet Mask'), ('Wash Off Mask'), 
-        ('Sun Stick'), ('Eye Cream'), ('Clay Mask'), ('Ampoule'), ('Foam Cleanser'), 
-        ('Sleeping Pack'), ('Toner'), ('Lip Makeup'), ('Eye Makeup');`,
-        `INSERT IGNORE INTO products (id, sku, title, brand, category, price, discount_price, stock, image_url, description, ingredients) VALUES 
-        (1, 'MB-1', 'Mary&May Vegan Primer Glow Sun Cream SPF50+ PA++++ 50ml', 'Mary&May', 'Sunscreen', 8.50, 1.50, 9, './image/mary&maysunscreen/sun2.webp', 'A gorgeous glowing vegan sun primer...', 'Water, Dibutyl Adipate...'),
-        (2, 'MB-2', 'Mary&May Centella Asiatica Serum', 'Mary&May', 'Serum', 8.30, NULL, 0, './image/mary&mayserum/serum2 copy.jpeg', 'Infused with pure Centella Asiatica...', 'Centella Asiatica Extract (95%)...'),
-        (3, 'MB-3', 'Mary&May Sensitive Shooting Gel Cream', 'Mary&May', 'Cream', 9.50, 7.50, 49, './image/mary&maycream/shooting.webp', 'A deeply calming gel-cream formula...', 'Houttuynia Cordata Extract...')`
+        `CREATE TABLE IF NOT EXISTS categories (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL UNIQUE
+        );`
     ];
 
     queries.forEach(query => {
         db.query(query, err => {
-            if (err) console.error("Database seed error:", err.message);
+            if (err) console.error("Database auto-init error:", err.message);
         });
     });
 };
