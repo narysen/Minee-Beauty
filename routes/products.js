@@ -6,7 +6,7 @@ const fs = require('fs');
 
 module.exports = function(db) {
 
-    // Ensure uploads folder exists
+    // Ensure uploads folder exists inside public/image/uploads
     const uploadDir = path.join(__dirname, '../public/image/uploads');
     if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
@@ -47,21 +47,23 @@ module.exports = function(db) {
                 let finalImageUrl = product.image_url;
 
                 if (finalImageUrl) {
-                    if (finalImageUrl.startsWith('./image/uploads/')) {
-                        const cleanPath = finalImageUrl.substring(2);
-                        finalImageUrl = `http://localhost:3000/${cleanPath}`;
-                    } else if (finalImageUrl.startsWith('image/uploads/')) {
-                        finalImageUrl = `http://localhost:3000/${finalImageUrl}`;
-                    } else if (finalImageUrl.startsWith('./')) {
-                        finalImageUrl = `http://localhost:3000/${finalImageUrl.substring(2)}`;
+                    if (finalImageUrl.startsWith('./')) {
+                        finalImageUrl = finalImageUrl.substring(2);
+                    } else if (finalImageUrl.startsWith('/')) {
+                        finalImageUrl = finalImageUrl.substring(1);
                     }
                 } else {
-                    finalImageUrl = 'http://localhost:3000/image/logo copy.png';
+                    finalImageUrl = 'image/logo copy.png';
                 }
+
+                // Force absolute URL to ensure Live Server (5502) or any client grabs it from Express (3000)
+                const absoluteImageUrl = finalImageUrl.startsWith('http') 
+                    ? finalImageUrl 
+                    : `http://localhost:3000/${finalImageUrl.startsWith('/') ? finalImageUrl.substring(1) : finalImageUrl}`;
 
                 return {
                     id: product.id,
-                    sku: product.sku,
+                    sku: product.sku && product.sku.trim() !== '' && product.sku !== 'N/A' ? product.sku : `MB-${product.id}`,
                     title: product.title,
                     brand: product.brand,
                     category: product.category,
@@ -71,7 +73,7 @@ module.exports = function(db) {
                     discount_end: product.discount_end ? product.discount_end.toISOString().slice(0, 19).replace('T', ' ') : null,
                     limit_per_user: product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : 0,
                     stock: product.stock !== undefined ? parseInt(product.stock) : 0,
-                    image_url: finalImageUrl,
+                    image_url: absoluteImageUrl,
                     description: product.description,
                     ingredients: product.ingredients
                 };
@@ -80,16 +82,17 @@ module.exports = function(db) {
             res.json(formattedProducts);
         });
     });
+
     router.post('/products', upload.single('image_file'), (req, res) => {
-        const { title, price, stock, category, ingredients, brand, description, discount_price, discount_start, discount_end, limit_per_user } = req.body;
+        const { title, price, stock, category, ingredients, brand, description, discount_price, discount_start, discount_end, limit_per_user, sku } = req.body;
 
         if (!title || !price) {
             return res.status(400).json({ success: false, message: 'Title and price are required.' });
         }
 
-        let imageUrl = './image/logo copy.png';
+        let imageUrl = 'image/logo copy.png';
         if (req.file) {
-            imageUrl = `./image/uploads/${req.file.filename}`;
+            imageUrl = `image/uploads/${req.file.filename}`;
         }
 
         const lastIdQuery = 'SELECT id FROM products ORDER BY id DESC LIMIT 1';
@@ -99,7 +102,7 @@ module.exports = function(db) {
             }
 
             const nextId = (lastProduct && lastProduct.length > 0) ? lastProduct[0].id + 1 : 1;
-            const generatedSku = `MB-${nextId}`;
+            const generatedSku = (sku && sku.trim() !== '' && sku !== 'N/A') ? sku.trim() : `MB-${nextId}`;
 
             const insertQuery = `
                 INSERT INTO products (sku, title, brand, category, price, discount_price, stock, image_url, description, ingredients, discount_start, discount_end, limit_per_user)
@@ -129,20 +132,33 @@ module.exports = function(db) {
 
     router.put('/products/:id', upload.single('image_file'), (req, res) => {
         const productId = req.params.id;
-        const { title, price, stock, category, ingredients, brand, description, image_url, image, img, discount_price, discount_start, discount_end, limit_per_user } = req.body;
+        const { title, price, stock, category, ingredients, brand, description, image_url, image, img, discount_price, discount_start, discount_end, limit_per_user, sku } = req.body;
 
         if (!title || !price) {
             return res.status(400).json({ success: false, message: 'Title and price are required.' });
         }
 
-        let finalImageUrl = image_url || image || img || './image/logo copy.png';
-        if (req.file) {
-            finalImageUrl = `./image/uploads/${req.file.filename}`;
+        let rawImageUrl = image_url || image || img || 'image/logo copy.png';
+        // Strip any absolute domain prefix if present before updating database cleanly
+        if (rawImageUrl.includes('localhost:3000/')) {
+            rawImageUrl = rawImageUrl.split('localhost:3000/')[1];
         }
+        if (rawImageUrl.startsWith('./')) {
+            rawImageUrl = rawImageUrl.substring(2);
+        } else if (rawImageUrl.startsWith('/')) {
+            rawImageUrl = rawImageUrl.substring(1);
+        }
+
+        let finalImageUrl = rawImageUrl;
+        if (req.file) {
+            finalImageUrl = `image/uploads/${req.file.filename}`;
+        }
+
+        const validSku = (sku && sku.trim() !== '' && sku !== 'N/A') ? sku.trim() : `MB-${productId}`;
 
         const updateQuery = `
             UPDATE products 
-            SET title = ?, brand = ?, category = ?, price = ?, discount_price = ?, 
+            SET sku = ?, title = ?, brand = ?, category = ?, price = ?, discount_price = ?, 
                 stock = ?, image_url = ?, description = ?, ingredients = ?, 
                 discount_start = ?, discount_end = ?, limit_per_user = ? 
             WHERE id = ?
@@ -153,7 +169,7 @@ module.exports = function(db) {
         const parsedDiscountEnd = (discount_end && discount_end.trim() !== "") ? discount_end : null;
 
         const values = [
-            title.trim(), brand ? brand.trim() : 'Minee Beauty Core', category ? category.trim() : null,
+            validSku, title.trim(), brand ? brand.trim() : 'Minee Beauty Core', category ? category.trim() : null,
             parseFloat(price) || 0, parsedDiscountPrice, parseInt(stock, 10) || 0, finalImageUrl,
             description ? description.trim() : `${title} formula.`, ingredients && ingredients.trim() !== "" ? ingredients.trim() : null,
             parsedDiscountStart, parsedDiscountEnd, parseInt(limit_per_user, 10) || 0, productId

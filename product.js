@@ -1,18 +1,12 @@
-// ==========================================
-// 1. DYNAMIC ASYNC DATABASE CONTAINER & CONFIG
-// ==========================================
 let productsDatabase = [];
 let cart = [];
 // Fetch live items directly out of your local MySQL server instance 
 async function fetchProductsFromDatabase() {
-  // ==========================================================
-  // MODIFIED: BLOCKS AUTOMATIC INITIAL CATALOG LOAD ON BOOTUP
-  // ==========================================================
+ 
   const productContainer = document.getElementById('product-container'); 
   const emptyState = document.getElementById('empty-search-state');
   
   if (productContainer) {
-    // Inject the real-world empty search placeholder message instead of the products grid
     productContainer.innerHTML = `
       <div id="search-placeholder-view" class="col-span-full text-center py-20 flex flex-col items-center justify-center">
         <div class="w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center mb-4 text-pink-500 text-2xl">
@@ -28,7 +22,6 @@ async function fetchProductsFromDatabase() {
     emptyState.classList.add('hidden');
   }
 
-  // Run minor structural UI checks so the rest of your app elements stay running smoothly
   try {
     const user = JSON.parse(localStorage.getItem("currentUser"));
     const userQueryKey = user && user.name ? user.name : "Guest";
@@ -51,279 +44,7 @@ async function fetchProductsFromDatabase() {
     if (typeof syncWishlistUI === 'function') syncWishlistUI(); 
   }
 }
-// Fetch live items directly out of your local MySQL server instance 
-/*async function fetchProductsFromDatabase() {
-  try {
-    const response = await fetch('http://localhost:3000/api/products');
-    if (!response.ok) throw new Error('Network query was not successful');
-    
-    productsDatabase = await response.json();
-    console.log(` Loaded ${productsDatabase.length} products live from MySQL Backend.`);
-    
-    const now = new Date();
-    const productContainer = document.getElementById('product-container'); 
-    if (productContainer) {
-      productContainer.innerHTML = ''; 
-    }
 
-    productsDatabase.forEach(product => {
-      const currentPrice = Number(product.price);
-      const stockQuantity = product.stock !== undefined ? parseInt(product.stock) : 0;
-      const finalImgSrc = product.image_url || product.image || "./image/logo copy.png";
-      const userLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : 0;
-
-      // --- AUTOMATED TIME-BASED DISCOUNT EVALUATION ---
-      let discountPrice = null;
-      if (product.discount_price && product.discount_start && product.discount_end) {
-        const startTime = new Date(product.discount_start);
-        const endTime = new Date(product.discount_end);
-        if (now >= startTime && now <= endTime) {
-          discountPrice = Number(product.discount_price);
-        }
-      } else if (product.discount_price && !product.discount_start) {
-        // Fallback if no specific dates were set by admin but a sale price exists
-        discountPrice = Number(product.discount_price);
-      }
-
-      // 1. Calculate and build the Dynamic Discount UI Elements
-      let priceMarkup = `<div class="text-pink-600 font-bold text-base mb-3">$${currentPrice.toFixed(2)}</div>`;
-      let saleBadge = '';
-      let isPromoActive = false;
-      
-      if (discountPrice && discountPrice < currentPrice) {
-        isPromoActive = true;
-        priceMarkup = `
-          <div class="flex items-center justify-center gap-2 mb-3">
-            <span class="text-neutral-400 line-through text-xs">$${currentPrice.toFixed(2)}</span>
-            <span class="text-pink-600 font-extrabold text-base">$${discountPrice.toFixed(2)}</span>
-          </div>
-        `;
-        saleBadge = `<span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md z-10 animate-pulse shadow-sm">Hot Sale</span>`;
-      }
-
-      // 2. Build the Stock Tracking and Purchase Limitation state layouts
-      let stockMarkup = `<p class="text-[11px] text-emerald-600 font-medium mb-2"><i class="fa-solid fa-boxes-stacked"></i> In Stock (${stockQuantity})</p>`;
-      if (userLimit > 0) {
-        stockMarkup += `<p class="text-[10px] text-amber-600 font-semibold mb-2"><i class="fa-solid fa-user-lock"></i> Limit: Max ${userLimit} per user</p>`;
-      }
-
-      let actionButtonMarkup = `
-        <button onclick="addToCart('${product.id}')" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-all active:scale-95 cursor-pointer">
-          Add to Cart
-        </button>
-      `;
-
-      if (stockQuantity <= 0) {
-        stockMarkup = `<p class="text-[11px] text-red-500 font-bold mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Out of Stock</p>`;
-        actionButtonMarkup = `
-          <button disabled class="w-full bg-neutral-200 text-neutral-400 text-xs font-bold py-2 rounded-xl cursor-not-allowed">
-            Sold Out
-          </button>
-        `;
-      }
-
-      // --- RENDER DYNAMIC BACKEND PRODUCTS CONTAINER ---
-      if (productContainer) {
-        productContainer.innerHTML += `
-          <div class="product-card bg-white border border-neutral-100 rounded-2xl p-4 relative shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between" 
-               data-id="${product.id}" data-type="${product.category || 'Skincare'}" data-ingredients="${product.ingredients || ''}" data-stock="${stockQuantity}" data-limit="${userLimit}">
-            
-            ${saleBadge}
-            
-            <div class="absolute top-3 right-3 z-10">
-              <button onclick="toggleWishlistItem('${product.id}')" class="cursor-pointer text-lg">
-                <i class="fa-solid fa-heart id-heart-${product.id} text-neutral-400 transition-colors"></i>
-              </button>
-            </div>
-            
-            <div onclick="viewProductDetails(this)" class="cursor-pointer group flex-grow">
-              <div class="overflow-hidden rounded-xl mb-3 flex justify-center items-center h-48 bg-neutral-50">
-                <img src="${finalImgSrc}" alt="${product.title}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
-              </div>
-              <p class="font-bold text-neutral-800 text-sm truncate group-hover:text-pink-500 transition-colors">${product.title}</p>
-              <p class="text-xs text-neutral-400 mb-1">${product.brand || 'Minee Beauty'}</p>
-              ${stockMarkup}
-              ${priceMarkup}
-            </div>
-            
-            <div class="mt-auto">
-              ${actionButtonMarkup}
-            </div>
-          </div>
-        `;
-      }
-
-      // --- BACKWARD COMPATIBILITY SYNC FOR STATIC HTML HARDCODED CARDS ---
-      const staticCard = document.querySelector(`div[data-id="${product.id}"]`);
-      if (staticCard) {
-        // Sync administrative variables to the DOM dataset memory spaces
-        staticCard.setAttribute('data-stock', stockQuantity);
-        staticCard.setAttribute('data-limit', userLimit);
-
-        // Update static layout pricing displays if an active discount applies
-        if (isPromoActive) {
-          const priceDiv = staticCard.querySelector('.text-pink-600') || staticCard.querySelector('[class*="text-pink-"]');
-          if (priceDiv) {
-            priceDiv.className = "flex items-center justify-center gap-2 mb-3";
-            priceDiv.innerHTML = `
-              <span class="text-neutral-400 line-through text-xs font-normal mr-2">$${currentPrice.toFixed(2)}</span>
-              <span class="text-pink-600 font-extrabold text-base">$${discountPrice.toFixed(2)}</span>
-            `;
-          }
-          if (!staticCard.querySelector('.animate-pulse')) {
-            staticCard.classList.add('relative');
-            staticCard.insertAdjacentHTML('afterbegin', `<span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md z-10 animate-pulse shadow-sm">Hot Sale</span>`);
-          }
-        }
-
-        // Handle Sold Out visual blocker overlays for static grids
-        if (stockQuantity <= 0) {
-          const imgDiv = staticCard.querySelector('.cursor-pointer');
-          if (imgDiv && !staticCard.innerHTML.includes('Sold Out')) {
-            imgDiv.classList.add('relative', 'opacity-60');
-            imgDiv.insertAdjacentHTML('beforeend', `
-              <div class="absolute inset-0 flex items-center justify-center bg-neutral-900/20 rounded-xl">
-                <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border tracking-wide uppercase">Sold Out</span>
-              </div>
-            `);
-          }
-          const actionBtn = staticCard.querySelector('button[onclick^="addToCart"]');
-          if (actionBtn) {
-            actionBtn.disabled = true;
-            actionBtn.innerText = "Out of Stock";
-            actionBtn.className = "w-full bg-neutral-200 text-neutral-400 text-sm font-semibold py-2 px-4 rounded-xl cursor-not-allowed mt-auto shadow-none";
-            actionBtn.removeAttribute('onclick');
-          }
-        }
-      }
-    });
-
-    // Handle user verification checks
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    const userQueryKey = user && user.name ? user.name : "Guest";
-    let isFirstOrder = true;
-
-    try {
-      const orderCheck = await fetch(`http://localhost:3000/api/orders/${encodeURIComponent(userQueryKey)}`);
-      const orders = await orderCheck.json();
-      isFirstOrder = (Array.isArray(orders) && orders.length === 0);
-    } catch (e) {
-      console.warn("Backend order history check missed. Defaulting to first-time user layout.");
-      isFirstOrder = true; 
-    }
-    
-    window.userQualifiesForDiscount = isFirstOrder;
-    updateCartUIDraw();
-    syncWishlistUI(); 
-  } catch (error) {
-    console.error(' Failed fetching products from MySQL Database backend: ', error);
-    updateCartUIDraw();
-    syncWishlistUI(); 
-  }
-}*/
-// Exposes renderProducts globally so index.html search functions can access it cleanly
-/*window.renderProducts = function(productsToRender) {
-  const now = new Date();
-  const productContainer = document.getElementById('product-container'); 
-  const emptyState = document.getElementById('empty-search-state');
-
-  if (productContainer) {
-    productContainer.innerHTML = ''; 
-  }
-
-  // Handle empty search layouts cleanly
-  if (!productsToRender || productsToRender.length === 0) {
-    if (emptyState) emptyState.classList.remove('hidden');
-    return;
-  }
-  if (emptyState) emptyState.classList.add('hidden');
-
-  productsToRender.forEach(product => {
-    const currentPrice = Number(product.price);
-    const stockQuantity = product.stock !== undefined ? parseInt(product.stock) : 0;
-    const finalImgSrc = product.image_url || product.image || "./image/logo copy.png";
-    const userLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : 0;
-
-    // --- AUTOMATED TIME-BASED DISCOUNT EVALUATION ---
-    let discountPrice = null;
-    if (product.discount_price && product.discount_start && product.discount_end) {
-      const startTime = new Date(product.discount_start);
-      const endTime = new Date(product.discount_end);
-      if (now >= startTime && now <= endTime) {
-        discountPrice = Number(product.discount_price);
-      }
-    } else if (product.discount_price && !product.discount_start) {
-      discountPrice = Number(product.discount_price);
-    }
-
-    // Calculate and build the Dynamic Discount UI Elements
-    let priceMarkup = `<div class="text-pink-600 font-bold text-base mb-3">$${currentPrice.toFixed(2)}</div>`;
-    let saleBadge = '';
-    
-    if (discountPrice && discountPrice < currentPrice) {
-      priceMarkup = `
-        <div class="flex items-center justify-center gap-2 mb-3">
-          <span class="text-neutral-400 line-through text-xs">$${currentPrice.toFixed(2)}</span>
-          <span class="text-pink-600 font-extrabold text-base">$${discountPrice.toFixed(2)}</span>
-        </div>
-      `;
-      saleBadge = `<span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md z-10 animate-pulse shadow-sm">Hot Sale</span>`;
-    }
-
-    // Build the Stock Tracking and Purchase Limitation state layouts
-    let stockMarkup = `<p class="text-[11px] text-emerald-600 font-medium mb-2"><i class="fa-solid fa-boxes-stacked"></i> In Stock (${stockQuantity})</p>`;
-    if (userLimit > 0) {
-      stockMarkup += `<p class="text-[10px] text-amber-600 font-semibold mb-2"><i class="fa-solid fa-user-lock"></i> Limit: Max ${userLimit} per user</p>`;
-    }
-
-    let actionButtonMarkup = `
-      <button onclick="addToCart('${product.id}')" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-all active:scale-95 cursor-pointer">
-        Add to Cart
-      </button>
-    `;
-
-    if (stockQuantity <= 0) {
-      stockMarkup = `<p class="text-[11px] text-red-500 font-bold mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Out of Stock</p>`;
-      actionButtonMarkup = `
-        <button disabled class="w-full bg-neutral-200 text-neutral-400 text-xs font-bold py-2 rounded-xl cursor-not-allowed">
-          Sold Out
-        </button>
-      `;
-    }
-
-    // Render cards dynamic properties
-    if (productContainer) {
-      productContainer.innerHTML += `
-        <div class="product-card bg-white border border-neutral-100 rounded-2xl p-4 relative shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between" 
-             data-id="${product.id}" data-type="${product.category || 'Skincare'}" data-ingredients="${product.ingredients || ''}" data-stock="${stockQuantity}" data-limit="${userLimit}">
-          
-          ${saleBadge}
-          
-          <div class="absolute top-3 right-3 z-10">
-            <button onclick="toggleWishlistItem('${product.id}')" class="cursor-pointer text-lg">
-              <i class="fa-solid fa-heart id-heart-${product.id} text-neutral-400 transition-colors"></i>
-            </button>
-          </div>
-          
-          <div onclick="viewProductDetails(this)" class="cursor-pointer group flex-grow">
-            <div class="overflow-hidden rounded-xl mb-3 flex justify-center items-center h-48 bg-neutral-50">
-              <img src="${finalImgSrc}" alt="${product.title}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
-            </div>
-            <p class="font-bold text-neutral-800 text-sm truncate group-hover:text-pink-500 transition-colors">${product.title}</p>
-            <p class="text-xs text-neutral-400 mb-1">${product.brand || 'Minee Beauty'}</p>
-            ${stockMarkup}
-            ${priceMarkup}
-          </div>
-          
-          <div class="mt-auto">
-            ${actionButtonMarkup}
-          </div>
-        </div>
-      `;
-    }
-  });
-};*/
-// ឧទាហរណ៍៖ កូដ renderProducts ដែលត្រឹមត្រូវនៅក្នុង product.js
 window.renderProducts = function(filteredResults) {
   const container = document.getElementById('product-container');
   if (!container) return;
@@ -407,9 +128,6 @@ window.renderProducts = function(filteredResults) {
     `;
   }).join('');
 };
-// ==========================================
-// HELPER ANIMATION TRANSITION HANDLERS
-// ==========================================
 function showPanel(panelElement) {
   if (!panelElement) return;
   panelElement.classList.remove('opacity-0', 'scale-95', 'pointer-events-none', 'hidden');
@@ -422,346 +140,11 @@ function hidePanel(panelElement) {
   panelElement.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
 }
 
-// ==========================================
-// 2. CORE CART SYSTEM INTERACTIONS
-/*function addProductToCart(productId) {
-  const lookupId = String(productId);
-  
-  // 1. Look up the live item inside the database array synced from your MySQL server
-  let product = productsDatabase.find(p => String(p.id) === lookupId);
-  const itemContainer = document.querySelector(`div[data-id="${lookupId}"]`);
-  
-  if (!product) {
-    // Fallback for static HTML scrape if database is still loading
-    const textSelector = itemContainer?.querySelector('p');
-    const imageElement = itemContainer?.querySelector('img');
-    const priceSelector = itemContainer?.querySelector('.text-pink-600') || itemContainer?.querySelector('[class*="text-pink-"]');
-
-    product = {
-      id: lookupId,
-      title: textSelector ? textSelector.innerText : "Skincare Item",
-      price: priceSelector ? parseFloat(priceSelector.innerText.replace('$', '')) : 8.30,
-      image: imageElement ? imageElement.getAttribute('src') : "./image/logo copy.png"
-    };
-  }
-
-  // 2. --- ADMIN CONTROLLED STOCK CHECK ---
-  // Read stock value straight from your MySQL backend data properties
-  let maxStock = 0;
-  if (product && product.stock !== undefined) {
-    maxStock = parseInt(product.stock);
-  } else if (itemContainer && itemContainer.getAttribute('data-stock') !== null) {
-    maxStock = parseInt(itemContainer.getAttribute('data-stock'));
-  }
-
-  // 3. Count how many the user has already added to their cart
-  const existingItem = cart.find(item => String(item.id) === lookupId);
-  const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
-
-  // 4. Validation Guard: If quantity in cart matches or exceeds admin stock, block it!
-  if (currentQuantityInCart >= maxStock) {
-    alert(`Only ${maxStock} items are available!!.`);
-    return; // Stops execution immediately
-  }
-  // ---------------------------------------
-
-  // Determine actual purchase price
-  const finalPrice = product.discount_price ? Number(product.discount_price) : Number(product.price);
-
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.push({
-      id: lookupId,
-      title: product.title,
-      price: finalPrice,
-      image: product.image_url || product.image || "./image/logo copy.png",
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem("minee_cart", JSON.stringify(cart));
-  updateCartUIDraw();
-}*/
-
-/*function addProductToCart(productId) {
-  const lookupId = String(productId);
-  const now = new Date();
-
-  // 1. Locate product database data
-  let product = productsDatabase.find(p => String(p.id) === lookupId);
-  const itemContainer = document.querySelector(`div[data-id="${lookupId}"]`);
-
-  if (!product) {
-    const textSelector = itemContainer?.querySelector('p');
-    const imageElement = itemContainer?.querySelector('img');
-    const priceSelector = itemContainer?.querySelector('.text-pink-600') || itemContainer?.querySelector('[class*="text-pink-"]');
-
-    product = {
-      id: lookupId,
-      title: textSelector ? textSelector.innerText : "Skincare Item",
-      price: priceSelector ? parseFloat(priceSelector.innerText.replace('$', '')) : 8.30,
-      image: imageElement ? imageElement.getAttribute('src') : "./image/logo copy.png",
-      limit_per_user: itemContainer?.getAttribute('data-limit') ? parseInt(itemContainer.getAttribute('data-limit')) : 0
-    };
-  }
-
-  // 2. Determine if the promotional discount windows are active right now
-  let activePromoPrice = null;
-  if (product.discount_price && product.discount_start && product.discount_end) {
-    const startTime = new Date(product.discount_start);
-    const endTime = new Date(product.discount_end);
-
-    if (now >= startTime && now <= endTime) {
-      activePromoPrice = Number(product.discount_price);
-    }
-  }
-
-  // 3. Establish the runtime transactional limit parameters
-  const finalPrice = activePromoPrice !== null ? activePromoPrice : Number(product.price);
-  const maxStock = product.stock !== undefined ? parseInt(product.stock) : (itemContainer?.getAttribute('data-stock') ? parseInt(itemContainer.getAttribute('data-stock')) : 3);
-  
-  // Set the structural limit per user based on admin records
-  const userPurchaseLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : (itemContainer?.getAttribute('data-limit') ? parseInt(itemContainer.getAttribute('data-limit')) : 0);
-
-  const existingItem = cart.find(item => String(item.id) === lookupId);
-  const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
-
-  // 4. RULE ENFORCEMENT A: Limit Per User Check
-  if (userPurchaseLimit > 0 && currentQuantityInCart >= userPurchaseLimit) {
-    alert(`Restriction Notice: The administration has limited purchase bounds for "${product.title}" to a maximum of ${userPurchaseLimit} per user.`);
-    return;
-  }
-
-  // 5. RULE ENFORCEMENT B: Standard Physical Stock Level Pool Guard
-  if (currentQuantityInCart >= maxStock) {
-    alert(`Sorry! We only have ${maxStock} items available in our total live inventory pool right now.`);
-    return;
-  }
-
-  // 6. Push data safely to the cart array structure
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.push({
-      id: lookupId,
-      title: product.title,
-      price: finalPrice,
-      image: product.image_url || product.image || "./image/logo copy.png",
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem("minee_cart", JSON.stringify(cart));
-  updateCartUIDraw();
-}
-
-window.removeProductFromCart = function(productId) {
-  cart = cart.filter(item => String(item.id) !== String(productId));
-  localStorage.setItem("minee_cart", JSON.stringify(cart));
-  updateCartUIDraw();
-};
-
-// ==========================================
-// 3. CORE WISHLIST SYSTEM INTERACTIONS
-// ==========================================
-window.toggleWishlist = function() {
-  const wishlistPanel = document.getElementById("wishlist-preview");
-  const cartPanel = document.getElementById("cart-preview");
-  if (!wishlistPanel) return;
-
-  if (wishlistPanel.classList.contains('opacity-0') || wishlistPanel.classList.contains('hidden')) {
-    if (cartPanel) hidePanel(cartPanel);
-    showPanel(wishlistPanel);
-  } else {
-    hidePanel(wishlistPanel);
-  }
-};
-
-window.toggleWishlistItem = function(id, name, price, img) {
-  let storeWishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
-  const index = storeWishlist.findIndex(item => String(item.id) === String(id));
-
-  if (index > -1) {
-    storeWishlist.splice(index, 1);
-  } else {
-    if (!name) {
-      const dbProduct = productsDatabase.find(p => String(p.id) === String(id));
-      if (dbProduct) {
-        name = dbProduct.title;
-        price = dbProduct.discount_price ? dbProduct.discount_price : dbProduct.price;
-        img = dbProduct.image_url || dbProduct.image;
-      }
-    }
-    storeWishlist.push({ id: String(id), name, price: parseFloat(price), img });
-  }
-
-  localStorage.setItem("minee_wishlist", JSON.stringify(storeWishlist));
-  syncWishlistUI();
-};*/
-// ==========================================
-// SEARCH & FILTER SYSTEM ENGINE (DATABASE PIPELINE)
-// ==========================================
-/*let activeCategory = 'all'; 
-let searchDebounceTimeout = null;
-
-// 1. Called on keyup inside your search input field
-function filterProducts() {
-  // Clear timeout to prevent overloading your MySQL backend on every keystroke
-  clearTimeout(searchDebounceTimeout);
-  
-  searchDebounceTimeout = setTimeout(() => {
-    // Collect variables directly from the HTML inputs
-    const searchInput = document.getElementById('search-input')?.value || '';
-    
-    // Call the network endpoint with active filters
-    fetchFilteredProducts(searchInput, activeCategory);
-  }, 300); // Wait for the student/user to pause typing for 300ms
-}
-
-// 2. Called when clicking your Tailwind category pill buttons
-function setCategoryFilter(category, event) {
-  activeCategory = category;
-  
-  // Update Tailwind active button state highlights
-  document.querySelectorAll('.cat-pill').forEach(btn => {
-    btn.classList.remove('bg-pink-500', 'text-white');
-    btn.classList.add('bg-white', 'border-gray-200');
-  });
-  
-  if (event && event.currentTarget) {
-    event.currentTarget.classList.remove('bg-white', 'border-gray-200');
-    event.currentTarget.classList.add('bg-pink-500', 'text-white');
-  }
-
-  // Categories query the database instantly
-  const searchInput = document.getElementById('search-input')?.value || '';
-  fetchFilteredProducts(searchInput, activeCategory);
-}
-
-// 3. New helper function to request matching criteria safely from your Node/Express server
-async function fetchFilteredProducts(searchKeyword, categorySelection) {
-  try {
-    // Build query parameters matching your Express backend route setup
-    const params = new URLSearchParams({
-      search: searchKeyword,
-      category: categorySelection
-    });
-
-    const response = await fetch(`http://localhost:3000/api/products?${params.toString()}`);
-    if (!response.ok) throw new Error('Database server sync was unsuccessful');
-    
-    // Overwrite global products array with your database results
-    productsDatabase = await response.json();
-    console.log(`Live Filter: Loaded ${productsDatabase.length} items out of MySQL database.`);
-
-    const now = new Date();
-    const productContainer = document.getElementById('product-container');
-    const emptyState = document.getElementById('empty-search-state');
-
-    if (productContainer) {
-      productContainer.innerHTML = '';
-    }
-
-    // If zero rows are returned, show your "No products found" state element
-    if (productsDatabase.length === 0) {
-      if (emptyState) emptyState.classList.remove('hidden');
-      return;
-    }
-    if (emptyState) emptyState.classList.add('hidden');
-
-    // Loop through filtered database rows and inject into your main grid container
-    productsDatabase.forEach(product => {
-      const currentPrice = Number(product.price);
-      const stockQuantity = product.stock !== undefined ? parseInt(product.stock) : 0;
-      const finalImgSrc = product.image_url || product.image || "./image/logo copy.png";
-      const userLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : 0;
-
-      // --- AUTOMATED TIME-BASED DISCOUNT EVALUATION ---
-      let discountPrice = null;
-      if (product.discount_price && product.discount_start && product.discount_end) {
-        const startTime = new Date(product.discount_start);
-        const endTime = new Date(product.discount_end);
-        if (now >= startTime && now <= endTime) {
-          discountPrice = Number(product.discount_price);
-        }
-      } else if (product.discount_price && !product.discount_start) {
-        discountPrice = Number(product.discount_price);
-      }
-
-      let priceMarkup = `<div class="text-pink-600 font-bold text-base mb-3">$${currentPrice.toFixed(2)}</div>`;
-      let saleBadge = '';
-      
-      if (discountPrice && discountPrice < currentPrice) {
-        priceMarkup = `
-          <div class="flex items-center justify-center gap-2 mb-3">
-            <span class="text-neutral-400 line-through text-xs">$${currentPrice.toFixed(2)}</span>
-            <span class="text-pink-600 font-extrabold text-base">$${discountPrice.toFixed(2)}</span>
-          </div>
-        `;
-        saleBadge = `<span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md z-10 animate-pulse shadow-sm">Hot Sale</span>`;
-      }
-
-      let stockMarkup = `<p class="text-[11px] text-emerald-600 font-medium mb-2"><i class="fa-solid fa-boxes-stacked"></i> In Stock (${stockQuantity})</p>`;
-      if (userLimit > 0) {
-        stockMarkup += `<p class="text-[10px] text-amber-600 font-semibold mb-2"><i class="fa-solid fa-user-lock"></i> Limit: Max ${userLimit} per user</p>`;
-      }
-
-      let actionButtonMarkup = `
-        <button onclick="addToCart('${product.id}')" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-all active:scale-95 cursor-pointer">
-          Add to Cart
-        </button>
-      `;
-
-      if (stockQuantity <= 0) {
-        stockMarkup = `<p class="text-[11px] text-red-500 font-bold mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Out of Stock</p>`;
-        actionButtonMarkup = `
-          <button disabled class="w-full bg-neutral-200 text-neutral-400 text-xs font-bold py-2 rounded-xl cursor-not-allowed">
-            Sold Out
-          </button>
-        `;
-      }
-
-      if (productContainer) {
-        productContainer.innerHTML += `
-          <div class="product-card bg-white border border-neutral-100 rounded-2xl p-4 relative shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between" 
-               data-id="${product.id}" data-type="${product.category || 'Skincare'}" data-ingredients="${product.ingredients || ''}" data-stock="${stockQuantity}" data-limit="${userLimit}">
-            ${saleBadge}
-            <div class="absolute top-3 right-3 z-10">
-              <button onclick="toggleWishlistItem('${product.id}')" class="cursor-pointer text-lg">
-                <i class="fa-solid fa-heart id-heart-${product.id} text-neutral-400 transition-colors"></i>
-              </button>
-            </div>
-            <div onclick="viewProductDetails(this)" class="cursor-pointer group flex-grow">
-              <div class="overflow-hidden rounded-xl mb-3 flex justify-center items-center h-48 bg-neutral-50">
-                <img src="${finalImgSrc}" alt="${product.title}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
-              </div>
-              <p class="font-bold text-neutral-800 text-sm truncate group-hover:text-pink-500 transition-colors">${product.title}</p>
-              <p class="text-xs text-neutral-400 mb-1">${product.brand || 'Minee Beauty'}</p>
-              ${stockMarkup}
-              ${priceMarkup}
-            </div>
-            <div class="mt-auto">
-              ${actionButtonMarkup}
-            </div>
-          </div>
-        `;
-      }
-    });
-
-    // Make sure other parts of your UI stay accurately updated
-    syncWishlistUI();
-  } catch (error) {
-    console.error('Failed querying active search rows from backend:', error);
-  }
-}*/
-
-//
 function addProductToCart(productId) {
   const lookupId = String(productId);
   const now = new Date();
 
-  // 1. Locate product database data safely (with fallback check if database hasn't loaded yet)
+  // Locate product database data safely (with fallback check if database hasn't loaded yet)
   let product = (typeof productsDatabase !== 'undefined' && productsDatabase) 
     ? productsDatabase.find(p => String(p.id) === lookupId) 
     : null;
@@ -786,7 +169,7 @@ function addProductToCart(productId) {
     };
   }
 
-  // 2. Determine if the promotional discount windows are active right now
+  //  Determine if the promotional discount windows are active right now
   let activePromoPrice = null;
   if (product.discount_price && product.discount_start && product.discount_end) {
     const startTime = new Date(product.discount_start);
@@ -799,7 +182,7 @@ function addProductToCart(productId) {
     activePromoPrice = Number(product.discount_price);
   }
 
-  // 3. Establish the runtime transactional limit parameters
+  //  Establish the runtime transactional limit parameters
   const finalPrice = activePromoPrice !== null ? activePromoPrice : Number(product.price);
   const maxStock = product.stock !== undefined ? parseInt(product.stock) : (itemContainer?.getAttribute('data-stock') ? parseInt(itemContainer.getAttribute('data-stock')) : 3);
   
@@ -809,19 +192,19 @@ function addProductToCart(productId) {
   const existingItem = cart.find(item => String(item.id) === lookupId);
   const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
 
-  // 4. RULE ENFORCEMENT A: Limit Per User Check
+  //Limit Per User Check
   if (userPurchaseLimit > 0 && currentQuantityInCart >= userPurchaseLimit) {
     alert(`Restriction Notice: The administration has limited purchase bounds for "${product.title}" to a maximum of ${userPurchaseLimit} per user.`);
     return;
   }
 
-  // 5. RULE ENFORCEMENT B: Standard Physical Stock Level Pool Guard
+  // Standard Physical Stock Level Pool Guard
   if (currentQuantityInCart >= maxStock) {
     alert(`Sorry! We only have ${maxStock} items available in our total live inventory pool right now.`);
     return;
   }
 
-  // 6. Push data safely to the cart array structure
+  // Push data safely to the cart array structure
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
@@ -849,9 +232,6 @@ window.removeProductFromCart = function(productId) {
   updateCartUIDraw();
 };
 
-// ==========================================
-// CART QUANTITY MODIFIERS (INCREASE & DECREASE)
-// ==========================================
 window.increaseQuantity = function(productId) {
   const lookupId = String(productId);
   const existingItem = cart.find(item => String(item.id) === lookupId);
@@ -902,9 +282,6 @@ window.decreaseQuantity = function(productId) {
   updateCartUIDraw();
 };
 
-// ==========================================
-// 3. CORE WISHLIST SYSTEM INTERACTIONS
-// ==========================================
 window.toggleWishlist = function() {
   const wishlistPanel = document.getElementById("wishlist-preview");
   const cartPanel = document.getElementById("cart-preview");
@@ -969,8 +346,6 @@ function syncWishlistUI() {
       `;
     });
   }
-  // SEARCH & FILTER SYSTEM ENGINE
-// ==========================================
 let activeCategory = 'all'; 
 let searchDebounceTimeout = null;
 
@@ -1037,9 +412,6 @@ fetchProductsFromDatabase();
   });
 }
 
-// ==========================================
-// 4. UI RENDERING PIPELINE
-// ==========================================
 function updateCartUIDraw() {
   const cartBtn = document.getElementById("cart-button");
   const cartList = document.getElementById("cart-items");
@@ -1105,9 +477,6 @@ function updateCartUIDraw() {
   }
 }
 
-// ==========================================
-// 5. ROUTING & PRODUCT DETAILS LOGIC
-// ==========================================
 window.confirmCart = function() {
   if (cart.length === 0) {
     alert("Your shopping bag is completely empty!");
@@ -1134,12 +503,9 @@ window.viewProductDetails = function(cardDiv) {
   };
 
   localStorage.setItem('selectedProduct', JSON.stringify(productData));
-  window.location.href = 'product.html'; // Points smoothly to your product template file
+  window.location.href = 'product.html';
 };
 
-// ==========================================
-// 6. RESPONSIVE NAVIGATION & POPUP SYSTEM
-// ==========================================
 function setupNavigationAndPopups() {
   const menuToggle = document.getElementById('menu-toggle');
   const navMenu = document.getElementById('nav-menu');
@@ -1183,11 +549,7 @@ function setupNavigationAndPopups() {
   }
 }
 
-// ==========================================
-// 7. INITIALIZATION PIPELINE
-// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Pull current cart items out of web storage if they exist
   cart = JSON.parse(localStorage.getItem("minee_cart")) || [];
   fetchProductsFromDatabase();
   setupNavigationAndPopups();
