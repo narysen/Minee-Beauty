@@ -58,6 +58,63 @@ db.getConnection((err, connection) => {
   }
 });
 
+// ==========================================
+// AUTO-INITIALIZE TABLES FOR RENDER / PRODUCTION
+// ==========================================
+const initDatabase = () => {
+    const queries = [
+        `CREATE TABLE IF NOT EXISTS products (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            sku VARCHAR(50) DEFAULT NULL,
+            title VARCHAR(255) NOT NULL,
+            brand VARCHAR(100),
+            category VARCHAR(100),
+            price DECIMAL(10, 2) NOT NULL,
+            discount_price DECIMAL(10, 2) DEFAULT NULL,
+            discount_start DATETIME DEFAULT NULL,
+            discount_end DATETIME DEFAULT NULL,
+            stock INT DEFAULT 0,
+            limit_per_user INT DEFAULT 0,
+            image_url VARCHAR(255),
+            description TEXT,
+            ingredients TEXT
+        );`,
+        `CREATE TABLE IF NOT EXISTS orders (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            customer_name VARCHAR(150) NOT NULL,
+            phone VARCHAR(50) NOT NULL,
+            address TEXT NOT NULL,
+            total DECIMAL(10, 2) NOT NULL,
+            payment_method VARCHAR(50) DEFAULT 'Cash on Delivery',
+            status VARCHAR(50) DEFAULT 'Pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`,
+        `CREATE TABLE IF NOT EXISTS order_items (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            order_id INT NOT NULL,
+            product_id INT NOT NULL,
+            quantity INT NOT NULL,
+            price DECIMAL(10, 2) NOT NULL
+        );`,
+        `CREATE TABLE IF NOT EXISTS expenses (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            category VARCHAR(100) DEFAULT 'Inventory',
+            amount DECIMAL(10, 2) NOT NULL,
+            expense_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`
+    ];
+
+    queries.forEach(query => {
+        db.query(query, err => {
+            if (err) console.error("Database auto-init error:", err.message);
+        });
+    });
+};
+
+initDatabase();
+
 const productRoutes = require("./routes/products")(db);
 app.use("/api", productRoutes);
 
