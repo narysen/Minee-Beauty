@@ -379,24 +379,74 @@
     ? "http://localhost:3000/api"
     : "/api";
 
-  document.addEventListener("DOMContentLoaded", () => {
-    // Initialize systems
-    refreshFloatingCartUI();
-    syncWishlistUI();
-    setupMenuToggle();
-    checkLiveDatabaseStockAndDiscounts();
+      document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+          // Start inventory synchronization first.
+          checkLiveDatabaseStockAndDiscounts();
 
-    // Setup main cart button toggle action path
-    const cartBtn = document.getElementById('cart-button');
-    const cartPreview = document.getElementById('cart-preview');
-    if (cartBtn && cartPreview) {
-      cartBtn.onclick = (e) => {
-        e.stopPropagation();
-        cartPreview.classList.toggle('hidden');
-        document.getElementById('wishlist-preview').classList.add('hidden'); // Close wishlist if open
-      };
-    }
-  });
+          try {
+            refreshFloatingCartUI();
+          } catch (error) {
+            console.error(
+              "Cart UI initialization failed:",
+              error
+            );
+          }
+
+          try {
+            syncWishlistUI();
+          } catch (error) {
+            console.error(
+              "Wishlist initialization failed:",
+              error
+            );
+          }
+
+          try {
+            setupMenuToggle();
+          } catch (error) {
+            console.error(
+              "Menu initialization failed:",
+              error
+            );
+          }
+
+          // Setup floating cart toggle.
+          const cartBtn =
+            document.getElementById(
+              "cart-button"
+            );
+
+          const cartPreview =
+            document.getElementById(
+              "cart-preview"
+            );
+
+          if (cartBtn && cartPreview) {
+            cartBtn.onclick = event => {
+              event.stopPropagation();
+
+              cartPreview.classList.toggle(
+                "hidden"
+              );
+
+              const wishlistPreview =
+                document.getElementById(
+                  "wishlist-preview"
+                );
+
+              if (wishlistPreview) {
+                wishlistPreview.classList.add(
+                  "hidden"
+                );
+              }
+            };
+          }
+        }
+      );
+
+      // --- MOBILE MENU HAMBURGER CONTROLLER ---
 
   // --- MOBILE MENU HAMBURGER CONTROLLER ---
   function setupMenuToggle() {
@@ -669,10 +719,35 @@
         const card = document.querySelector(`[data-id="${prod.id}"]`);
         if (!card) return;
 
-        const currentPrice = Number(prod.price);
-        const discountPrice = prod.discount_price ? Number(prod.discount_price) : null;
-        const stockQuantity = prod.stock !== undefined ? parseInt(prod.stock) : 10;
+        const currentPrice =
+          Number(prod.price);
 
+        const discountPrice =
+          prod.discount_price
+            ? Number(prod.discount_price)
+            : null;
+
+        const stockQuantity =
+          prod.stock !== undefined
+            ? Number(prod.stock)
+            : 0;
+
+        const userLimit =
+          prod.limit_per_user !== undefined
+            ? Number(prod.limit_per_user)
+            : 0;
+
+        // Give Add to Cart and the cart + button
+        // the exact values from MySQL.
+        card.setAttribute(
+          "data-stock",
+          String(stockQuantity)
+        );
+
+        card.setAttribute(
+          "data-limit",
+          String(userLimit)
+        );
         // 1. If item has a dynamic promotion discount active, inject sale price updates
         if (discountPrice && discountPrice < currentPrice) {
           const priceDiv = card.querySelector('.text-pink-600');

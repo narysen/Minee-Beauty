@@ -196,31 +196,94 @@ window.finishAssumedOrder = async function() {
     payment_method: selectedMethod
   };
 
+  let completedOrderData = null;
+
   try {
-    const response = await fetch(`${API_URL}/checkout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    
-    if (!response.ok) throw new Error("Server checkout pipeline rejected request.");
-    const data = await response.json();
-    console.log(`Order processed successfully backend reference ID: #${data.orderId}`);
-    
-  } catch (err) {
-    console.error("Express registration sequence error details:", err);
-    alert(" Checkout saved locally, but database insertion failed. Check if node server is active.");
+    const response = await fetch(
+      `${API_URL}/checkout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const data =
+      await response.json().catch(() => ({
+        message:
+          "The server returned an invalid response."
+      }));
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+        "The order could not be completed."
+      );
+    }
+
+    completedOrderData = data;
+
+    console.log(
+      `Order processed successfully. Backend reference ID: #${data.orderId}`
+    );
+  } catch (error) {
+    console.error(
+      "Checkout failed:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "Checkout failed. Please try again."
+    );
+
+    return;
   }
 
-  // SHOWS HISTORY ON PROFILE INFO: Saves order records with exact time
-  let orderHistory = JSON.parse(localStorage.getItem("orderHistory")) || [];
+  const orderHistory =
+    JSON.parse(
+      localStorage.getItem(
+        "orderHistory"
+      )
+    ) || [];
+
   orderHistory.push({
-    date: new Date().toLocaleDateString(),
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
+    orderId:
+      completedOrderData.orderId,
+
+    customerName:
+      user.name ||
+      "Guest Customer",
+
+    totalPrice:
+      Number(
+        completedOrderData.total
+      ).toFixed(2),
+
+    date:
+      new Date().toLocaleDateString(),
+
+    time:
+      new Date().toLocaleTimeString(
+        [],
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      ),
+
     items: checkoutCart,
+
     method: selectedMethod
   });
-  localStorage.setItem("orderHistory", JSON.stringify(orderHistory));
+
+  localStorage.setItem(
+    "orderHistory",
+    JSON.stringify(orderHistory)
+  );
 
   // Clear the local storage basket memory out completely
   localStorage.removeItem("minee_cart");

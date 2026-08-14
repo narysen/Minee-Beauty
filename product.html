@@ -1,170 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details - Minee Beauty</title>
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between relative">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details - Minee Beauty</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between relative"
+  >
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <nav
+        class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between"
+      >
+        <a
+          id="back-link"
+          href="cosmetic.html"
+          class="text-pink-500 hover:text-pink-600 font-bold text-lg flex items-center gap-2 transition-colors"
+        >
+          <i class="fa-solid fa-arrow-left"></i> Back to Store
+        </a>
+        <span class="font-semibold text-neutral-500">Minee Beauty Details</span>
+      </nav>
+    </header>
 
-  <header class="bg-white shadow-sm sticky top-0 z-50">
-    <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a id="back-link" href="cosmetic.html" class="text-pink-500 hover:text-pink-600 font-bold text-lg flex items-center gap-2 transition-colors">
-        <i class="fa-solid fa-arrow-left"></i> Back to Store
-      </a>
-      <span class="font-semibold text-neutral-500">Minee Beauty Details</span>
-    </nav>
-  </header>
+    <main class="max-w-6xl mx-auto px-4 py-12 w-full flex-grow">
+      <div
+        id="detail-card-container"
+        class="bg-white rounded-3xl border border-neutral-100 p-6 md:p-12 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+        data-id=""
+      >
+        <div
+          class="bg-neutral-50 rounded-2xl p-6 flex justify-center items-center border border-neutral-100"
+        >
+          <img
+            id="detail-image"
+            src=""
+            alt="Product Image"
+            class="max-h-96 object-contain"
+          />
+        </div>
 
-  <main class="max-w-6xl mx-auto px-4 py-12 w-full flex-grow">
-    <div id="detail-card-container" class="bg-white rounded-3xl border border-neutral-100 p-6 md:p-12 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-12 items-center" data-id="">
-      
-      <div class="bg-neutral-50 rounded-2xl p-6 flex justify-center items-center border border-neutral-100">
-        <img id="detail-image" src="" alt="Product Image" class="max-h-96 object-contain">
-      </div>
+        <div class="flex flex-col h-full justify-center">
+          <span
+            id="detail-type"
+            class="text-xs font-bold tracking-wider text-pink-500 uppercase bg-pink-50 px-3 py-1 rounded-full w-max mb-3"
+            >Category</span
+          >
+          <h1
+            id="detail-title"
+            class="text-2xl md:text-4xl font-bold text-neutral-800 mb-2"
+          >
+            Loading Product Title...
+          </h1>
+          <div
+            id="detail-price"
+            class="text-2xl font-extrabold text-pink-600 mb-6"
+          >
+            $0.00
+          </div>
 
-      <div class="flex flex-col h-full justify-center">
-        <span id="detail-type" class="text-xs font-bold tracking-wider text-pink-500 uppercase bg-pink-50 px-3 py-1 rounded-full w-max mb-3">Category</span>
-        <h1 id="detail-title" class="text-2xl md:text-4xl font-bold text-neutral-800 mb-2">Loading Product Title...</h1>
-        <div id="detail-price" class="text-2xl font-extrabold text-pink-600 mb-6">$0.00</div>
-        
-        <div class="space-y-4 border-t border-neutral-100 pt-6">
-          <div>
-            <h3 class="text-sm font-bold text-neutral-800 mb-1"><i class="fa-solid fa-flask text-pink-400 mr-1"></i> Ingredients Structure</h3>
-            <p id="detail-ingredients" class="text-neutral-600 text-sm leading-relaxed bg-neutral-50 p-3 rounded-xl border border-neutral-100">Loading ingredient formulas...</p>
+          <div class="space-y-4 border-t border-neutral-100 pt-6">
+            <div>
+              <h3 class="text-sm font-bold text-neutral-800 mb-1">
+                <i class="fa-solid fa-flask text-pink-400 mr-1"></i> Ingredients
+                Structure
+              </h3>
+              <p
+                id="detail-ingredients"
+                class="text-neutral-600 text-sm leading-relaxed bg-neutral-50 p-3 rounded-xl border border-neutral-100"
+              >
+                Loading ingredient formulas...
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="flex items-center gap-4 mt-8 pt-6 border-t border-neutral-100"
+          >
+            <button
+              id="detail-wishlist-btn"
+              class="flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer"
+            >
+              <i
+                id="detail-heart-icon"
+                class="fa-solid fa-heart text-lg transition-colors"
+              ></i>
+              <span class="text-[10px] font-medium mt-0.5">Wishlist</span>
+            </button>
+
+            <button
+              id="add-to-cart-btn"
+              class="flex-1 h-12 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-xl text-sm transition-all active:scale-95 shadow-md hover:shadow-lg cursor-pointer"
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
+      </div>
+    </main>
 
-        <div class="flex items-center gap-4 mt-8 pt-6 border-t border-neutral-100">
-          
-          <button id="detail-wishlist-btn" class="flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer">
-            <i id="detail-heart-icon" class="fa-solid fa-heart text-lg transition-colors"></i>
-            <span class="text-[10px] font-medium mt-0.5">Wishlist</span>
-          </button>
+    <section class="max-w-6xl mx-auto px-4 pb-24 w-full">
+      <h2
+        class="text-2xl font-bold text-neutral-800 mb-6 flex items-center gap-2"
+      >
+        <span class="w-2 h-6 bg-pink-400 rounded-full"></span> Related Products
+        You May Like
+      </h2>
+      <div
+        id="related-grid"
+        class="grid grid-cols-1 sm:grid-cols-3 gap-6"
+      ></div>
+    </section>
 
-          <button id="add-to-cart-btn" class="flex-1 h-12 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-xl text-sm transition-all active:scale-95 shadow-md hover:shadow-lg cursor-pointer">
-            Add to Cart
-          </button>
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+      <button
+        id="cart-button"
+        class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2"
+      >
+        <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
+      </button>
 
-        </div>
+      <div
+        id="cart-preview"
+        class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto"
+      >
+        <h3
+          class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview
+          Items
+        </h3>
+        <ul
+          id="cart-items"
+          class="space-y-2 text-xs text-neutral-600 mb-3"
+        ></ul>
+        <h4
+          id="cart-total"
+          class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3"
+        >
+          Total: $0.00
+        </h4>
+        <button
+          onclick="confirmCart()"
+          class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer"
+        >
+          Confirm Order
+        </button>
       </div>
     </div>
-  </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const savedProduct = JSON.parse(
+          localStorage.getItem("selectedProduct"),
+        );
+        const cartBtn = document.getElementById("cart-button");
+        const cartPreview = document.getElementById("cart-preview");
+        const backLinkElement = document.getElementById("back-link");
 
-  <section class="max-w-6xl mx-auto px-4 pb-24 w-full">
-    <h2 class="text-2xl font-bold text-neutral-800 mb-6 flex items-center gap-2">
-      <span class="w-2 h-6 bg-pink-400 rounded-full"></span> Related Products You May Like
-    </h2>
-    <div id="related-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-    </div>
-  </section>
+        // Change this block in your product.html:
+        const API_BASE =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1"
+            ? "http://localhost:3000/api"
+            : "/api";
+        // --- DYNAMIC BACK LINK BY CATEGORY ---
+        if (backLinkElement && savedProduct) {
+          const categoryName = String(
+            savedProduct.type || savedProduct.category || "",
+          ).toLowerCase();
 
-  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
-    <button id="cart-button" class="bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 px-6 rounded-full shadow-xl transition-all cursor-pointer flex items-center gap-2">
-      <i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (0)
-    </button>
-    
-    <div id="cart-preview" class="hidden mt-3 bg-white border border-neutral-200 w-72 rounded-2xl p-4 shadow-xl max-h-96 overflow-y-auto">
-      <h3 class="font-bold text-neutral-800 text-sm border-b border-neutral-100 pb-2 mb-2 flex items-center gap-1.5">
-        <i class="fa-solid fa-basket-shopping text-pink-500"></i> Preview Items
-      </h3>
-      <ul id="cart-items" class="space-y-2 text-xs text-neutral-600 mb-3"></ul>
-      <h4 id="cart-total" class="font-bold text-right text-sm text-neutral-800 border-t border-neutral-100 pt-2 mb-3">Total: $0.00</h4>
-      <button onclick="confirmCart()" class="w-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer">Confirm Order</button>
-    </div>
-  </div>
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const savedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
-      const cartBtn = document.getElementById('cart-button');
-      const cartPreview = document.getElementById('cart-preview');
-      const backLinkElement = document.getElementById('back-link');
-
-     // Change this block in your product.html:
-const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-  ? "http://localhost:3000/api"
-  : "/api";
-      // --- DYNAMIC BACK LINK BY CATEGORY ---
-      if (backLinkElement && savedProduct) {
-        const categoryName = String(savedProduct.type || savedProduct.category || "").toLowerCase();
-        
-        if (categoryName.includes('skincare') || categoryName.includes('skin')) {
-          backLinkElement.href = "skincare.html";
-          backLinkElement.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Skincare`;
-        } else {
-          backLinkElement.href = "cosmetic.html";
-          backLinkElement.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Cosmetic`;
-        }
-      }
-
-      function showCartPreview() {
-        if (!cartPreview) return;
-        cartPreview.style.setProperty('display', 'block', 'important');
-        cartPreview.classList.remove('hidden'); 
-      }
-
-      function hideCartPreview() {
-        if (!cartPreview) return;
-        cartPreview.style.setProperty('display', 'none', 'important');
-      }
-
-      if (cartBtn && cartPreview) {
-        cartPreview.style.setProperty('display', 'none', 'important');
-
-        cartBtn.onclick = (e) => {
-          e.stopPropagation();
-          if (cartPreview.style.display === 'none') {
-            showCartPreview();
+          if (
+            categoryName.includes("skincare") ||
+            categoryName.includes("skin")
+          ) {
+            backLinkElement.href = "skincare.html";
+            backLinkElement.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Skincare`;
           } else {
-            hideCartPreview();
+            backLinkElement.href = "cosmetic.html";
+            backLinkElement.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Cosmetic`;
           }
-        };
-
-        document.addEventListener('click', (e) => {
-          if (!cartPreview.contains(e.target) && e.target !== cartBtn) {
-            hideCartPreview();
-          }
-        });
-      }
-
-      // មុខងារ Render ទិន្នន័យទំនិញនៅក្នុងកន្ត្រកអណ្តែត (Floating Cart)
-      window.refreshFloatingCartUI = function() {
-        const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
-        const totalCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
-        
-        if (cartBtn) {
-          cartBtn.innerHTML = `<i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (${totalCount})`;
         }
 
-        const listContainer = document.getElementById('cart-items');
-        const totalContainer = document.getElementById('cart-total');
-        if (!listContainer || !totalContainer) return;
-
-        if (cartItems.length === 0) {
-          listContainer.innerHTML = `<li class="text-neutral-400 text-center py-2 text-xs italic">Your basket is empty</li>`;
-          totalContainer.innerText = `Total: $0.00`;
-          return;
+        function showCartPreview() {
+          if (!cartPreview) return;
+          cartPreview.style.setProperty("display", "block", "important");
+          cartPreview.classList.remove("hidden");
         }
 
-        listContainer.innerHTML = "";
-        let accumulatedPrice = 0;
+        function hideCartPreview() {
+          if (!cartPreview) return;
+          cartPreview.style.setProperty("display", "none", "important");
+        }
 
-        cartItems.forEach(item => {
-          const cost = parseFloat(item.price) || 0;
-          const qty = item.quantity || 1;
-          accumulatedPrice += (cost * qty);
-          const itemImgUrl = item.image || item.img || "./image/logo copy.png";
+        if (cartBtn && cartPreview) {
+          cartPreview.style.setProperty("display", "none", "important");
 
-          listContainer.innerHTML += `
+          cartBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (cartPreview.style.display === "none") {
+              showCartPreview();
+            } else {
+              hideCartPreview();
+            }
+          };
+
+          document.addEventListener("click", (e) => {
+            if (!cartPreview.contains(e.target) && e.target !== cartBtn) {
+              hideCartPreview();
+            }
+          });
+        }
+
+        // មុខងារ Render ទិន្នន័យទំនិញនៅក្នុងកន្ត្រកអណ្តែត (Floating Cart)
+        window.refreshFloatingCartUI = function () {
+          const cartItems =
+            JSON.parse(localStorage.getItem("minee_cart")) || [];
+          const totalCount = cartItems.reduce(
+            (acc, item) => acc + (item.quantity || 1),
+            0,
+          );
+
+          if (cartBtn) {
+            cartBtn.innerHTML = `<i class="fa-solid fa-shopping-cart text-pink-400"></i> Cart (${totalCount})`;
+          }
+
+          const listContainer = document.getElementById("cart-items");
+          const totalContainer = document.getElementById("cart-total");
+          if (!listContainer || !totalContainer) return;
+
+          if (cartItems.length === 0) {
+            listContainer.innerHTML = `<li class="text-neutral-400 text-center py-2 text-xs italic">Your basket is empty</li>`;
+            totalContainer.innerText = `Total: $0.00`;
+            return;
+          }
+
+          listContainer.innerHTML = "";
+          let accumulatedPrice = 0;
+
+          cartItems.forEach((item) => {
+            const cost = parseFloat(item.price) || 0;
+            const qty = item.quantity || 1;
+            accumulatedPrice += cost * qty;
+            const itemImgUrl =
+              item.image || item.img || "./image/logo copy.png";
+
+            listContainer.innerHTML += `
             <li class="flex justify-between items-center bg-neutral-50 p-2 rounded-lg border border-neutral-100 text-[11px] gap-2">
               <div class="flex items-center gap-2 truncate max-w-[130px]">
                 <div class="w-8 h-8 rounded-md bg-white border border-neutral-100 flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="${itemImgUrl}" alt="${item.title}" class="w-full h-full object-contain">
                 </div>
                 <div class="truncate">
-                  <p class="font-medium text-neutral-700 truncate">${item.title || 'Skincare Item'}</p>
+                  <p class="font-medium text-neutral-700 truncate">${item.title || "Skincare Item"}</p>
                   <p class="text-[10px] text-neutral-400">$${cost.toFixed(2)}</p>
                 </div>
               </div>
@@ -178,234 +270,441 @@ const API_BASE = window.location.hostname === "localhost" || window.location.hos
               <span class="font-bold text-neutral-800 shrink-0">$${(cost * qty).toFixed(2)}</span>
             </li>
           `;
-        });
+          });
 
-        totalContainer.innerText = `Total: $${accumulatedPrice.toFixed(2)}`;
-      };
+          totalContainer.innerText = `Total: $${accumulatedPrice.toFixed(2)}`;
+        };
 
-      // មុខងារបូកដកចំនួនទំនិញនៅក្នុង Cart Inline (រួមជាមួយការទប់ស្កាត់ limit_per_user)
-      window.handleInlineQtyChange = function(id, balance) {
-        let storageCart = JSON.parse(localStorage.getItem('minee_cart')) || [];
-        let target = storageCart.find(i => String(i.id) === String(id));
-        if (!target) return;
-        
-        const newQty = (target.quantity || 1) + balance;
-        
-        if (balance > 0 && target.limit_per_user && target.limit_per_user > 0) {
-          if (newQty > target.limit_per_user) {
-            alert(`Sorry, you can only buy a maximum of ${target.limit_per_user} units of this product.`);
-            return;
-          }
-        }
+        // មុខងារបូកដកចំនួនទំនិញនៅក្នុង Cart Inline (រួមជាមួយការទប់ស្កាត់ limit_per_user)
+        window.handleInlineQtyChange = async function (id, balance) {
+          let storageCart =
+            JSON.parse(localStorage.getItem("minee_cart")) || [];
 
-        target.quantity = newQty;
-        if (target.quantity <= 0) {
-          storageCart = storageCart.filter(i => String(i.id) !== String(id));
-        }
-        localStorage.setItem('minee_cart', JSON.stringify(storageCart));
-        refreshFloatingCartUI();
-      };
+          const lookupId = String(id);
 
-      refreshFloatingCartUI();
+          let target = storageCart.find((item) => String(item.id) === lookupId);
 
-      if (savedProduct) {
-        let currentProduct = savedProduct;
-        let databaseProductsList = []; 
+          if (!target) return;
 
-        const imageWrapper = document.getElementById('detail-image').parentElement;
-        const mainAddToCartBtn = document.getElementById('add-to-cart-btn');
-        const cardBox = document.getElementById('detail-card-container');
+          // Decreasing quantity does not require
+          // an inventory request.
+          if (balance < 0) {
+            const newQuantity = (Number(target.quantity) || 1) - 1;
 
-        if (imageWrapper) imageWrapper.classList.add('relative');
-        if (cardBox) cardBox.setAttribute('data-id', String(savedProduct.id));
-
-        try {
-          const response = await fetch(`${API_BASE}/products`);
-          databaseProductsList = await response.json();
-          
-          const dbProduct = databaseProductsList.find(prod => String(prod.id) === String(savedProduct.id));
-          
-          if (dbProduct) {
-            const currentPrice = Number(dbProduct.price);
-            const discountPrice = dbProduct.discount_price ? Number(dbProduct.discount_price) : null;
-            const stockQuantity = dbProduct.stock !== undefined ? parseInt(dbProduct.stock) : 0;
-            const userLimit = dbProduct.limit_per_user !== undefined ? parseInt(dbProduct.limit_per_user) : 0;
-
-            if (cardBox) {
-              cardBox.setAttribute('data-stock', stockQuantity);
-              cardBox.setAttribute('data-limit', userLimit);
+            if (newQuantity <= 0) {
+              storageCart = storageCart.filter(
+                (item) => String(item.id) !== lookupId,
+              );
+            } else {
+              target.quantity = newQuantity;
             }
 
-            currentProduct = {
-              id: dbProduct.id,
-              name: dbProduct.title || dbProduct.name,
-              type: dbProduct.category || dbProduct.type || "Skincare Essential",
-              price: typeof dbProduct.price === 'number' ? `$${dbProduct.price.toFixed(2)}` : dbProduct.price,
-              img: dbProduct.image_url || dbProduct.image || dbProduct.img || "./image/logo copy.png", 
-              ingredients: dbProduct.ingredients,
-              stock: stockQuantity,
-              limit_per_user: userLimit,
-              discount_price: discountPrice
-            };
+            localStorage.setItem("minee_cart", JSON.stringify(storageCart));
 
-            if (discountPrice && discountPrice < currentPrice) {
-              document.getElementById('detail-price').innerHTML = `
+            refreshFloatingCartUI();
+            return;
+          }
+
+          // Ignore unsupported quantity changes.
+          if (balance <= 0) return;
+
+          try {
+            const response = await fetch(`${API_BASE}/products`);
+
+            if (!response.ok) {
+              throw new Error("Unable to verify inventory.");
+            }
+
+            const liveProducts = await response.json();
+
+            const liveProduct = liveProducts.find(
+              (product) => String(product.id) === lookupId,
+            );
+
+            if (!liveProduct) {
+              alert("This product is no longer available.");
+              return;
+            }
+
+            const availableStock = Number(liveProduct.stock) || 0;
+
+            const currentQuantity = Number(target.quantity) || 0;
+
+            if (availableStock <= 0) {
+              alert(`Sorry, "${liveProduct.title}" is out of stock.`);
+              return;
+            }
+
+            if (currentQuantity >= availableStock) {
+              alert(
+                `Sorry, only ${availableStock} unit(s) of "${liveProduct.title}" are available.`,
+              );
+              return;
+            }
+
+            const limitPerUser = Number(liveProduct.limit_per_user) || 0;
+
+            if (limitPerUser > 0 && currentQuantity >= limitPerUser) {
+              alert(
+                `Sorry, you can only buy a maximum of ${limitPerUser} unit(s) of this product.`,
+              );
+              return;
+            }
+
+            target.quantity = currentQuantity + 1;
+
+            target.title = liveProduct.title;
+
+            target.image = liveProduct.image_url || target.image;
+
+            target.limit_per_user = limitPerUser;
+
+            localStorage.setItem("minee_cart", JSON.stringify(storageCart));
+
+            refreshFloatingCartUI();
+          } catch (error) {
+            console.error("Cart quantity stock check failed:", error);
+
+            alert("We could not verify the available stock. Please try again.");
+          }
+        };
+
+        refreshFloatingCartUI();
+
+        if (savedProduct) {
+          let currentProduct = savedProduct;
+          let databaseProductsList = [];
+
+          const imageWrapper =
+            document.getElementById("detail-image").parentElement;
+          const mainAddToCartBtn = document.getElementById("add-to-cart-btn");
+          const cardBox = document.getElementById("detail-card-container");
+
+          if (imageWrapper) imageWrapper.classList.add("relative");
+          if (cardBox) cardBox.setAttribute("data-id", String(savedProduct.id));
+
+          try {
+            const response = await fetch(`${API_BASE}/products`);
+            databaseProductsList = await response.json();
+
+            const dbProduct = databaseProductsList.find(
+              (prod) => String(prod.id) === String(savedProduct.id),
+            );
+
+            if (dbProduct) {
+              const currentPrice = Number(dbProduct.price);
+              const discountPrice = dbProduct.discount_price
+                ? Number(dbProduct.discount_price)
+                : null;
+              const stockQuantity =
+                dbProduct.stock !== undefined ? parseInt(dbProduct.stock) : 0;
+              const userLimit =
+                dbProduct.limit_per_user !== undefined
+                  ? parseInt(dbProduct.limit_per_user)
+                  : 0;
+
+              if (cardBox) {
+                cardBox.setAttribute("data-stock", stockQuantity);
+                cardBox.setAttribute("data-limit", userLimit);
+              }
+
+              currentProduct = {
+                id: dbProduct.id,
+                name: dbProduct.title || dbProduct.name,
+                type:
+                  dbProduct.category || dbProduct.type || "Skincare Essential",
+                price:
+                  typeof dbProduct.price === "number"
+                    ? `$${dbProduct.price.toFixed(2)}`
+                    : dbProduct.price,
+                img:
+                  dbProduct.image_url ||
+                  dbProduct.image ||
+                  dbProduct.img ||
+                  "./image/logo copy.png",
+                ingredients: dbProduct.ingredients,
+                stock: stockQuantity,
+                limit_per_user: userLimit,
+                discount_price: discountPrice,
+              };
+
+              if (discountPrice && discountPrice < currentPrice) {
+                document.getElementById("detail-price").innerHTML = `
                 <div class="flex items-center gap-3">
                   <span class="text-neutral-400 line-through text-sm font-normal">$${currentPrice.toFixed(2)}</span>
                   <span class="text-pink-600 font-extrabold text-2xl md:text-3xl">$${discountPrice.toFixed(2)}</span>
                 </div>
               `;
-              if (imageWrapper) {
-                imageWrapper.innerHTML += `<span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-black px-3 py-1 rounded-lg z-10 animate-pulse shadow-md">Hot Sale</span>`;
+                if (imageWrapper) {
+                  imageWrapper.innerHTML += `<span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-black px-3 py-1 rounded-lg z-10 animate-pulse shadow-md">Hot Sale</span>`;
+                }
               }
-            }
 
-            if (stockQuantity <= 0) {
-              if (imageWrapper) {
-                imageWrapper.innerHTML += `
+              if (stockQuantity <= 0) {
+                if (imageWrapper) {
+                  imageWrapper.innerHTML += `
                   <div class="absolute inset-0 bg-neutral-900/40 rounded-2xl flex items-center justify-center z-10 backdrop-blur-[1px]">
                     <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-1.5 rounded-xl shadow-lg border border-neutral-100 tracking-wider uppercase">Sold Out</span>
                   </div>
                 `;
-              }
-              if (mainAddToCartBtn) {
-                mainAddToCartBtn.disabled = true;
-                mainAddToCartBtn.innerText = "Sold Out (Out of Stock)";
-                mainAddToCartBtn.className = "flex-1 h-12 bg-neutral-200 text-neutral-400 font-semibold rounded-xl text-sm cursor-not-allowed shadow-none";
+                }
+                if (mainAddToCartBtn) {
+                  mainAddToCartBtn.disabled = true;
+                  mainAddToCartBtn.innerText = "Sold Out (Out of Stock)";
+                  mainAddToCartBtn.className =
+                    "flex-1 h-12 bg-neutral-200 text-neutral-400 font-semibold rounded-xl text-sm cursor-not-allowed shadow-none";
+                }
               }
             }
+          } catch (err) {
+            console.warn(
+              "Failed to patch fresh live rows, using storage cache alternative:",
+              err,
+            );
           }
-        } catch (err) {
-          console.warn("Failed to patch fresh live rows, using storage cache alternative:", err);
-        }
 
-        document.getElementById('detail-title').innerText = currentProduct.name;
-        document.getElementById('detail-type').innerText = currentProduct.type;
-        
-        if (!currentProduct.discount_price || Number(currentProduct.discount_price) >= parseFloat(currentProduct.price.replace('$', ''))) {
-          document.getElementById('detail-price').innerText = currentProduct.price; 
-        }
-        
-        document.getElementById('detail-ingredients').innerText = currentProduct.ingredients && currentProduct.ingredients.trim() !== "" 
-          ? currentProduct.ingredients 
-          : "No specific ingredient formulas declared for this product profile.";
-        
-        document.getElementById('detail-image').src = currentProduct.img;
-        document.getElementById('detail-image').alt = currentProduct.name;
+          document.getElementById("detail-title").innerText =
+            currentProduct.name;
+          document.getElementById("detail-type").innerText =
+            currentProduct.type;
 
-        const dynamicFinalPriceNum = currentProduct.discount_price ? Number(currentProduct.discount_price) : parseFloat(currentProduct.price.replace('$', ''));
+          if (
+            !currentProduct.discount_price ||
+            Number(currentProduct.discount_price) >=
+              parseFloat(currentProduct.price.replace("$", ""))
+          ) {
+            document.getElementById("detail-price").innerText =
+              currentProduct.price;
+          }
 
-        if (currentProduct.stock === undefined || currentProduct.stock > 0) {
-          mainAddToCartBtn.onclick = function() {
-            let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
-            const exactItem = cart.find(item => String(item.id) === String(currentProduct.id));
-            
-            const currentQtyInCart = exactItem ? exactItem.quantity : 0;
-            const limitPerUser = currentProduct.limit_per_user || 0;
+          document.getElementById("detail-ingredients").innerText =
+            currentProduct.ingredients &&
+            currentProduct.ingredients.trim() !== ""
+              ? currentProduct.ingredients
+              : "No specific ingredient formulas declared for this product profile.";
 
-            if (limitPerUser > 0 && (currentQtyInCart + 1) > limitPerUser) {
-              alert(`Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`);
-              return;
-            }
+          document.getElementById("detail-image").src = currentProduct.img;
+          document.getElementById("detail-image").alt = currentProduct.name;
 
-            if (exactItem) { 
-              exactItem.quantity += 1; 
-            } else { 
-              cart.push({ 
-                id: String(currentProduct.id), 
-                title: currentProduct.name, 
-                price: dynamicFinalPriceNum, 
-                image: currentProduct.img,
-                quantity: 1,
-                limit_per_user: limitPerUser
-              }); 
-            }
-            localStorage.setItem('minee_cart', JSON.stringify(cart));
-            refreshFloatingCartUI();
-            setTimeout(() => { showCartPreview(); }, 50);
-          };
-        }
+          const dynamicFinalPriceNum = currentProduct.discount_price
+            ? Number(currentProduct.discount_price)
+            : parseFloat(currentProduct.price.replace("$", ""));
 
-        const wishlistBtn = document.getElementById('detail-wishlist-btn');
-        if (wishlistBtn) {
-          wishlistBtn.onclick = function() {
-            let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
-            const index = wishlist.findIndex(item => String(item.id) === String(currentProduct.id));
-            if (index > -1) {
-              wishlist.splice(index, 1);
-            } else {
-              wishlist.push({ id: String(currentProduct.id), name: currentProduct.name, price: dynamicFinalPriceNum, img: currentProduct.img });
-            }
-            localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
-            updateMainHeartUI(currentProduct.id);
-          };
-        }
+          if (currentProduct.stock === undefined || currentProduct.stock > 0) {
+            mainAddToCartBtn.onclick = async function () {
+              try {
+                // Check current database stock when clicked.
+                const response = await fetch(`${API_BASE}/products`);
 
-        updateMainHeartUI(currentProduct.id);
-        
-        loadDynamicRelatedItems(currentProduct.id, currentProduct.type, databaseProductsList);
-      } else {
-        document.querySelector('main').innerHTML = `
+                if (!response.ok) {
+                  throw new Error("Unable to verify inventory.");
+                }
+
+                const liveProducts = await response.json();
+
+                const liveProduct = liveProducts.find(
+                  (product) => String(product.id) === String(currentProduct.id),
+                );
+
+                if (!liveProduct) {
+                  alert("This product is no longer available.");
+                  return;
+                }
+
+                const availableStock = Number(liveProduct.stock) || 0;
+
+                let cart = JSON.parse(localStorage.getItem("minee_cart")) || [];
+
+                const exactItem = cart.find(
+                  (item) => String(item.id) === String(liveProduct.id),
+                );
+
+                const currentQtyInCart = exactItem
+                  ? Number(exactItem.quantity) || 0
+                  : 0;
+
+                if (availableStock <= 0) {
+                  alert(`Sorry, "${liveProduct.title}" is out of stock.`);
+                  return;
+                }
+
+                if (currentQtyInCart >= availableStock) {
+                  alert(
+                    `Sorry, only ${availableStock} unit(s) of "${liveProduct.title}" are available.`,
+                  );
+                  return;
+                }
+
+                const limitPerUser = Number(liveProduct.limit_per_user) || 0;
+
+                if (limitPerUser > 0 && currentQtyInCart >= limitPerUser) {
+                  alert(
+                    `Sorry, you can only buy a maximum of ${limitPerUser} unit(s) of this product.`,
+                  );
+                  return;
+                }
+
+                if (exactItem) {
+                  exactItem.quantity = currentQtyInCart + 1;
+
+                  exactItem.title = liveProduct.title;
+
+                  exactItem.image = liveProduct.image_url || currentProduct.img;
+
+                  exactItem.limit_per_user = limitPerUser;
+                } else {
+                  cart.push({
+                    id: String(liveProduct.id),
+                    product_id: String(liveProduct.id),
+                    title: liveProduct.title,
+                    price: dynamicFinalPriceNum,
+                    image: liveProduct.image_url || currentProduct.img,
+                    quantity: 1,
+                    limit_per_user: limitPerUser,
+                  });
+                }
+
+                localStorage.setItem("minee_cart", JSON.stringify(cart));
+
+                refreshFloatingCartUI();
+
+                setTimeout(() => {
+                  showCartPreview();
+                }, 50);
+              } catch (error) {
+                console.error("Detail-page stock check failed:", error);
+
+                alert(
+                  "We could not verify the available stock. Please try again.",
+                );
+              }
+            };
+          }
+
+          const wishlistBtn = document.getElementById("detail-wishlist-btn");
+          if (wishlistBtn) {
+            wishlistBtn.onclick = function () {
+              let wishlist =
+                JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+              const index = wishlist.findIndex(
+                (item) => String(item.id) === String(currentProduct.id),
+              );
+              if (index > -1) {
+                wishlist.splice(index, 1);
+              } else {
+                wishlist.push({
+                  id: String(currentProduct.id),
+                  name: currentProduct.name,
+                  price: dynamicFinalPriceNum,
+                  img: currentProduct.img,
+                });
+              }
+              localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+              updateMainHeartUI(currentProduct.id);
+            };
+          }
+
+          updateMainHeartUI(currentProduct.id);
+
+          loadDynamicRelatedItems(
+            currentProduct.id,
+            currentProduct.type,
+            databaseProductsList,
+          );
+        } else {
+          document.querySelector("main").innerHTML = `
           <div class="text-center py-24 bg-white rounded-2xl border border-neutral-100 max-w-md mx-auto my-12 shadow-xs">
             <i class="fa-solid fa-circle-exclamation text-4xl text-neutral-300 mb-3"></i>
             <p class="text-neutral-500 font-medium">No skincare context profile found.</p>
             <a href="cosmetic.html" class="mt-4 text-pink-500 hover:text-pink-600 font-semibold underline inline-block text-sm">Return to Shop</a>
           </div>`;
-      }
-    });
+        }
+      });
 
-    function loadDynamicRelatedItems(currentId, currentCategory, allProducts) {
-      const relatedGrid = document.getElementById('related-grid');
-      if (!relatedGrid) return;
-      
-      if (!allProducts || allProducts.length === 0) {
-        relatedGrid.innerHTML = "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No recommendations available right now.</p>";
-        return;
-      }
+      function loadDynamicRelatedItems(
+        currentId,
+        currentCategory,
+        allProducts,
+      ) {
+        const relatedGrid = document.getElementById("related-grid");
+        if (!relatedGrid) return;
 
-      let filtered = allProducts.filter(prod => 
-        String(prod.id) !== String(currentId) && 
-        String(prod.category || prod.type || "").toLowerCase() === String(currentCategory || "").toLowerCase()
-      );
+        if (!allProducts || allProducts.length === 0) {
+          relatedGrid.innerHTML =
+            "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No recommendations available right now.</p>";
+          return;
+        }
 
-      if (filtered.length < 3) {
-        const extraItems = allProducts.filter(prod => String(prod.id) !== String(currentId) && !filtered.some(r => r.id === prod.id));
-        filtered = [...filtered, ...extraItems];
-      }
+        let filtered = allProducts.filter(
+          (prod) =>
+            String(prod.id) !== String(currentId) &&
+            String(prod.category || prod.type || "").toLowerCase() ===
+              String(currentCategory || "").toLowerCase(),
+        );
 
-      const recommendations = filtered.slice(0, 3);
+        if (filtered.length < 3) {
+          const extraItems = allProducts.filter(
+            (prod) =>
+              String(prod.id) !== String(currentId) &&
+              !filtered.some((r) => r.id === prod.id),
+          );
+          filtered = [...filtered, ...extraItems];
+        }
 
-      if (recommendations.length === 0) {
-        relatedGrid.innerHTML = "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No similar items found.</p>";
-        return;
-      }
+        const recommendations = filtered.slice(0, 3);
 
-      relatedGrid.innerHTML = recommendations.map((prod, index) => {
-        const title = prod.title || prod.name || "Skincare Item";
-        
-        const stockQuantity = prod.stock !== undefined ? parseInt(prod.stock) : 1;
-        const userLimit = prod.limit_per_user !== undefined ? parseInt(prod.limit_per_user) : 0;
-        const isOutOfStock = stockQuantity <= 0;
-        
-        const originalPrice = Number(prod.price);
-        const promoPrice = prod.discount_price ? Number(prod.discount_price) : null;
-        const isOnSale = (promoPrice && promoPrice < originalPrice);
-        
-        const displayPriceText = isOnSale ? `$${promoPrice.toFixed(2)}` : `$${originalPrice.toFixed(2)}`;
-        const rawPriceNum = isOnSale ? promoPrice : originalPrice;
-        
-        const img = prod.image_url || prod.image || prod.img || './image/logo copy.png';
-        const ingredientsText = (prod.ingredients || "").replace(/'/g, "\\'");
-        const escapedTitle = title.replace(/'/g, "\\'");
+        if (recommendations.length === 0) {
+          relatedGrid.innerHTML =
+            "<p class='text-neutral-400 text-sm col-span-full text-center py-4'>No similar items found.</p>";
+          return;
+        }
 
-        let badgeMarkup = isOnSale ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-10 animate-pulse shadow-xs">SALE</span>` : '';
-        let overlayMarkup = isOutOfStock ? `<div class="absolute inset-0 bg-neutral-900/40 rounded-xl flex items-center justify-center z-10"><span class="bg-white/95 text-neutral-800 text-[9px] font-black px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">Sold Out</span></div>` : '';
-        
-        let relatedButton = isOutOfStock 
-          ? `<button disabled class="w-full mt-4 bg-neutral-200 text-neutral-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed">Sold Out</button>`
-          : `<button onclick="handleRelatedAddToCartFallback('${prod.id}', \`${escapedTitle}\`, ${rawPriceNum}, '${img}', ${userLimit})" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 rounded-xl transition-all active:scale-95 shadow-sm hover:shadow cursor-pointer">Add to Cart</button>`;
+        relatedGrid.innerHTML = recommendations
+          .map((prod, index) => {
+            const title = prod.title || prod.name || "Skincare Item";
 
-        return `
+            const stockQuantity =
+              prod.stock !== undefined ? parseInt(prod.stock) : 1;
+            const userLimit =
+              prod.limit_per_user !== undefined
+                ? parseInt(prod.limit_per_user)
+                : 0;
+            const isOutOfStock = stockQuantity <= 0;
+
+            const originalPrice = Number(prod.price);
+            const promoPrice = prod.discount_price
+              ? Number(prod.discount_price)
+              : null;
+            const isOnSale = promoPrice && promoPrice < originalPrice;
+
+            const displayPriceText = isOnSale
+              ? `$${promoPrice.toFixed(2)}`
+              : `$${originalPrice.toFixed(2)}`;
+            const rawPriceNum = isOnSale ? promoPrice : originalPrice;
+
+            const img =
+              prod.image_url ||
+              prod.image ||
+              prod.img ||
+              "./image/logo copy.png";
+            const ingredientsText = (prod.ingredients || "").replace(
+              /'/g,
+              "\\'",
+            );
+            const escapedTitle = title.replace(/'/g, "\\'");
+
+            let badgeMarkup = isOnSale
+              ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-10 animate-pulse shadow-xs">SALE</span>`
+              : "";
+            let overlayMarkup = isOutOfStock
+              ? `<div class="absolute inset-0 bg-neutral-900/40 rounded-xl flex items-center justify-center z-10"><span class="bg-white/95 text-neutral-800 text-[9px] font-black px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">Sold Out</span></div>`
+              : "";
+
+            let relatedButton = isOutOfStock
+              ? `<button disabled class="w-full mt-4 bg-neutral-200 text-neutral-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed">Sold Out</button>`
+              : `<button onclick="handleRelatedAddToCartFallback('${prod.id}', \`${escapedTitle}\`, ${rawPriceNum}, '${img}', ${userLimit})" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 rounded-xl transition-all active:scale-95 shadow-sm hover:shadow cursor-pointer">Add to Cart</button>`;
+
+            return `
           <div class="bg-white rounded-2xl border border-neutral-100 p-4 shadow-sm hover:shadow-md transition-all duration-700 ease-out transform opacity-0 translate-y-4 related-card flex flex-col justify-between relative"
                style="transition-delay: ${index * 150}ms" data-id="${prod.id}">
             
@@ -430,97 +729,134 @@ const API_BASE = window.location.hostname === "localhost" || window.location.hos
             ${relatedButton}
           </div>
         `;
-      }).join('');
+          })
+          .join("");
 
-      setTimeout(() => {
-        const cards = document.querySelectorAll('.related-card');
-        cards.forEach(card => {
-          card.classList.remove('opacity-0', 'translate-y-4');
-          card.classList.add('opacity-100', 'translate-y-0');
-        });
-      }, 50);
-    }
-
-    window.handleRelatedAddToCartFallback = function(id, name, price, img, limitPerUser) {
-      const clickedCard = document.querySelector(`.related-card[data-id="${id}"]`);
-      if (clickedCard && clickedCard.querySelector('.bg-neutral-900\\/40')) {
-        alert("Sorry, this item is currently Sold Out.");
-        return;
+        setTimeout(() => {
+          const cards = document.querySelectorAll(".related-card");
+          cards.forEach((card) => {
+            card.classList.remove("opacity-0", "translate-y-4");
+            card.classList.add("opacity-100", "translate-y-0");
+          });
+        }, 50);
       }
 
-      let cart = JSON.parse(localStorage.getItem('minee_cart')) || [];
-      const exactItem = cart.find(item => String(item.id) === String(id));
-      
-      const currentQty = exactItem ? exactItem.quantity : 0;
-      if (limitPerUser > 0 && (currentQty + 1) > limitPerUser) {
-        alert(`Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`);
-        return;
-      }
+      window.handleRelatedAddToCartFallback = function (
+        id,
+        name,
+        price,
+        img,
+        limitPerUser,
+      ) {
+        const clickedCard = document.querySelector(
+          `.related-card[data-id="${id}"]`,
+        );
+        if (clickedCard && clickedCard.querySelector(".bg-neutral-900\\/40")) {
+          alert("Sorry, this item is currently Sold Out.");
+          return;
+        }
 
-      if (exactItem) { 
-        exactItem.quantity += 1; 
-      } else { 
-        cart.push({ 
-          id: String(id), 
-          title: name, 
-          price: parseFloat(price), 
-          image: img, 
-          quantity: 1,
-          limit_per_user: limitPerUser 
-        }); 
-      }
-      localStorage.setItem('minee_cart', JSON.stringify(cart));
-      refreshFloatingCartUI();
-      
-      const preview = document.getElementById('cart-preview');
-      if (preview) {
-        preview.style.setProperty('display', 'block', 'important');
-        preview.classList.remove('hidden');
-      }
-    };
+        let cart = JSON.parse(localStorage.getItem("minee_cart")) || [];
+        const exactItem = cart.find((item) => String(item.id) === String(id));
 
-    window.toggleRelatedWishlist = function(id, name, price, img) {
-      let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
-      const index = wishlist.findIndex(item => String(item.id) === String(id));
-      if (index > -1) {
-        wishlist.splice(index, 1);
-      } else {
-        wishlist.push({ id: String(id), name: name, price: parseFloat(price), img: img });
-      }
-      localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
-    };
+        const currentQty = exactItem ? exactItem.quantity : 0;
+        if (limitPerUser > 0 && currentQty + 1 > limitPerUser) {
+          alert(
+            `Sorry, you can only buy a maximum of ${limitPerUser} units of this product.`,
+          );
+          return;
+        }
 
-    window.viewProductDetail = function(id, name, type, price, img, ingredients) {
-      const productObj = { id, name, type, price, img, ingredients: ingredients || "" };
-      localStorage.setItem('selectedProduct', JSON.stringify(productObj));
-      window.location.reload(); 
-    };
+        if (exactItem) {
+          exactItem.quantity += 1;
+        } else {
+          cart.push({
+            id: String(id),
+            title: name,
+            price: parseFloat(price),
+            image: img,
+            quantity: 1,
+            limit_per_user: limitPerUser,
+          });
+        }
+        localStorage.setItem("minee_cart", JSON.stringify(cart));
+        refreshFloatingCartUI();
 
-    window.confirmCart = function() {
-      const cartItems = JSON.parse(localStorage.getItem('minee_cart')) || [];
-      if (cartItems.length === 0) {
-        alert("Your cart is empty!");
-        return;
-      }
-      window.location.href = "checkout.html"; 
-    };
+        const preview = document.getElementById("cart-preview");
+        if (preview) {
+          preview.style.setProperty("display", "block", "important");
+          preview.classList.remove("hidden");
+        }
+      };
 
-    function updateMainHeartUI(id) {
-      const heartIcon = document.getElementById('detail-heart-icon');
-      const heartBtn = document.getElementById('detail-wishlist-btn');
-      if (!heartIcon || !heartBtn) return;
-      
-      const storeWishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
-      const isSaved = storeWishlist.some(item => String(item.id) === String(id));
-      
-      if (isSaved) {
-        heartIcon.className = "fa-solid fa-heart text-lg text-pink-500";
-        heartBtn.className = "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-pink-200 bg-pink-50 text-pink-500 transition-all active:scale-95 cursor-pointer";
-      } else {
-        heartIcon.className = "fa-solid fa-heart text-lg text-neutral-400";
-        heartBtn.className = "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer";
+      window.toggleRelatedWishlist = function (id, name, price, img) {
+        let wishlist = JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+        const index = wishlist.findIndex(
+          (item) => String(item.id) === String(id),
+        );
+        if (index > -1) {
+          wishlist.splice(index, 1);
+        } else {
+          wishlist.push({
+            id: String(id),
+            name: name,
+            price: parseFloat(price),
+            img: img,
+          });
+        }
+        localStorage.setItem("minee_wishlist", JSON.stringify(wishlist));
+      };
+
+      window.viewProductDetail = function (
+        id,
+        name,
+        type,
+        price,
+        img,
+        ingredients,
+      ) {
+        const productObj = {
+          id,
+          name,
+          type,
+          price,
+          img,
+          ingredients: ingredients || "",
+        };
+        localStorage.setItem("selectedProduct", JSON.stringify(productObj));
+        window.location.reload();
+      };
+
+      window.confirmCart = function () {
+        const cartItems = JSON.parse(localStorage.getItem("minee_cart")) || [];
+        if (cartItems.length === 0) {
+          alert("Your cart is empty!");
+          return;
+        }
+        window.location.href = "checkout.html";
+      };
+
+      function updateMainHeartUI(id) {
+        const heartIcon = document.getElementById("detail-heart-icon");
+        const heartBtn = document.getElementById("detail-wishlist-btn");
+        if (!heartIcon || !heartBtn) return;
+
+        const storeWishlist =
+          JSON.parse(localStorage.getItem("minee_wishlist")) || [];
+        const isSaved = storeWishlist.some(
+          (item) => String(item.id) === String(id),
+        );
+
+        if (isSaved) {
+          heartIcon.className = "fa-solid fa-heart text-lg text-pink-500";
+          heartBtn.className =
+            "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-pink-200 bg-pink-50 text-pink-500 transition-all active:scale-95 cursor-pointer";
+        } else {
+          heartIcon.className = "fa-solid fa-heart text-lg text-neutral-400";
+          heartBtn.className =
+            "flex flex-col items-center justify-center h-12 w-14 rounded-xl border border-neutral-200 text-neutral-400 hover:text-pink-500 hover:border-pink-200 transition-all active:scale-95 cursor-pointer";
+        }
       }
-    }
-  </script>
+    </script>
   </body>
-  </html>
+</html>

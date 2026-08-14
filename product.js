@@ -12,46 +12,129 @@ fetch(`${API_URL}/products`)
 
 // Fetch live items directly out of your local or production database instance 
 async function fetchProductsFromDatabase() {
- 
-  const productContainer = document.getElementById('product-container'); 
-  const emptyState = document.getElementById('empty-search-state');
-  
-  if (productContainer) {
-    productContainer.innerHTML = `
-      <div id="search-placeholder-view" class="col-span-full text-center py-20 flex flex-col items-center justify-center">
-        <div class="w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center mb-4 text-pink-500 text-2xl">
-          <i class="fa-solid fa-magnifying-glass animate-bounce"></i>
-        </div>
-        <h3 class="text-neutral-700 font-bold text-lg mb-1">Find your perfect match</h3>
-        <p class="text-neutral-400 text-sm max-w-xs mx-auto">Type in the search bar above to look through our live beauty products!</p>
-      </div>
-    `;
-  }
-  
-  if (emptyState) {
-    emptyState.classList.add('hidden');
-  }
-
   try {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    const userQueryKey = user && user.name ? user.name : "Guest";
+    const response = await fetch(
+      `${API_URL}/products`
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Unable to load live product inventory."
+      );
+    }
+
+    productsDatabase = await response.json();
+
+    productsDatabase.forEach(product => {
+      const card = document.querySelector(
+        `[data-id="${product.id}"]`
+      );
+
+      if (!card) return;
+
+      const stockQuantity =
+        Number(product.stock) || 0;
+
+      // Keep the exact database stock, including zero.
+      card.setAttribute(
+        "data-stock",
+        String(stockQuantity)
+      );
+
+      if (stockQuantity > 0) {
+        return;
+      }
+
+      // Disable only purchasing.
+      const addButton = card.querySelector(
+        'button[onclick^="addToCart"]'
+      );
+
+      if (addButton) {
+        addButton.disabled = true;
+        addButton.removeAttribute("onclick");
+        addButton.innerText = "Sold Out";
+
+        addButton.className =
+          "w-full bg-neutral-200 text-neutral-400 text-sm font-semibold py-2 px-4 rounded-xl cursor-not-allowed mt-auto";
+      }
+
+      // The overlay does not block clicking the product details.
+      const detailArea = card.querySelector(
+        '[onclick^="viewProduct"]'
+      );
+
+      if (
+        detailArea &&
+        !detailArea.querySelector(
+          ".sold-out-overlay"
+        )
+      ) {
+        detailArea.classList.add("relative");
+
+        detailArea.insertAdjacentHTML(
+          "beforeend",
+          `
+            <div class="sold-out-overlay pointer-events-none absolute inset-0 flex items-center justify-center bg-neutral-900/25 rounded-xl">
+              <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border uppercase tracking-wide">
+                Sold Out
+              </span>
+            </div>
+          `
+        );
+      }
+    });
+
+    const user = JSON.parse(
+      localStorage.getItem("currentUser")
+    );
+
+    const userQueryKey =
+      user && user.name
+        ? user.name
+        : "Guest";
+
     let isFirstOrder = true;
 
     try {
-      const orderCheck = await fetch(`${window.API_URL}/orders/${encodeURIComponent(userQueryKey)}`);
-      const orders = await orderCheck.json();
-      isFirstOrder = (Array.isArray(orders) && orders.length === 0);
-    } catch (e) {
-      isFirstOrder = true; 
+      const orderResponse = await fetch(
+        `${API_URL}/orders/${encodeURIComponent(
+          userQueryKey
+        )}`
+      );
+
+      const orders =
+        await orderResponse.json();
+
+      isFirstOrder =
+        Array.isArray(orders) &&
+        orders.length === 0;
+    } catch (error) {
+      isFirstOrder = true;
     }
-    
-    window.userQualifiesForDiscount = isFirstOrder;
+
+    window.userQualifiesForDiscount =
+      isFirstOrder;
+
     updateCartUIDraw();
-    syncWishlistUI(); 
+    syncWishlistUI();
   } catch (error) {
-    console.warn('Initial setups finalized without populating active cards grid.');
-    if (typeof updateCartUIDraw === 'function') updateCartUIDraw();
-    if (typeof syncWishlistUI === 'function') syncWishlistUI(); 
+    console.error(
+      "Unable to synchronize collection stock:",
+      error
+    );
+
+    if (
+      typeof updateCartUIDraw === "function"
+    ) {
+      updateCartUIDraw();
+    }
+
+    if (
+      typeof syncWishlistUI === "function"
+    ) {
+      syncWishlistUI();
+    }
   }
 }
 
@@ -94,7 +177,46 @@ window.renderProducts = function(filteredResults) {
 
     const formattedPrice = finalPrice.toFixed(2);
     const formattedStandardPrice = standardPrice.toFixed(2);
+    const stockQuantity =
+      prod.stock !== undefined
+        ? Number(prod.stock)
+        : 0;
 
+    const isOutOfStock =
+      stockQuantity <= 0;
+
+    const userLimit =
+      prod.limit_per_user !== undefined
+        ? Number(prod.limit_per_user)
+        : 0;
+
+    const soldOutOverlay = isOutOfStock
+      ? `
+          <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-neutral-900/25 rounded-xl z-10">
+            <span class="bg-white/95 text-neutral-800 text-xs font-black px-4 py-2 rounded-lg shadow-sm border uppercase tracking-wide">
+              Sold Out
+            </span>
+          </div>
+        `
+      : "";
+
+    const actionButton = isOutOfStock
+      ? `
+          <button
+            disabled
+            class="w-full mt-4 bg-neutral-200 text-neutral-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed text-center block"
+          >
+            Sold Out
+          </button>
+        `
+      : `
+          <button
+            onclick="addToCart('${prod.id}')"
+            class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 rounded-xl transition-all cursor-pointer text-center block"
+          >
+            Add to Cart
+          </button>
+        `;
     // Build Price HTML displaying both original price crossed out and discounted price
     let priceHtml = `<div class="text-pink-600 font-extrabold mt-2">$${formattedPrice}</div>`;
     
@@ -111,28 +233,43 @@ window.renderProducts = function(filteredResults) {
     }
 
     return `
-      <div class="bg-white rounded-2xl border border-neutral-100 p-4 shadow-sm flex flex-col justify-between relative" data-id="${prod.id}" data-limit="${prod.limit_per_user || 0}" data-stock="${prod.stock || 10}">
-        
-        <!-- Product Image & Detail View Trigger -->
-        <div onclick="viewProductDetail('${prod.id}', \`${escapedTitle}\`, \`${escapedCategory}\`, '$${formattedPrice}', '${escapedImg}', \`${escapedIngredients}\`)" 
-             class="bg-neutral-50 rounded-xl p-4 flex justify-center items-center h-48 mb-4 cursor-pointer overflow-hidden group relative">
-          ${hasActiveDiscount ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-10">SALE</span>' : ''}
-          <img src="${escapedImg}" alt="${escapedTitle}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+      <div
+        class="bg-white rounded-2xl border border-neutral-100 p-4 shadow-sm flex flex-col justify-between relative"
+        data-id="${prod.id}"
+        data-limit="${userLimit}"
+        data-stock="${stockQuantity}"
+      >
+        <!-- Image remains clickable for product details. -->
+        <div
+          onclick="viewProductDetail('${prod.id}', \`${escapedTitle}\`, \`${escapedCategory}\`, '$${formattedPrice}', '${escapedImg}', \`${escapedIngredients}\`)"
+          class="bg-neutral-50 rounded-xl p-4 flex justify-center items-center h-48 mb-4 cursor-pointer overflow-hidden group relative"
+        >
+          ${hasActiveDiscount
+            ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded z-20">SALE</span>'
+            : ''
+          }
+
+          <img
+            src="${escapedImg}"
+            alt="${escapedTitle}"
+            class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300"
+          >
+
+          ${soldOutOverlay}
         </div>
-        
+
         <div class="text-left flex-grow">
-          <h3 class="font-bold text-neutral-800 text-sm mt-1 cursor-pointer hover:text-pink-500 transition-colors" 
-              onclick="viewProductDetail('${prod.id}', \`${escapedTitle}\`, \`${escapedCategory}\`, '$${formattedPrice}', '${escapedImg}', \`${escapedIngredients}\`)">
+          <h3
+            class="font-bold text-neutral-800 text-sm mt-1 cursor-pointer hover:text-pink-500 transition-colors"
+            onclick="viewProductDetail('${prod.id}', \`${escapedTitle}\`, \`${escapedCategory}\`, '$${formattedPrice}', '${escapedImg}', \`${escapedIngredients}\`)"
+          >
             ${prod.title || prod.name}
           </h3>
+
           ${priceHtml}
         </div>
-        
-        <!-- Add to Cart Button -->
-        <button onclick="addToCart('${prod.id}')" 
-                class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 rounded-xl transition-all cursor-pointer text-center block">
-          Add to Cart
-        </button>
+
+        ${actionButton}
       </div>
     `;
   }).join('');
@@ -150,85 +287,206 @@ function hidePanel(panelElement) {
   panelElement.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
 }
 
-function addProductToCart(productId) {
-  const currentUser = localStorage.getItem('currentUser') || localStorage.getItem('minee_user') || localStorage.getItem('isRegistered');
-  
+async function addProductToCart(productId) {
+  const currentUser =
+    localStorage.getItem("currentUser") ||
+    localStorage.getItem("minee_user") ||
+    localStorage.getItem("isRegistered");
+
   if (!currentUser) {
-    alert("Please register or log in first before adding items to your cart!");
-    window.location.href = "profileinfo.html";
+    alert(
+      "Please register or log in first before adding items to your cart!"
+    );
+
+    window.location.href =
+      "profileinfo.html";
+
     return;
   }
 
   const lookupId = String(productId);
-  const now = new Date();
 
-  let product = (typeof productsDatabase !== 'undefined' && productsDatabase) 
-    ? productsDatabase.find(p => String(p.id) === lookupId) 
-    : null;
-    
-  const itemContainer = document.querySelector(`div[data-id="${lookupId}"]`);
+  try {
+    // Check the database again at click time.
+    const response = await fetch(
+      `${API_URL}/products`
+    );
 
-  if (!product) {
-    if (!itemContainer) {
-      console.warn(`Could not find item layout container for ID: ${lookupId}`);
+    if (!response.ok) {
+      throw new Error(
+        "Unable to verify inventory."
+      );
+    }
+
+    const liveProducts =
+      await response.json();
+
+    const product =
+      liveProducts.find(
+        item =>
+          String(item.id) === lookupId
+      );
+
+    if (!product) {
+      alert(
+        "This product is no longer available."
+      );
       return;
     }
-    const textSelector = itemContainer.querySelector('p');
-    const imageElement = itemContainer.querySelector('img');
-    const priceSelector = itemContainer.querySelector('.text-pink-600') || itemContainer.querySelector('[class*="text-pink-"]');
 
-    product = {
-      id: lookupId,
-      title: textSelector ? textSelector.innerText : "Skincare Item",
-      price: priceSelector ? parseFloat(priceSelector.innerText.replace('$', '')) : 8.30,
-      image: imageElement ? imageElement.getAttribute('src') : "./image/logo copy.png",
-      limit_per_user: itemContainer.getAttribute('data-limit') ? parseInt(itemContainer.getAttribute('data-limit')) : 0
-    };
-  }
+    productsDatabase = liveProducts;
 
-  let activePromoPrice = null;
-  if (product.discount_price && product.discount_start && product.discount_end) {
-    const startTime = new Date(product.discount_start);
-    const endTime = new Date(product.discount_end);
+    // Refresh cart in case another page changed it.
+    cart =
+      JSON.parse(
+        localStorage.getItem("minee_cart")
+      ) || [];
 
-    if (now >= startTime && now <= endTime) {
-      activePromoPrice = Number(product.discount_price);
+    const availableStock =
+      Number(product.stock) || 0;
+
+    const existingItem =
+      cart.find(
+        item =>
+          String(item.id) === lookupId
+      );
+
+    const currentQuantity =
+      existingItem
+        ? Number(existingItem.quantity) || 0
+        : 0;
+
+    if (availableStock <= 0) {
+      alert(
+        `Sorry, "${product.title}" is out of stock.`
+      );
+      return;
     }
-  } else if (product.discount_price && !product.discount_start) {
-    activePromoPrice = Number(product.discount_price);
+
+    if (
+      currentQuantity >= availableStock
+    ) {
+      alert(
+        `Sorry, only ${availableStock} unit(s) of "${product.title}" are available.`
+      );
+      return;
+    }
+
+    const userPurchaseLimit =
+      Number(product.limit_per_user) || 0;
+
+    if (
+      userPurchaseLimit > 0 &&
+      currentQuantity >=
+        userPurchaseLimit
+    ) {
+      alert(
+        `Sorry, "${product.title}" is limited to ${userPurchaseLimit} unit(s) per customer.`
+      );
+      return;
+    }
+
+    let finalPrice =
+      Number(product.price);
+
+    const discountPrice =
+      Number(product.discount_price);
+
+    if (
+      Number.isFinite(discountPrice) &&
+      discountPrice > 0 &&
+      discountPrice < finalPrice
+    ) {
+      if (
+        product.discount_start &&
+        product.discount_end
+      ) {
+        const now = new Date();
+
+        const startTime =
+          new Date(product.discount_start);
+
+        const endTime =
+          new Date(product.discount_end);
+
+        if (
+          now >= startTime &&
+          now <= endTime
+        ) {
+          finalPrice = discountPrice;
+        }
+      } else if (
+        !product.discount_start
+      ) {
+        finalPrice = discountPrice;
+      }
+    }
+
+    const itemContainer =
+      document.querySelector(
+        `div[data-id="${lookupId}"]`
+      );
+
+    const displayedImage =
+      itemContainer
+        ?.querySelector("img")
+        ?.src;
+
+    const finalImage =
+      displayedImage ||
+      product.image_url ||
+      "./image/logo copy.png";
+
+    if (existingItem) {
+      existingItem.quantity =
+        currentQuantity + 1;
+
+      // Refresh stale cart information.
+      existingItem.title =
+        product.title;
+
+      existingItem.price =
+        finalPrice;
+
+      existingItem.image =
+        finalImage;
+
+      existingItem.limit_per_user =
+        userPurchaseLimit;
+    } else {
+      cart.push({
+        id: lookupId,
+        product_id: lookupId,
+        title: product.title,
+        price: finalPrice,
+        image: finalImage,
+        quantity: 1,
+        limit_per_user:
+          userPurchaseLimit
+      });
+    }
+
+    localStorage.setItem(
+      "minee_cart",
+      JSON.stringify(cart)
+    );
+
+    if (
+      typeof updateCartUIDraw ===
+      "function"
+    ) {
+      updateCartUIDraw();
+    }
+  } catch (error) {
+    console.error(
+      "Live Add to Cart stock check failed:",
+      error
+    );
+
+    alert(
+      "We could not verify the available stock. Please try again."
+    );
   }
-
-  const finalPrice = activePromoPrice !== null ? activePromoPrice : Number(product.price);
-  const maxStock = product.stock !== undefined ? parseInt(product.stock) : (itemContainer?.getAttribute('data-stock') ? parseInt(itemContainer.getAttribute('data-stock')) : 3);
-  const userPurchaseLimit = product.limit_per_user !== undefined ? parseInt(product.limit_per_user) : (itemContainer?.getAttribute('data-limit') ? parseInt(itemContainer.getAttribute('data-limit')) : 0);
-
-  const existingItem = cart.find(item => String(item.id) === lookupId);
-  const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
-
-  if (userPurchaseLimit > 0 && currentQuantityInCart >= userPurchaseLimit) {
-    alert(`Restriction Notice: The administration has limited purchase bounds for "${product.title}" to a maximum of ${userPurchaseLimit} per user.`);
-    return;
-  }
-
-  if (currentQuantityInCart >= maxStock) {
-    alert(`Sorry! We only have ${maxStock} items available in our total live inventory pool right now.`);
-    return;
-  }
-
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.push({
-      id: lookupId,
-      title: product.title,
-      price: finalPrice,
-      image: product.image_url || product.image || "./image/logo copy.png",
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem("minee_cart", JSON.stringify(cart));
-  if (typeof updateCartUIDraw === "function") updateCartUIDraw();
 }
 
 window.addToCart = function(id) {

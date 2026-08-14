@@ -221,44 +221,361 @@ module.exports = function(db) {
         });
     });
 
-    router.post('/checkout', (req, res) => {
-        const { customer_name, phone, address, payment_method, items, cart } = req.body;
-        const cartItems = items || cart;
+        router.post("/checkout", async (req, res) => {
+        const {
+            customer_name,
+            phone,
+            address,
+            payment_method,
+            items,
+            cart
+        } = req.body;
 
-        if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
-            return res.status(400).json({ success: false, message: 'No items in cart.' });
+        const requestedCart = items || cart;
+
+        if (
+            !Array.isArray(requestedCart) ||
+            requestedCart.length === 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "No items in cart."
+            });
         }
 
-        let total = 0;
-        cartItems.forEach(item => { total += Number(item.price) * Number(item.quantity); });
+        if (
+            !String(customer_name || "").trim() ||
+            !String(phone || "").trim() ||
+            !String(address || "").trim()
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Customer name, phone, and address are required."
+            });
+        }
 
-        const orderQuery = `INSERT INTO orders (customer_name, phone, address, total, payment_method) VALUES (?, ?, ?, ?, ?)`;
-        db.query(orderQuery, [customer_name, phone, address, total, payment_method || 'Cash on Delivery'], (err, orderResult) => {
-            if (err) {
-                return res.status(500).json({ success: false, error: err.message });
+        // Combine duplicate cart rows for the same product.
+        const combinedItems = new Map();
+
+        for (const item of requestedCart) {
+            const productId = Number(
+                item.id || item.product_id
+            );
+
+            const quantity = Number(
+                item.quantity
+            );
+
+            if (
+                !Number.isInteger(productId) ||
+                productId <= 0 ||
+                !Number.isInteger(quantity) ||
+                quantity <= 0
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "The cart contains an invalid product or quantity."
+                });
             }
 
-            const orderId = orderResult.insertId;
-            const orderItemsValues = cartItems.map(item => [orderId, item.product_id || item.id, item.quantity, item.price]);
-            const orderItemsQuery = `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ?`;
+            combinedItems.set(
+                productId,
+                (combinedItems.get(productId) || 0) +
+                    quantity
+            );
+        }
 
-            db.query(orderItemsQuery, [orderItemsValues], (itemErr) => {
-                if (itemErr) {
-                    return res.status(500).json({ success: false, error: itemErr.message });
+        const productIds = [
+            ...combinedItems.keys()
+        ];
+
+        const placeholders = productIds
+            .map(() => "?")
+            .join(",");
+
+        let connection;
+
+        try {
+            connection =
+                await db.promise().getConnection();
+
+            await connection.beginTransaction();
+
+            // Lock products until checkout finishes.
+            const [products] =
+                await connection.query(
+                    `
+                        SELECT
+                            id,
+                            title,
+                            price,
+                            discount_price,
+                            discount_start,
+                            discount_end,
+                            stock
+                        FROM products
+                        WHERE id IN (${placeholders})
+                        FOR UPDATE
+                    `,
+                    productIds
+                );
+
+            if (
+                products.length !==
+                productIds.length
+            ) {
+                await connection.rollback();
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "One or more cart products no longer exist."
+                });
+            }
+
+            const now = new Date();
+            const orderItems = [];
+            let subtotalCents = 0;
+
+            for (const product of products) {
+                const quantity =
+                    combinedItems.get(
+                        Number(product.id)
+                    );
+
+                const availableStock =
+                    Number(product.stock) || 0;
+
+                if (
+                    availableStock < quantity
+                ) {
+                    await connection.rollback();
+
+                    return res.status(409).json({
+                        success: false,
+                        outOfStock: true,
+                        productId:
+                            Number(product.id),
+                        availableStock,
+                        message:
+                            availableStock <= 0
+                                ? `${product.title} is out of stock.`
+                                : `${product.title} only has ${availableStock} item(s) available.`
+                    });
                 }
 
-                let stockUpdatesCompleted = 0;
-                cartItems.forEach(item => {
-                    const productId = item.product_id || item.id;
-                    db.query(`UPDATE products SET stock = stock - ? WHERE id = ?`, [item.quantity, productId], () => {
-                        stockUpdatesCompleted++;
-                        if (stockUpdatesCompleted === cartItems.length) {
-                            res.status(201).json({ success: true, message: 'Order placed successfully!', orderId: orderId });
-                        }
-                    });
+                // Never trust the browser price.
+                const regularPrice =
+                    Number(product.price);
+
+                const discountPrice =
+                    product.discount_price ===
+                    null
+                        ? null
+                        : Number(
+                            product.discount_price
+                        );
+
+                const startsAt =
+                    product.discount_start
+                        ? new Date(
+                            product.discount_start
+                        )
+                        : null;
+
+                const endsAt =
+                    product.discount_end
+                        ? new Date(
+                            product.discount_end
+                        )
+                        : null;
+
+                const promotionIsActive =
+                    Number.isFinite(
+                        discountPrice
+                    ) &&
+                    discountPrice > 0 &&
+                    discountPrice <
+                        regularPrice &&
+                    (
+                        !startsAt ||
+                        now >= startsAt
+                    ) &&
+                    (
+                        !endsAt ||
+                        now <= endsAt
+                    );
+
+                const unitPrice =
+                    promotionIsActive
+                        ? discountPrice
+                        : regularPrice;
+
+                const unitPriceCents =
+                    Math.round(
+                        unitPrice * 100
+                    );
+
+                subtotalCents +=
+                    unitPriceCents *
+                    quantity;
+
+                orderItems.push({
+                    productId:
+                        Number(product.id),
+                    quantity,
+                    unitPrice:
+                        unitPriceCents / 100
                 });
+            }
+
+            // Calculate the first-order discount
+            // from database order history.
+            const [previousOrders] =
+                await connection.query(
+                    `
+                        SELECT COUNT(*) AS order_count
+                        FROM orders
+                        WHERE customer_name = ?
+                    `,
+                    [
+                        String(
+                            customer_name
+                        ).trim()
+                    ]
+                );
+
+            const isFirstOrder =
+                Number(
+                    previousOrders[0]
+                        .order_count
+                ) === 0;
+
+            const discountCents =
+                isFirstOrder
+                    ? Math.round(
+                        subtotalCents * 0.05
+                    )
+                    : 0;
+
+            const deliveryFeeCents = 150;
+
+            const totalCents =
+                subtotalCents -
+                discountCents +
+                deliveryFeeCents;
+
+            const finalTotal =
+                totalCents / 100;
+
+            const [orderResult] =
+                await connection.query(
+                    `
+                        INSERT INTO orders (
+                            customer_name,
+                            phone,
+                            address,
+                            total,
+                            payment_method,
+                            status
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    `,
+                    [
+                        String(
+                            customer_name
+                        ).trim(),
+                        String(phone).trim(),
+                        String(address).trim(),
+                        finalTotal,
+                        payment_method ||
+                            "Cash on Delivery",
+                        "Pending"
+                    ]
+                );
+
+            const orderId =
+                orderResult.insertId;
+
+            const orderItemValues =
+                orderItems.map(item => [
+                    orderId,
+                    item.productId,
+                    item.quantity,
+                    item.unitPrice
+                ]);
+
+            await connection.query(
+                `
+                    INSERT INTO order_items (
+                        order_id,
+                        product_id,
+                        quantity,
+                        price
+                    )
+                    VALUES ?
+                `,
+                [orderItemValues]
+            );
+
+            for (const item of orderItems) {
+                const [stockResult] =
+                    await connection.query(
+                        `
+                            UPDATE products
+                            SET stock = stock - ?
+                            WHERE id = ?
+                              AND stock >= ?
+                        `,
+                        [
+                            item.quantity,
+                            item.productId,
+                            item.quantity
+                        ]
+                    );
+
+                if (
+                    stockResult.affectedRows !==
+                    1
+                ) {
+                    throw new Error(
+                        "Stock changed during checkout."
+                    );
+                }
+            }
+
+            await connection.commit();
+
+            return res.status(201).json({
+                success: true,
+                message:
+                    "Order placed successfully.",
+                orderId,
+                total: finalTotal,
+                isFirstOrder
             });
-        });
+        } catch (error) {
+            if (connection) {
+                await connection.rollback();
+            }
+
+            console.error(
+                "Checkout transaction failed:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to complete checkout."
+            });
+        } finally {
+            if (connection) {
+                connection.release();
+            }
+        }
     });
 
     // ==========================================
