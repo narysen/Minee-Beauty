@@ -35,13 +35,13 @@ const dbConfig = {
   port: Number(process.env.DB_PORT) || 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 };
 
 // Aiven MySQL SSL
 if (process.env.DB_SSL === "true") {
   dbConfig.ssl = {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
   };
 }
 
@@ -62,8 +62,8 @@ db.getConnection((err, connection) => {
 // AUTO-INITIALIZE TABLES FOR RENDER / PRODUCTION
 // ==========================================
 const initDatabase = () => {
-    const queries = [
-        `CREATE TABLE IF NOT EXISTS products (
+  const queries = [
+    `CREATE TABLE IF NOT EXISTS products (
             id INT AUTO_INCREMENT PRIMARY KEY,
             sku VARCHAR(50) DEFAULT NULL,
             title VARCHAR(255) NOT NULL,
@@ -79,7 +79,7 @@ const initDatabase = () => {
             description TEXT,
             ingredients TEXT
         );`,
-        `CREATE TABLE IF NOT EXISTS orders (
+    `CREATE TABLE IF NOT EXISTS orders (
             id INT AUTO_INCREMENT PRIMARY KEY,
             customer_name VARCHAR(150) NOT NULL,
             phone VARCHAR(50) NOT NULL,
@@ -89,14 +89,14 @@ const initDatabase = () => {
             status VARCHAR(50) DEFAULT 'Pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`,
-        `CREATE TABLE IF NOT EXISTS order_items (
+    `CREATE TABLE IF NOT EXISTS order_items (
             id INT AUTO_INCREMENT PRIMARY KEY,
             order_id INT NOT NULL,
             product_id INT NOT NULL,
             quantity INT NOT NULL,
             price DECIMAL(10, 2) NOT NULL
         );`,
-        `CREATE TABLE IF NOT EXISTS expenses (
+    `CREATE TABLE IF NOT EXISTS expenses (
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             category VARCHAR(100) DEFAULT 'Inventory',
@@ -104,17 +104,42 @@ const initDatabase = () => {
             expense_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`,
-        `CREATE TABLE IF NOT EXISTS categories (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL UNIQUE
-        );`
-    ];
+    `CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);`,
+    `CREATE TABLE IF NOT EXISTS khqr_payment_attempts (
+    id CHAR(36) NOT NULL,
+    order_id INT DEFAULT NULL,
+    khqr_md5 CHAR(32) NOT NULL,
+    qr_payload TEXT NOT NULL,
+    expected_amount DECIMAL(10, 2) NOT NULL,
+    currency CHAR(3) NOT NULL DEFAULT 'USD',
+    receiver_account VARCHAR(100) NOT NULL,
+    customer_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    address TEXT NOT NULL,
+    cart_snapshot LONGTEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'Generated',
+    verification_attempts INT NOT NULL DEFAULT 0,
+    last_verification_at DATETIME DEFAULT NULL,
+    bakong_transaction_hash VARCHAR(128) DEFAULT NULL,
+    expires_at DATETIME NOT NULL,
+    verified_at DATETIME DEFAULT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_khqr_md5 (khqr_md5),
+    UNIQUE KEY uq_bakong_hash (bakong_transaction_hash),
+    KEY idx_khqr_status_expiry (status, expires_at),
+    KEY idx_khqr_order (order_id)
+);`,
+  ];
 
-    queries.forEach(query => {
-        db.query(query, err => {
-            if (err) console.error("Database auto-init error:", err.message);
-        });
+  queries.forEach((query) => {
+    db.query(query, (err) => {
+      if (err) console.error("Database auto-init error:", err.message);
     });
+  });
 };
 
 initDatabase();
@@ -136,7 +161,7 @@ app.get("/api/categories", (req, res) => {
       console.error("Category error:", err.message);
 
       return res.status(500).json({
-        error: err.message
+        error: err.message,
       });
     }
 
@@ -149,7 +174,7 @@ app.post("/api/categories", (req, res) => {
 
   if (!name || name.trim() === "") {
     return res.status(400).json({
-      error: "Category name is required."
+      error: "Category name is required.",
     });
   }
 
@@ -161,19 +186,19 @@ app.post("/api/categories", (req, res) => {
 
       if (err.code === "ER_DUP_ENTRY") {
         return res.status(400).json({
-          error: "Category already exists."
+          error: "Category already exists.",
         });
       }
 
       return res.status(500).json({
-        error: err.message
+        error: err.message,
       });
     }
 
     res.status(201).json({
       message: "Category added successfully!",
       id: result.insertId,
-      name: name.trim()
+      name: name.trim(),
     });
   });
 });
@@ -181,7 +206,7 @@ app.post("/api/categories", (req, res) => {
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
-    message: "Minee Beauty API is running!"
+    message: "Minee Beauty API is running!",
   });
 });
 
@@ -202,7 +227,7 @@ const htmlPages = [
   "etude.html",
   "lipbalm.html",
   "Mary&May.html",
-  "mascara.html"
+  "mascara.html",
 ];
 
 htmlPages.forEach((page) => {
@@ -217,7 +242,7 @@ const jsFiles = [
   "detail.js",
   "outstock.js",
   "product.js",
-  "admin.js"
+  "admin.js",
 ];
 
 jsFiles.forEach((file) => {
@@ -232,7 +257,7 @@ app.get("/favicon.png", (req, res) => {
 
 app.use("/api", (req, res) => {
   res.status(404).json({
-    error: "API endpoint not found"
+    error: "API endpoint not found",
   });
 });
 

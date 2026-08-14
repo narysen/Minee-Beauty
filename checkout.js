@@ -2,7 +2,10 @@ const API_URL = "http://localhost:3000/api";
 
 let checkoutCart = JSON.parse(localStorage.getItem("minee_cart")) || [];
 let selectedMethod = "Cash on Delivery";
-
+let currentKHQRAttempt = null;
+let khqrExpirationTimer = null;
+let khqrGenerationRunning = false;
+let khqrVerificationRunning = false;
 async function renderCheckoutPage() {
   const cartItemsContainer = document.getElementById("checkout-cart-items");
   const cartTotalContainer = document.getElementById("checkout-cart-total");
@@ -143,9 +146,28 @@ window.selectPayment = function(method) {
   document.querySelectorAll(".payment-section").forEach(sec => sec.classList.add("hidden"));
   document.querySelectorAll(".pay-selector-btn").forEach(btn => btn.classList.remove("border-pink-400", "bg-pink-50"));
 
-  if (method === 'Bank QR') {
-    document.getElementById("bank-qr").classList.remove("hidden");
-    document.getElementById("btn-bank").classList.add("border-pink-400", "bg-pink-50");
+if (method === "Bank QR") {
+  document
+    .getElementById("bank-qr")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("btn-bank")
+    .classList.add(
+      "border-pink-400",
+      "bg-pink-50"
+    );
+
+  const attemptIsActive =
+    currentKHQRAttempt &&
+    Date.now() <
+      new Date(
+        currentKHQRAttempt.expiresAt
+      ).getTime();
+
+  if (!attemptIsActive) {
+    generateKHQRPayment();
+  }
   } else if (method === 'Phone Line') {
     document.getElementById("phone-pay").classList.remove("hidden");
     document.getElementById("btn-phone").classList.add("border-pink-400", "bg-pink-50");
@@ -154,7 +176,534 @@ window.selectPayment = function(method) {
     document.getElementById("btn-cash").classList.add("border-pink-400", "bg-pink-50");
   }
 }
+function getCheckoutCustomerDetails() {
+  let user =
+    JSON.parse(
+      localStorage.getItem("currentUser")
+    );
 
+  if (!user) {
+    user = {
+      name: "Guest Customer",
+      phone: "",
+      address: ""
+    };
+  }
+
+  let phone =
+    String(user.phone || "").trim();
+
+  let address =
+    String(user.address || "").trim();
+
+  const addressForm =
+    document.getElementById("address-form");
+
+  if (
+    addressForm &&
+    !addressForm.classList.contains("hidden")
+  ) {
+    phone =
+      document
+        .getElementById("input-phone")
+        .value
+        .trim();
+
+    address =
+      document
+        .getElementById("input-address")
+        .value
+        .trim();
+  }
+
+  if (
+    !phone ||
+    !address ||
+    phone === "No phone added" ||
+    address === "No address saved" ||
+    address === "No address assigned"
+  ) {
+    throw new Error(
+      "Enter your phone number and delivery address before generating KHQR."
+    );
+  }
+
+  return {
+    customerName:
+      String(
+        user.name || "Guest Customer"
+      ).trim(),
+    phone,
+    address
+  };
+}
+
+function setKHQRView(view) {
+  const loading =
+    document.getElementById("khqr-loading");
+
+  const content =
+    document.getElementById("khqr-content");
+
+  const error =
+    document.getElementById("khqr-error");
+
+  loading.classList.toggle(
+    "hidden",
+    view !== "loading"
+  );
+
+  content.classList.toggle(
+    "hidden",
+    view !== "content"
+  );
+
+  error.classList.toggle(
+    "hidden",
+    view !== "error"
+  );
+}
+
+function showKHQRError(message) {
+  document
+    .getElementById("khqr-error-message")
+    .innerText = message;
+
+  setKHQRView("error");
+}
+
+function startKHQRExpirationTimer(
+  expiresAt
+) {
+  if (khqrExpirationTimer) {
+    clearInterval(khqrExpirationTimer);
+  }
+
+  const expirationElement =
+    document.getElementById(
+      "khqr-expiration"
+    );
+
+  const verifyButton =
+    document.getElementById(
+      "verify-khqr-button"
+    );
+
+  const updateTimer = () => {
+    const remainingMilliseconds =
+      new Date(expiresAt).getTime() -
+      Date.now();
+
+    if (remainingMilliseconds <= 0) {
+      clearInterval(
+        khqrExpirationTimer
+      );
+
+      khqrExpirationTimer = null;
+      currentKHQRAttempt = null;
+
+      expirationElement.innerText =
+        "KHQR expired";
+
+      verifyButton.disabled = true;
+
+      showKHQRError(
+        "This KHQR has expired. Generate a new payment QR."
+      );
+
+      return;
+    }
+
+    const totalSeconds =
+      Math.ceil(
+        remainingMilliseconds / 1000
+      );
+
+    const minutes =
+      Math.floor(totalSeconds / 60);
+
+    const seconds =
+      totalSeconds % 60;
+
+    expirationElement.innerText =
+      `Expires in ${minutes}:` +
+      String(seconds).padStart(2, "0");
+  };
+
+  updateTimer();
+
+  khqrExpirationTimer =
+    setInterval(updateTimer, 1000);
+}
+
+window.generateKHQRPayment =
+  async function () {
+    if (khqrGenerationRunning) {
+      return;
+    }
+
+    if (!checkoutCart.length) {
+      showKHQRError(
+        "Your cart is empty."
+      );
+
+      return;
+    }
+
+    let customer;
+
+    try {
+      customer =
+        getCheckoutCustomerDetails();
+    } catch (error) {
+      showKHQRError(error.message);
+      return;
+    }
+
+    khqrGenerationRunning = true;
+    currentKHQRAttempt = null;
+
+    setKHQRView("loading");
+
+    try {
+      const response =
+        await fetch(
+          `${API_URL}/payments/khqr`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              customer_name:
+                customer.customerName,
+              phone: customer.phone,
+              address: customer.address,
+              cart:
+                checkoutCart.map(
+                  item => ({
+                    id:
+                      Number(item.id),
+                    quantity:
+                      Number(
+                        item.quantity
+                      )
+                  })
+                )
+            })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        throw new Error(
+          data.message ||
+          "Unable to generate KHQR."
+        );
+      }
+
+      currentKHQRAttempt = {
+        id:
+          data.paymentAttemptId,
+        reference:
+          data.paymentReference,
+        amount:
+          Number(data.amount),
+        expiresAt:
+          data.expiresAt,
+        customerName:
+          customer.customerName
+      };
+
+      document
+        .getElementById("khqr-image")
+        .src = data.qrImage;
+
+      document
+        .getElementById("khqr-amount")
+        .innerText =
+          `$${Number(data.amount).toFixed(2)} USD`;
+
+      document
+        .getElementById("khqr-status")
+        .innerText =
+          "Complete the transfer, then press Verify Payment.";
+
+      const verifyButton =
+        document.getElementById(
+          "verify-khqr-button"
+        );
+
+      verifyButton.disabled = false;
+
+      setKHQRView("content");
+
+      startKHQRExpirationTimer(
+        data.expiresAt
+      );
+    } catch (error) {
+      console.error(
+        "KHQR generation error:",
+        error
+      );
+
+      showKHQRError(
+        error.message ||
+        "Unable to generate KHQR."
+      );
+    } finally {
+      khqrGenerationRunning = false;
+    }
+  };
+function completeVerifiedKHQROrder(
+  data
+) {
+  const history =
+    JSON.parse(
+      localStorage.getItem(
+        "orderHistory"
+      )
+    ) || [];
+
+  history.push({
+    orderId: data.orderId,
+
+    customerName:
+      currentKHQRAttempt
+        .customerName,
+
+    totalPrice:
+      currentKHQRAttempt
+        .amount
+        .toFixed(2),
+
+    date:
+      new Date()
+        .toLocaleDateString(),
+
+    time:
+      new Date()
+        .toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        ),
+
+    items: checkoutCart,
+    method: "Bank QR"
+  });
+
+  localStorage.setItem(
+    "orderHistory",
+    JSON.stringify(history)
+  );
+
+  localStorage.removeItem(
+    "minee_cart"
+  );
+
+  if (khqrExpirationTimer) {
+    clearInterval(
+      khqrExpirationTimer
+    );
+  }
+
+  window.location.href =
+    "order-success.html";
+}
+
+function beginVerificationCooldown(
+  seconds
+) {
+  const button =
+    document.getElementById(
+      "verify-khqr-button"
+    );
+
+  let remaining =
+    Math.max(
+      1,
+      Number(seconds) || 60
+    );
+
+  let timer = null;
+
+  button.disabled = true;
+
+  const updateButton = () => {
+    button.innerText =
+      `Try Again in ${remaining}s`;
+
+    remaining -= 1;
+
+    if (remaining < 0) {
+      clearInterval(timer);
+
+      button.disabled = false;
+
+      button.innerHTML =
+        '<i class="fa-solid fa-circle-check mr-1"></i> Verify Payment';
+    }
+  };
+
+  updateButton();
+
+  timer =
+    setInterval(
+      updateButton,
+      1000
+    );
+}
+
+window.verifyKHQRPayment =
+  async function () {
+    if (
+      khqrVerificationRunning ||
+      !currentKHQRAttempt
+    ) {
+      return;
+    }
+
+    const expiresAt =
+      new Date(
+        currentKHQRAttempt.expiresAt
+      ).getTime();
+
+    if (Date.now() >= expiresAt) {
+      showKHQRError(
+        "This KHQR has expired. Generate a new payment QR."
+      );
+
+      return;
+    }
+
+    const button =
+      document.getElementById(
+        "verify-khqr-button"
+      );
+
+    const status =
+      document.getElementById(
+        "khqr-status"
+      );
+
+    khqrVerificationRunning = true;
+    button.disabled = true;
+
+    button.innerHTML =
+      '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Checking Payment...';
+
+    status.className =
+      "mt-3 text-xs text-blue-600";
+
+    status.innerText =
+      "Checking your transaction with Bakong...";
+
+    try {
+      const response =
+        await fetch(
+          `${API_URL}/payments/khqr/verify`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                paymentAttemptId:
+                  currentKHQRAttempt.id
+              })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (data.verified) {
+        status.className =
+          "mt-3 text-xs font-semibold text-emerald-600";
+
+        status.innerText =
+          "Payment verified successfully.";
+
+        button.innerHTML =
+          '<i class="fa-solid fa-check mr-1"></i> Payment Verified';
+
+        completeVerifiedKHQROrder(
+          data
+        );
+
+        return;
+      }
+
+      if (response.status === 429) {
+        status.className =
+          "mt-3 text-xs text-amber-600";
+
+        status.innerText =
+          data.message;
+
+        beginVerificationCooldown(
+          data.retryAfter || 60
+        );
+
+        return;
+      }
+
+      if (data.expired) {
+        currentKHQRAttempt = null;
+
+        showKHQRError(
+          data.message
+        );
+
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+          "Payment verification failed."
+        );
+      }
+
+      status.className =
+        "mt-3 text-xs text-amber-600";
+
+      status.innerText =
+        data.message;
+
+      beginVerificationCooldown(60);
+    } catch (error) {
+      console.error(
+        "KHQR verification error:",
+        error
+      );
+
+      status.className =
+        "mt-3 text-xs text-red-600";
+
+      status.innerText =
+        error.message ||
+        "Unable to verify payment.";
+
+      button.disabled = false;
+
+      button.innerHTML =
+        '<i class="fa-solid fa-circle-check mr-1"></i> Verify Payment';
+    } finally {
+      khqrVerificationRunning = false;
+    }
+  };
 // --- SUBMIT ORDER & REDIRECT ---
 window.finishAssumedOrder = async function() {
   if (!checkoutCart.length) return alert("Cart is empty!");
