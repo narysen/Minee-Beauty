@@ -64,7 +64,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <button onclick="selectPayment('Bank QR')" id="btn-bank" class="pay-selector-btn w-full bg-white border border-neutral-200 rounded-xl py-3 px-4 text-xs font-bold text-neutral-600 transition-all cursor-pointer flex flex-col items-center justify-center gap-2">
             <i class="fa-solid fa-qrcode text-lg text-pink-500"></i>
-            <span>Bank QR Code</span>
+            <span>Bakong KHQR</span>
           </button>
           <button onclick="selectPayment('Phone Line')" id="btn-phone" class="pay-selector-btn w-full bg-white border border-neutral-200 rounded-xl py-3 px-4 text-xs font-bold text-neutral-600 transition-all cursor-pointer flex flex-col items-center justify-center gap-2">
             <i class="fa-solid fa-phone text-lg text-pink-500"></i>
@@ -76,14 +76,26 @@
           </button>
         </div>
 
+        <!-- Bakong Dynamic QR Section -->
         <div id="bank-qr" class="payment-section hidden bg-pink-50/50 rounded-2xl p-5 border border-pink-100 text-center">
-          <p class="text-xs font-medium text-neutral-500 mb-4">Scan code to pay:</p>
-          <div class="flex justify-center gap-4 mb-4">
-            <img src="./image/payment/qr1.jpg" alt="QR 1" class="w-32 h-32 object-cover rounded-lg bg-white p-1">
-            <img src="./image/payment/q2.jpg" alt="QR 2" class="w-32 h-32 object-cover rounded-lg bg-white p-1">
+          <p class="text-xs font-medium text-neutral-500 mb-2">Scan with any mobile banking app:</p>
+          
+          <div id="bakong-qr-container" class="flex justify-center mb-3">
+            <div id="qr-code-box" class="bg-white p-3 rounded-xl shadow-sm border border-neutral-200 inline-block">
+              <div class="w-40 h-40 flex items-center justify-center bg-neutral-100 text-neutral-400 text-xs animate-pulse rounded">
+                Generating QR...
+              </div>
+            </div>
           </div>
-          <p class="text-xs font-bold text-neutral-800 mb-4">Bank ID: 015 479 408</p>
-          <button class="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-xl cursor-pointer" onclick="finishAssumedOrder()">Done</button>
+
+          <p id="bakong-timer" class="text-[11px] text-pink-600 font-semibold mb-3">QR Expires in: 10:00</p>
+          
+          <div class="space-y-2">
+            <button id="verify-payment-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl text-xs cursor-pointer transition-all" onclick="checkBakongPaymentStatus()">
+              Verify Payment Status
+            </button>
+            <button class="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 rounded-xl text-xs cursor-pointer" onclick="finishAssumedOrder()">Complete Manually</button>
+          </div>
         </div>
 
         <div id="phone-pay" class="payment-section hidden bg-pink-50/50 rounded-2xl p-6 border border-pink-100 text-center">
@@ -100,6 +112,7 @@
       </div>
     </div>
   </main>
+  
   <script src="checkout.js"></script> 
-  </body>
-  </html>
+</body>
+</html>

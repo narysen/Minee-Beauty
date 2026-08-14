@@ -128,6 +128,9 @@ app.use("/api", ordersRouter);
 const promotionRoutes = require("./routes/promotions")(db);
 app.use("/api", promotionRoutes);
 
+const bakongRoutes = require("./routes/bakong")(db);
+app.use("/api", bakongRoutes);
+
 app.get("/api/categories", (req, res) => {
   const sqlQuery = "SELECT * FROM categories ORDER BY name ASC";
 

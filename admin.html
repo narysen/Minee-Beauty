@@ -347,9 +347,7 @@
       </form>
     </div>
   </div>
-
-  <script>
-    // Dynamic API Base URL supporting local testing and Render production deployment
+<script>
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:3000/api'
       : 'https://minee-beauty-store.onrender.com/api';
@@ -661,17 +659,27 @@
       }
 
       tbody.innerHTML = "";
-      filtered.forEach((p, idx) => {
+      filtered.forEach((p) => {
         const skuText = p.sku || `MB-${Math.floor(10 + Math.random() * 90)}`;
         const stockCount = parseInt(p.stock !== undefined ? p.stock : (p.quantity || 10), 10);
         const statusHtml = stockCount > 0 
           ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600">In Stock (${stockCount})</span>`
           : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600">Out of Stock</span>`;
 
+        let rawImg = p.image || p.image_url || "";
+        let finalImageSrc = "https://placehold.co/100x100?text=Item";
+        if (rawImg.trim() !== "") {
+          if (rawImg.startsWith('http') || rawImg.startsWith('data:image')) {
+            finalImageSrc = rawImg;
+          } else {
+            finalImageSrc = `./image/uploads/${rawImg.replace(/^uploads\/?/, '')}`;
+          }
+        }
+
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50/80 transition-colors">
             <td class="p-4 pl-6 flex items-center gap-3">
-              <img src="${p.image || 'https://placehold.co/100x100?text=Item'}" alt="" class="w-10 h-10 rounded-xl object-cover border border-slate-100 bg-slate-50">
+              <img src="${finalImageSrc}" alt="" class="w-10 h-10 rounded-xl object-cover border border-slate-100 bg-slate-50" onerror="this.src='https://placehold.co/100x100?text=Item'">
               <div>
                 <p class="font-bold text-slate-800">${p.title || 'Untitled Item'}</p>
                 <p class="text-[10px] font-mono text-slate-400">SKU: ${skuText}</p>
@@ -739,7 +747,7 @@
       document.getElementById("prod-price").value = product.price || 0;
       document.getElementById("prod-stock").value = product.stock !== undefined ? product.stock : 10;
       document.getElementById("prod-category").value = product.category || customCategories[0];
-      document.getElementById("prod-existing-img").value = product.image || "";
+      document.getElementById("prod-existing-img").value = product.image || product.image_url || "";
       document.getElementById("crud-modal").classList.remove("hidden");
     }
 
@@ -781,7 +789,7 @@
         price: product.price,
         stock: product.stock !== undefined ? product.stock : 10,
         category: product.category,
-        image: product.image,
+        image: product.image || product.image_url,
         sale_price: salePrice > 0 ? salePrice : null,
         sale_start: saleStart,
         sale_end: saleEnd,
@@ -817,7 +825,7 @@
       const category = document.getElementById("prod-category").value;
       const fileInput = document.getElementById("prod-img-file");
       
-      let imageUrl = document.getElementById("prod-existing-img").value || "https://placehold.co/300x300?text=Minee+Beauty";
+      let imageUrl = document.getElementById("prod-existing-img").value || "";
 
       if (fileInput.files && fileInput.files[0]) {
         imageUrl = await convertFileToDataUri(fileInput.files[0]);
@@ -844,7 +852,7 @@
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(productPayload)
-          });
+        });
         }
 
         if (response.ok) {
