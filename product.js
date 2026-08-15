@@ -695,10 +695,20 @@ function updateCartUIDraw() {
 }
 
 window.confirmCart = function () {
-  if (cart.length === 0) {
-    alert("Your shopping bag is completely empty!");
+  const latestCart = JSON.parse(localStorage.getItem("minee_cart") || "[]");
+
+  if (latestCart.length === 0) {
+    refreshFloatingCartUI();
+
+    const cartPreview = document.getElementById("floating-cart-preview");
+
+    if (cartPreview) {
+      cartPreview.classList.remove("hidden");
+    }
+
     return;
   }
+
   window.location.href = "checkout.html";
 };
 
