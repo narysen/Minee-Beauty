@@ -116,6 +116,82 @@ module.exports = function (db) {
     });
   });
 
+  // ==========================================
+  // GET /api/products/:id (FIXED: Handles single product requests)
+  // ==========================================
+  router.get("/products/:id", (req, res) => {
+    const productId = req.params.id;
+    const sqlQuery = "SELECT * FROM products WHERE id = ?";
+
+    db.query(sqlQuery, [productId], (error, results) => {
+      if (error) {
+        console.error("Error fetching single product:", error);
+        return res.status(500).json({ success: false, error: "Database query failed" });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ success: false, error: "Product not found" });
+      }
+
+      const product = results[0];
+      const forwardedProtocol = req.get("x-forwarded-proto");
+      const requestProtocol = forwardedProtocol
+        ? forwardedProtocol.split(",")[0].trim()
+        : req.protocol;
+      const requestOrigin = `${requestProtocol}://${req.get("host")}`;
+
+      let finalImageUrl = product.image_url || "image/logo copy.png";
+
+      finalImageUrl = finalImageUrl.replace(
+        /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\//i,
+        "",
+      );
+
+      if (finalImageUrl.startsWith("./")) {
+        finalImageUrl = finalImageUrl.substring(2);
+      } else if (finalImageUrl.startsWith("/")) {
+        finalImageUrl = finalImageUrl.substring(1);
+      }
+
+      const isExternalImage = /^https?:\/\//i.test(finalImageUrl);
+      const absoluteImageUrl = isExternalImage
+        ? finalImageUrl
+        : `${requestOrigin}/${finalImageUrl}`;
+
+      const formattedProduct = {
+        id: product.id,
+        sku:
+          product.sku && product.sku.trim() !== "" && product.sku !== "N/A"
+            ? product.sku
+            : `MB-${product.id}`,
+        title: product.title,
+        brand: product.brand,
+        category: product.category,
+        price: parseFloat(product.price),
+        discount_price:
+          product.discount_price !== null && product.discount_price !== undefined
+            ? parseFloat(product.discount_price)
+            : null,
+        discount_start: product.discount_start
+          ? product.discount_start.toISOString().slice(0, 19).replace("T", " ")
+          : null,
+        discount_end: product.discount_end
+          ? product.discount_end.toISOString().slice(0, 19).replace("T", " ")
+          : null,
+        limit_per_user:
+          product.limit_per_user !== undefined
+            ? parseInt(product.limit_per_user)
+            : 0,
+        stock: product.stock !== undefined ? parseInt(product.stock) : 0,
+        image_url: absoluteImageUrl,
+        description: product.description,
+        ingredients: product.ingredients,
+      };
+
+      res.json(formattedProduct);
+    });
+  });
+
   router.post("/products", upload.single("image_file"), (req, res) => {
     const {
       title,
