@@ -144,6 +144,7 @@ const initDatabase = () => {
 
 initDatabase();
 
+// Mount Routers properly
 const productRoutes = require("./routes/products")(db);
 app.use("/api", productRoutes);
 
@@ -255,9 +256,11 @@ app.get("/favicon.png", (req, res) => {
   res.sendFile(path.join(__dirname, "favicon.png"));
 });
 
+// Fallback for missing api routes to help debug instead of raw 404/500 text
 app.use("/api", (req, res) => {
   res.status(404).json({
     error: "API endpoint not found",
+    requestedPath: req.originalUrl
   });
 });
 
