@@ -1,281 +1,532 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minee Beauty - Cosmetics Hub</title>
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-  <style>
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-marquee {
-      display: flex;
-      width: max-content;
-      animation: marquee 25s linear infinite;
-    }
-  </style>
-</head>
-<body class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between">
-
-  <!-- Responsive Navigation Header -->
-  <header class="bg-white shadow-sm sticky top-0 z-50">
-    <nav class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
-      <!-- Logo -->
-      <div class="flex-shrink-0">
-        <img src="./image/logo copy.png" alt="Logo" class="w-[60px]">
-      </div>
-
-      <!-- Hamburger Menu Button (Mobile Only) -->
-      <button id="menu-toggle" class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer" aria-label="Toggle Menu">
-        <i class="fa-solid fa-bars" id="menu-icon"></i>
-      </button>
-
-      <!-- Navigation Links -->
-      <div id="nav-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6">
-        <ul class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto">
-          <li>
-            <a href="index.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
-              <i class="fa-solid fa-house"></i>
-              <span>Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="about.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
-              <i class="fa-solid fa-circle-info"></i>
-              <span>About</span>
-            </a>
-          </li>
-          <li>
-            <a href="profileinfo.html" class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors">
-              <i class="fa-solid fa-user-circle"></i>
-              <span>Profile</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </header>
-
-  <!-- HERO BANNER CAROUSEL SLIDER -->
-  <div class="relative w-full h-[250px] sm:h-[350px] md:h-[450px] overflow-hidden bg-neutral-900">
-    <div id="carousel-container" class="relative w-full h-full">
-      
-      <!-- Slide 1 (Active) -->
-      <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
-        <img src="https://koshicosmetics.fr/cdn/shop/collections/banniere_romand.png?v=1740077571&width=1500" alt="Romand Banner" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-black/30 flex flex-col justify-center items-center text-center p-4">
-          <p class="text-white text-lg sm:text-2xl md:text-3xl font-bold drop-shadow-md mb-4 tracking-wide">Discover your favorite makeup products!</p>
-          <button onclick="goShopping()" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 px-6 rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer text-sm md:text-base">Order Now ⋆.𐙚 ̊</button>
-        </div>
-      </div>
-
-      <!-- Slide 2 -->
-      <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
-        <img src="https://themonodist.com/wp-content/uploads/2025/02/maybelline.jpg" alt="Maybelline Banner" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-black/30 flex flex-col justify-center items-center text-center p-4">
-          <p class="text-white text-lg sm:text-2xl md:text-3xl font-bold drop-shadow-md mb-4 tracking-wide">Discover your favorite makeup products!</p>
-          <button onclick="goShopping()" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 px-6 rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer text-sm md:text-base">Order Now ⋆.𐙚 ̊</button>
-        </div>
-      </div>
-
-      <!-- Slide 3 -->
-      <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
-        <img src="https://cdn.shopify.com/s/files/1/0736/1354/1630/files/dasique-banner.jpg" alt="Dasique Banner" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-black/30 flex flex-col justify-center items-center text-center p-4">
-          <p class="text-white text-lg sm:text-2xl md:text-3xl font-bold drop-shadow-md mb-4 tracking-wide">Discover your favorite makeup products!</p>
-          <button onclick="goShopping()" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 px-6 rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer text-sm md:text-base">Order Now ⋆.𐙚 ̊</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- INFINITE SMOOTH RUNNING MARQUEE NOTIFICATION BANNER -->
-  <div class="bg-neutral-900 text-pink-300 py-2 overflow-hidden border-y border-pink-500/20 shadow-inner">
-    <div class="animate-marquee whitespace-nowrap text-xs md:text-sm font-semibold tracking-widest uppercase gap-16">
-      <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
-      <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
-      <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
-      <span>Welcome to Girly World!!</span><span>Get 5% off your first order</span><span>Sign Up Now</span>
-    </div>
-  </div>
-
-  <!-- MAIN APP ROUTER WRAPPER GRID -->
-  <main class="max-w-7xl mx-auto px-4 py-12 w-full space-y-16">
-
-    <!-- TOP SELLING PRODUCT BRANDS GALLERY CATEGORY -->
-    <section id="products">
-      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8 flex items-center justify-center gap-2">
-        Top Selling in Store ⋆🐾°
-      </h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-        
-        <!-- Etude -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden">
-          <a href="etude.html" class="block">
-            <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-              <img src="https://cdn-image.oliveyoung.com/prdtImg/1814/667c2aaf-8751-4ebe-bc5c-150b0e523e6f.png?RS=1500x1500&AR=0&SF=webp&QT=80" alt="etude" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
-            </div>
-            <p class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors">Etude Collection</p>
-          </a>
-        </div>
-
-        <!-- Rom&and -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden">
-          <a href="sheertint.html" class="block">
-            <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-              <img src="./image/makeup/sheertint/group.webp" alt="rom&and" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
-            </div>
-            <p class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors">Rom&amp;and Sheer Tint</p>
-          </a>
-        </div>
-
-        <!-- Dasique -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden">
-          <a href="dasique.html" class="block">
-            <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-              <img src="./image/makeup/oneye/dasique/top-d.jpeg" alt="dasique" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
-            </div>
-            <p class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors">Dasique Palettes</p>
-          </a>
-        </div>
-
-        <!-- Suake Mascara -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden">
-          <a href="mascara.html" class="block">
-            <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-              <img src="./image/makeup/oneye/sukaeeye.jpeg" alt="sukae" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
-            </div>
-            <p class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors">Mascara &amp; Eye Makeup</p>
-          </a>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- INLINE MID PAGE PROMOTION GIF POSTER IMAGE WRAPPER -->
-    <div class="w-full rounded-2xl overflow-hidden shadow-sm border border-neutral-100 bg-white">
-      <img src="https://limese.com/cdn/shop/files/Romand-Banner-All-in-one.gif?v=1678971930" alt="Romand Campaign" class="w-full h-auto object-cover max-h-[300px]">
-    </div>
-
-    <!-- NEW ARRIVALS TRENDING SHELF PREVIEW -->
-    <section>
-      <h2 class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8 tracking-wide">New Arrivals!!!</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-        
-        <!-- Item 1 Lipbalm -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group">
-          <a href="lipbalm.html" class="block">
-            <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-              <img src="https://bearel.fi/wp-content/uploads/2024/08/Romand-Glasting-Melting-Balm-2.jpg" alt="lipbalm" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
-            </div>
-            <p class="text-center text-sm font-medium text-neutral-600 group-hover:text-pink-500 transition-colors">Rom&amp;and Glasting Balm</p>
-          </a>
-        </div>
-
-        <!-- Item 2 3CE -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group">
-          <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-            <img src="https://www.koreanbeautykr.com/cdn/shop/files/L_g0165709271.webp?v=1745456108&width=1200" alt="3ce" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
-          </div>
-          <p class="text-center text-sm font-medium text-neutral-600">3CE Velvet Edition</p>
-        </div>
-
-        <!-- Item 3 House of Hur -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group">
-          <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-            <img src="./image/blush/main.jpeg" alt="hur blush" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
-          </div>
-          <p class="text-center text-sm font-medium text-neutral-600">House of Hur Ampoule Blusher</p>
-        </div>
-
-        <!-- Item 4 Etude -->
-        <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group">
-          <div class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center">
-            <img src="https://www.koreanbeautykr.com/cdn/shop/files/sub9.jpg?v=1745455829&width=1500" alt="etude" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
-          </div>
-          <p class="text-center text-sm font-medium text-neutral-600">Etude Glow Series</p>
-        </div>
-
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Unified Footer Layout -->
-  <footer class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400">
-    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <div>
-        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR STORE</h3>
-        <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
-        <p class="text-sm leading-relaxed mb-3">We believe that beauty elements begin and end with finding balance and creating harmony.</p>
-        <p class="text-sm leading-relaxed mb-4">We always choose the best product to make your beauty. <span class="block text-neutral-500 mt-1">We give all customers the truth and respect.</span></p>
-        <a href="https://maps.google.com" class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a>
-      </div>
-      <div>
-        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">OUR PLATFORM</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-pink-400"></i> @minee beauty.official</a></li>
-          <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-pink-400"></i> @minee beauty.official</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-white text-lg font-bold mb-4 tracking-wider">CONTACT</h3>
-        <p class="text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408</p>
-        <p class="text-sm mb-4"><a href="mailto:narysen913@gmail.com" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-envelope text-pink-400"></i> minee beauty.com</a></p>
-        <button class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer">Unlock 5% off</button>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
-      &copy; 2026 Minee Beauty. All rights reserved.
-    </div>
-  </footer>
-
-  <!-- JS Controller Modules -->
-  <script src="product.js"></script>
-  <script>
-    // 1. Mobile Responsive Navbar Toggle Button Action (Fixed using style display block/none)
-    const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.getElementById('nav-menu');
-    const menuIcon = document.getElementById('menu-icon');
-
-    menuToggle.addEventListener('click', () => {
-      // Toggle directly via inline display styles to bypass Tailwind class specificity clashes
-      if (navMenu.style.display === 'block') {
-        navMenu.style.display = '';
-        menuIcon.className = 'fa-solid fa-bars';
-      } else {
-        navMenu.style.display = 'block';
-        menuIcon.className = 'fa-solid fa-xmark';
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minee Beauty - Cosmetics Hub</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+    <style>
+      @keyframes marquee {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
       }
-    });
-
-    // 2. Built-in Automated Header Carousel Rotator Logic
-    const slides = document.querySelectorAll('.carousel-slide');
-    let currentSlideIndex = 0;
-
-    function showNextSlide() {
-      slides[currentSlideIndex].classList.replace('opacity-100', 'opacity-0');
-      slides[currentSlideIndex].classList.replace('z-10', 'z-0');
-      
-      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-      
-      slides[currentSlideIndex].classList.replace('opacity-0', 'opacity-100');
-      slides[currentSlideIndex].classList.replace('z-0', 'z-10');
-    }
-    setInterval(showNextSlide, 4500);
-
-    // 3. Fixed Order Now Scroll Action
-    function goShopping() {
-      const productSection = document.getElementById('products');
-      if (productSection) {
-        productSection.scrollIntoView({ behavior: 'smooth' });
+      .animate-marquee {
+        display: flex;
+        width: max-content;
+        animation: marquee 25s linear infinite;
       }
-    }
-  </script>
-</body>
+    </style>
+  </head>
+  <body
+    class="bg-pink-50 text-neutral-800 font-sans min-h-screen flex flex-col justify-between"
+  >
+    <!-- Responsive Navigation Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <nav
+        class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative"
+      >
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <img src="./image/logo copy.png" alt="Logo" class="w-[60px]" />
+        </div>
+
+        <!-- Hamburger Menu Button (Mobile Only) -->
+        <button
+          id="menu-toggle"
+          class="md:hidden text-2xl text-neutral-700 focus:outline-none cursor-pointer"
+          aria-label="Toggle Menu"
+        >
+          <i class="fa-solid fa-bars" id="menu-icon"></i>
+        </button>
+
+        <!-- Navigation Links -->
+        <div
+          id="nav-menu"
+          class="hidden absolute top-full left-0 w-full bg-white border-b border-neutral-100 p-4 md:p-0 md:border-none md:static md:w-auto md:flex items-center gap-6"
+        >
+          <ul
+            class="flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto"
+          >
+            <li>
+              <a
+                href="index.html"
+                class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors"
+              >
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="about.html"
+                class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors"
+              >
+                <i class="fa-solid fa-circle-info"></i>
+                <span>About</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="profileinfo.html"
+                class="flex items-center gap-2 text-neutral-600 hover:text-pink-500 font-medium transition-colors"
+              >
+                <i class="fa-solid fa-user-circle"></i>
+                <span>Profile</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- HERO BANNER CAROUSEL SLIDER -->
+    <div
+      class="relative w-full h-[250px] sm:h-[350px] md:h-[450px] overflow-hidden bg-neutral-900"
+    >
+      <div id="carousel-container" class="relative w-full h-full">
+        <!-- Slide 1 (Active) -->
+        <div
+          class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10"
+        >
+          <img
+            src="https://koshicosmetics.fr/cdn/shop/collections/banniere_romand.png?v=1740077571&width=1500"
+            alt="Romand Banner"
+            class="w-full h-full object-cover"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-black/30 flex flex-col justify-center items-center text-center p-4"
+          >
+            <p
+              class="text-white text-lg sm:text-2xl md:text-3xl font-bold drop-shadow-md mb-4 tracking-wide"
+            >
+              Discover your favorite makeup products!
+            </p>
+            <button
+              onclick="goShopping()"
+              class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 px-6 rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer text-sm md:text-base"
+            >
+              Order Now ⋆.𐙚 ̊
+            </button>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div
+          class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0"
+        >
+          <img
+            src="https://themonodist.com/wp-content/uploads/2025/02/maybelline.jpg"
+            alt="Maybelline Banner"
+            class="w-full h-full object-cover"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-black/30 flex flex-col justify-center items-center text-center p-4"
+          >
+            <p
+              class="text-white text-lg sm:text-2xl md:text-3xl font-bold drop-shadow-md mb-4 tracking-wide"
+            >
+              Discover your favorite makeup products!
+            </p>
+            <button
+              onclick="goShopping()"
+              class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 px-6 rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer text-sm md:text-base"
+            >
+              Order Now ⋆.𐙚 ̊
+            </button>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div
+          class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0"
+        >
+          <img
+            src="https://cdn.shopify.com/s/files/1/0736/1354/1630/files/dasique-banner.jpg"
+            alt="Dasique Banner"
+            class="w-full h-full object-cover"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-black/30 flex flex-col justify-center items-center text-center p-4"
+          >
+            <p
+              class="text-white text-lg sm:text-2xl md:text-3xl font-bold drop-shadow-md mb-4 tracking-wide"
+            >
+              Discover your favorite makeup products!
+            </p>
+            <button
+              onclick="goShopping()"
+              class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2.5 px-6 rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer text-sm md:text-base"
+            >
+              Order Now ⋆.𐙚 ̊
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFINITE SMOOTH RUNNING MARQUEE NOTIFICATION BANNER -->
+    <div
+      class="bg-neutral-900 text-pink-300 py-2 overflow-hidden border-y border-pink-500/20 shadow-inner"
+    >
+      <div
+        class="animate-marquee whitespace-nowrap text-xs md:text-sm font-semibold tracking-widest uppercase gap-16"
+      >
+        <span>Welcome to Girly World!!</span
+        ><span>Get 5% off your first order</span><span>Sign Up Now</span>
+        <span>Welcome to Girly World!!</span
+        ><span>Get 5% off your first order</span><span>Sign Up Now</span>
+        <span>Welcome to Girly World!!</span
+        ><span>Get 5% off your first order</span><span>Sign Up Now</span>
+        <span>Welcome to Girly World!!</span
+        ><span>Get 5% off your first order</span><span>Sign Up Now</span>
+      </div>
+    </div>
+
+    <!-- MAIN APP ROUTER WRAPPER GRID -->
+    <main class="max-w-7xl mx-auto px-4 py-12 w-full space-y-16">
+      <!-- TOP SELLING PRODUCT BRANDS GALLERY CATEGORY -->
+      <section id="products">
+        <h2
+          class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8 flex items-center justify-center gap-2"
+        >
+          Top Selling in Store ⋆🐾°
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Etude -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden"
+          >
+            <a href="etude.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="https://cdn-image.oliveyoung.com/prdtImg/1814/667c2aaf-8751-4ebe-bc5c-150b0e523e6f.png?RS=1500x1500&AR=0&SF=webp&QT=80"
+                  alt="etude"
+                  class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <p
+                class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors"
+              >
+                Etude Collection
+              </p>
+            </a>
+          </div>
+
+          <!-- Rom&and -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden"
+          >
+            <a href="sheertint.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/sheertint/group.webp"
+                  alt="rom&and"
+                  class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <p
+                class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors"
+              >
+                Rom&amp;and Sheer Tint
+              </p>
+            </a>
+          </div>
+
+          <!-- Dasique -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden"
+          >
+            <a href="dasique.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/oneye/dasique/top-d.jpeg"
+                  alt="dasique"
+                  class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <p
+                class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors"
+              >
+                Dasique Palettes
+              </p>
+            </a>
+          </div>
+
+          <!-- Suake Mascara -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all group overflow-hidden"
+          >
+            <a href="mascara.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/oneye/sukaeeye.jpeg"
+                  alt="sukae"
+                  class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <p
+                class="text-center text-sm font-semibold text-neutral-700 group-hover:text-pink-500 transition-colors"
+              >
+                Mascara &amp; Eye Makeup
+              </p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- INLINE MID PAGE PROMOTION GIF POSTER IMAGE WRAPPER -->
+      <div
+        class="w-full rounded-2xl overflow-hidden shadow-sm border border-neutral-100 bg-white"
+      >
+        <img
+          src="https://limese.com/cdn/shop/files/Romand-Banner-All-in-one.gif?v=1678971930"
+          alt="Romand Campaign"
+          class="w-full h-auto object-cover max-h-[300px]"
+        />
+      </div>
+
+      <!-- NEW ARRIVALS TRENDING SHELF PREVIEW -->
+      <section>
+        <h2
+          class="text-2xl md:text-3xl font-bold text-center text-neutral-800 mb-8 tracking-wide"
+        >
+          New Arrivals!!!
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Item 1: Rom&and Glasting Balm -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group"
+          >
+            <a href="lipbalm.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/lipbalm/romand-glasting-melting-balm-12-veiled-rose-3-5g.jpg.webp"
+                  alt="Romand Glasting Balm"
+                  class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+
+              <p
+                class="text-center text-sm font-medium text-neutral-600 group-hover:text-pink-500 transition-colors"
+              >
+                Rom&amp;and Glasting Balm
+              </p>
+            </a>
+          </div>
+
+          <!-- Item 2: Dasique Eye Makeup -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group"
+          >
+            <a href="dasique.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/oneye/dasique/top-d.jpeg"
+                  alt="Dasique Eye Makeup"
+                  class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+
+              <p
+                class="text-center text-sm font-medium text-neutral-600 group-hover:text-pink-500 transition-colors"
+              >
+                Dasique Eye Makeup
+              </p>
+            </a>
+          </div>
+
+          <!-- Item 3: Rom&and Sheer Tint -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group"
+          >
+            <a href="sheertint.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/blur.webp"
+                  alt="Romand Sheer Tint Collection"
+                  class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+
+              <p
+                class="text-center text-sm font-medium text-neutral-600 group-hover:text-pink-500 transition-colors"
+              >
+                Rom&amp;and Sheer Tint
+              </p>
+            </a>
+          </div>
+
+          <!-- Item 4: Etude Glow Series -->
+          <div
+            class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-xs hover:shadow-md transition-all group"
+          >
+            <a href="etude.html" class="block">
+              <div
+                class="overflow-hidden rounded-xl bg-neutral-50 mb-3 aspect-square flex items-center justify-center"
+              >
+                <img
+                  src="./image/makeup/glow-tint/top-g.jpeg"
+                  alt="Etude Glow Series"
+                  class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+
+              <p
+                class="text-center text-sm font-medium text-neutral-600 group-hover:text-pink-500 transition-colors"
+              >
+                Etude Glow Series
+              </p>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Unified Footer Layout -->
+    <footer
+      class="bg-neutral-900 text-neutral-400 pt-12 pb-6 w-full border-t-4 border-pink-400"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8"
+      >
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4 tracking-wider">
+            OUR STORE
+          </h3>
+          <p class="text-pink-400 font-semibold mb-2">MINEE BEAUTY</p>
+          <p class="text-sm leading-relaxed mb-3">
+            We believe that beauty elements begin and end with finding balance
+            and creating harmony.
+          </p>
+          <p class="text-sm leading-relaxed mb-4">
+            We always choose the best product to make your beauty.
+            <span class="block text-neutral-500 mt-1"
+              >We give all customers the truth and respect.</span
+            >
+          </p>
+          <a
+            href="https://maps.google.com"
+            class="text-pink-400 hover:text-pink-300 text-sm inline-flex items-center gap-1 transition-colors"
+            ><i class="fa-solid fa-map-marker-alt"></i> Google Map (click)</a
+          >
+        </div>
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4 tracking-wider">
+            OUR PLATFORM
+          </h3>
+          <ul class="space-y-2 text-sm">
+            <li>
+              <a
+                href="#"
+                class="hover:text-white transition-colors flex items-center gap-2"
+                ><i class="fa-brands fa-instagram text-pink-400"></i> @minee
+                beauty.official</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="hover:text-white transition-colors flex items-center gap-2"
+                ><i class="fa-brands fa-facebook text-pink-400"></i> @minee
+                beauty.official</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4 tracking-wider">
+            CONTACT
+          </h3>
+          <p class="text-sm mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-phone text-pink-400"></i> +885: 015 479 408
+          </p>
+          <p class="text-sm mb-4">
+            <a
+              href="mailto:narysen913@gmail.com"
+              class="hover:text-white transition-colors flex items-center gap-2"
+              ><i class="fa-solid fa-envelope text-pink-400"></i> minee
+              beauty.com</a
+            >
+          </p>
+          <button
+            class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-xl text-sm shadow-md transition-colors cursor-pointer"
+          >
+            Unlock 5% off
+          </button>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto px-4 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600"
+      >
+        &copy; 2026 Minee Beauty. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- JS Controller Modules -->
+    <script src="product.js"></script>
+    <script>
+      // 1. Mobile Responsive Navbar Toggle Button Action (Fixed using style display block/none)
+      const menuToggle = document.getElementById("menu-toggle");
+      const navMenu = document.getElementById("nav-menu");
+      const menuIcon = document.getElementById("menu-icon");
+
+      menuToggle.addEventListener("click", () => {
+        // Toggle directly via inline display styles to bypass Tailwind class specificity clashes
+        if (navMenu.style.display === "block") {
+          navMenu.style.display = "";
+          menuIcon.className = "fa-solid fa-bars";
+        } else {
+          navMenu.style.display = "block";
+          menuIcon.className = "fa-solid fa-xmark";
+        }
+      });
+
+      // 2. Built-in Automated Header Carousel Rotator Logic
+      const slides = document.querySelectorAll(".carousel-slide");
+      let currentSlideIndex = 0;
+
+      function showNextSlide() {
+        slides[currentSlideIndex].classList.replace("opacity-100", "opacity-0");
+        slides[currentSlideIndex].classList.replace("z-10", "z-0");
+
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+
+        slides[currentSlideIndex].classList.replace("opacity-0", "opacity-100");
+        slides[currentSlideIndex].classList.replace("z-0", "z-10");
+      }
+      setInterval(showNextSlide, 4500);
+
+      // 3. Fixed Order Now Scroll Action
+      function goShopping() {
+        const productSection = document.getElementById("products");
+        if (productSection) {
+          productSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    </script>
+  </body>
 </html>

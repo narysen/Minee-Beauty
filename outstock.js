@@ -6,18 +6,75 @@ document.addEventListener("DOMContentLoaded", () => {
   checkLiveDatabaseStockAndDiscounts();
 
   // Setup main cart button toggle action path
-  const cartBtn = document.getElementById('cart-button');
-  const cartPreview = document.getElementById('cart-preview');
-  if (cartBtn && cartPreview) {
-    cartBtn.onclick = (e) => {
-      e.stopPropagation();
-      cartPreview.classList.toggle('hidden');
-      const wishlistPreview = document.getElementById('wishlist-preview');
-      if (wishlistPreview) {
-        wishlistPreview.classList.add('hidden'); // Close wishlist if open
-      }
-    };
-  }
+// Use one authoritative cart toggle handler.
+const cartBtn =
+  document.getElementById(
+    "cart-button"
+  );
+
+const cartPreview =
+  document.getElementById(
+    "cart-preview"
+  );
+
+if (cartBtn && cartPreview) {
+  cartBtn.onclick = event => {
+    event.preventDefault();
+
+    // Prevent the other legacy cart handlers
+    // from toggling the same panel again.
+    event.stopImmediatePropagation();
+
+    const isOpen =
+      !cartPreview.classList
+        .contains("hidden");
+
+    // Remove the old inline
+    // "display: block !important".
+    cartPreview.style
+      .removeProperty("display");
+
+    if (isOpen) {
+      cartPreview.classList.add(
+        "hidden"
+      );
+
+      cartPreview.classList.remove(
+        "opacity-100",
+        "scale-100"
+      );
+
+      cartPreview.classList.add(
+        "opacity-0",
+        "scale-95",
+        "pointer-events-none"
+      );
+    } else {
+      cartPreview.classList.remove(
+        "hidden",
+        "opacity-0",
+        "scale-95",
+        "pointer-events-none"
+      );
+
+      cartPreview.classList.add(
+        "opacity-100",
+        "scale-100"
+      );
+    }
+
+    const wishlistPreview =
+      document.getElementById(
+        "wishlist-preview"
+      );
+
+    if (wishlistPreview) {
+      wishlistPreview.classList.add(
+        "hidden"
+      );
+    }
+  };
+}
 });
 
 window.API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

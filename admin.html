@@ -1,683 +1,1092 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minee Beauty Panel — Corporate Admin Center</title>
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link class="rounded-full" rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-</head>
-<body class="bg-[#f8fafc] text-[#334155] font-sans m-0 antialiased flex h-screen overflow-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minee Beauty Panel — Corporate Admin Center</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      class="rounded-full"
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicon.png"
+    />
+  </head>
+  <body
+    class="bg-[#f8fafc] text-[#334155] font-sans m-0 antialiased flex h-screen overflow-hidden"
+  >
+    <!-- SIDEBAR NAVIGATION -->
+    <aside
+      class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 h-full border-r border-slate-800"
+    >
+      <div>
+        <div class="p-4 border-b border-slate-800 bg-slate-950">
+          <a
+            href="#"
+            class="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-slate-800/40 transition-all duration-200 group"
+          >
+            <div
+              class="flex-shrink-0 bg-slate-900 p-1.5 rounded-xl border border-slate-800/60 shadow-inner"
+            >
+              <img
+                src="/favicon.png"
+                alt="Minee Beauty Logo"
+                class="h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                onerror="this.src = 'https://placehold.co/100x100?text=Logo'"
+              />
+            </div>
 
-  <!-- SIDEBAR NAVIGATION -->
-  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 h-full border-r border-slate-800">
-    <div>
-      <div class="p-4 border-b border-slate-800 bg-slate-950">
-        <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-slate-800/40 transition-all duration-200 group">
-          <div class="flex-shrink-0 bg-slate-900 p-1.5 rounded-xl border border-slate-800/60 shadow-inner">
-            <img 
-              src="/favicon.png" 
-              alt="Minee Beauty Logo" 
-              class="h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-              onerror="this.src='https://placehold.co/100x100?text=Logo'"
-            />
-          </div>
-          
-          <div class="flex flex-col min-w-0">
-            <span class="text-sm font-bold text-slate-100 tracking-wide truncate">
-              Minee Beauty
-            </span>
-            <span class="text-[10px] font-medium text-slate-500 font-mono tracking-wider uppercase">
-             Store Management 
-            </span>
-          </div>
+            <div class="flex flex-col min-w-0">
+              <span
+                class="text-sm font-bold text-slate-100 tracking-wide truncate"
+              >
+                Minee Beauty
+              </span>
+              <span
+                class="text-[10px] font-medium text-slate-500 font-mono tracking-wider uppercase"
+              >
+                Store Management
+              </span>
+            </div>
+          </a>
+        </div>
+
+        <nav class="p-4 space-y-1">
+          <button
+            onclick="switchTab('tab-overview')"
+            id="nav-tab-overview"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-white bg-slate-800 shadow-xs"
+          >
+            <i class="fa fa-home text-sm"></i> Dashboard Overview
+          </button>
+          <button
+            onclick="switchTab('tab-inventory')"
+            id="nav-tab-inventory"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50"
+          >
+            <i class="fa fa-database text-sm"></i> Products Management
+          </button>
+          <button
+            onclick="switchTab('tab-orders')"
+            id="nav-tab-orders"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50"
+          >
+            <i class="fa fa-user-circle text-sm"></i> Customer Order Logs
+          </button>
+          <button
+            onclick="openCreateMode()"
+            id="nav-tab-create"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50"
+          >
+            <i class="fa-solid fa-square-plus text-sm"></i> Launch New Product
+          </button>
+        </nav>
+      </div>
+
+      <div
+        class="p-4 border-t border-slate-800 bg-slate-950/40 text-[11px] text-slate-500 space-y-2"
+      >
+        <div class="flex justify-between items-center px-1">
+          <span>Server Connection:</span>
+          <span class="flex items-center gap-1 font-bold text-emerald-400"
+            ><i class="fa-solid fa-circle text-[6px] animate-pulse"></i> MySQL
+            ONLINE</span
+          >
+        </div>
+        <a
+          href="contact.html"
+          class="block w-full text-center bg-slate-800 hover:bg-slate-700 hover:text-white text-slate-300 font-bold py-2 rounded-xl transition-all"
+        >
+          <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Go to Live
+          Store
         </a>
       </div>
+    </aside>
 
-      <nav class="p-4 space-y-1">
-        <button onclick="switchTab('tab-overview')" id="nav-tab-overview" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-white bg-slate-800 shadow-xs">
-          <i class="fa fa-home text-sm"></i> Dashboard Overview
-        </button>
-        <button onclick="switchTab('tab-inventory')" id="nav-tab-inventory" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
-          <i class="fa fa-database text-sm"></i> Products Management
-        </button>
-        <button onclick="switchTab('tab-orders')" id="nav-tab-orders" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
-          <i class="fa fa-user-circle text-sm"></i> Customer Order Logs
-        </button>
-        <button onclick="openCreateMode()" id="nav-tab-create" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
-          <i class="fa-solid fa-square-plus text-sm"></i> Launch New Product
-        </button>
-      </nav>
-    </div>
-
-    <div class="p-4 border-t border-slate-800 bg-slate-950/40 text-[11px] text-slate-500 space-y-2">
-      <div class="flex justify-between items-center px-1">
-        <span>Server Connection:</span>
-        <span class="flex items-center gap-1 font-bold text-emerald-400"><i class="fa-solid fa-circle text-[6px] animate-pulse"></i> MySQL ONLINE</span>
-      </div>
-      <a href="contact.html" class="block w-full text-center bg-slate-800 hover:bg-slate-700 hover:text-white text-slate-300 font-bold py-2 rounded-xl transition-all">
-        <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Go to Live Store
-      </a>
-    </div>
-  </aside>
-
-  <!-- MAIN CONTENT AREA -->
-  <div class="flex-1 flex flex-col overflow-hidden h-full">
-
-    <header class="bg-white border-b border-slate-100 px-8 py-4 flex justify-between items-center shrink-0">
-      <div>
-        <h2 id="current-screen-title" class="text-lg font-bold text-slate-800">Dashboard Overview</h2>
-        <p class="text-xs text-slate-400 mt-0.5 font-mono">System Core Analysis Management</p>
-      </div>
-      
-      <div onclick="openProfileModal()" class="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 hover:bg-slate-100 transition-all cursor-pointer group select-none">
-        <div id="profile-badge" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#0099ff] to-[#28c4e7] text-white flex items-center justify-center text-xs font-black shadow-xs uppercase">
-          AD
-        </div>
-        <div class="flex flex-col">
-          <span id="profile-name" class="text-xs font-semibold text-slate-700 px-1">Administrator Root</span>
-          <span id="profile-role-sub" class="text-[9px] text-slate-400 px-1 font-mono uppercase tracking-wider">Owner Management</span>
-        </div>
-        <div class="text-slate-300 group-hover:text-slate-500 pl-1 pr-1 text-xs transition-colors">
-          <i class="fa-solid fa-gear"></i>
-        </div>
-      </div>
-    </header>
-
-    <main class="flex-1 overflow-y-auto p-8 space-y-6">
-
-      <!-- TAB 1: OVERVIEW -->
-      <div id="tab-overview" class="tab-panel space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
-            <div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gross Revenues</p>
-              <h3 id="stat-revenue" class="text-2xl font-black text-slate-800 mt-1 font-mono">$0.00</h3>
-            </div>
-            <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl"><i class="fa-solid fa-wallet text-lg"></i></div>
-          </div>
-          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
-            <div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Order Quantities</p>
-              <h3 id="stat-orders" class="text-2xl font-black text-slate-800 mt-1 font-mono">0 Invoices</h3>
-            </div>
-            <div class="bg-blue-50 text-blue-600 p-3.5 rounded-xl"><i class="fa-solid fa-file-invoice-dollar text-lg"></i></div>
-          </div>
-          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
-            <div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Products Inventory</p>
-              <h3 id="stat-products" class="text-2xl font-black text-slate-800 mt-1 font-mono">0 Items</h3>
-            </div>
-            <div class="bg-pink-50 text-pink-600 p-3.5 rounded-xl"><i class="fa-solid fa-spray-can-sparkles text-lg"></i></div>
-          </div>
-          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center">
-            <div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Profiles</p>
-              <h3 id="stat-users" class="text-2xl font-black text-slate-800 mt-1 font-mono">1 Profile</h3>
-            </div>
-            <div class="bg-amber-50 text-amber-600 p-3.5 rounded-xl"><i class="fa-solid fa-user-shield text-lg"></i></div>
-          </div>
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-1 flex flex-col overflow-hidden h-full">
+      <header
+        class="bg-white border-b border-slate-100 px-8 py-4 flex justify-between items-center shrink-0"
+      >
+        <div>
+          <h2
+            id="current-screen-title"
+            class="text-lg font-bold text-slate-800"
+          >
+            Dashboard Overview
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5 font-mono">
+            System Core Analysis Management
+          </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs lg:col-span-2">
-            <div class="flex items-center justify-between mb-4">
+        <div
+          onclick="openProfileModal()"
+          class="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 hover:bg-slate-100 transition-all cursor-pointer group select-none"
+        >
+          <div
+            id="profile-badge"
+            class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#0099ff] to-[#28c4e7] text-white flex items-center justify-center text-xs font-black shadow-xs uppercase"
+          >
+            AD
+          </div>
+          <div class="flex flex-col">
+            <span
+              id="profile-name"
+              class="text-xs font-semibold text-slate-700 px-1"
+              >Administrator Root</span
+            >
+            <span
+              id="profile-role-sub"
+              class="text-[9px] text-slate-400 px-1 font-mono uppercase tracking-wider"
+              >Owner Management</span
+            >
+          </div>
+          <div
+            class="text-slate-300 group-hover:text-slate-500 pl-1 pr-1 text-xs transition-colors"
+          >
+            <i class="fa-solid fa-gear"></i>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto p-8 space-y-6">
+        <!-- TAB 1: OVERVIEW -->
+        <div id="tab-overview" class="tab-panel space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center"
+            >
               <div>
-                <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide">Financial Progress Stream</h3>
-                <p class="text-xs text-slate-400">Real-time accumulated order revenue metrics matrix</p>
+                <p
+                  class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                >
+                  Gross Revenues
+                </p>
+                <h3
+                  id="stat-revenue"
+                  class="text-2xl font-black text-slate-800 mt-1 font-mono"
+                >
+                  $0.00
+                </h3>
               </div>
-              <div>
-                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-600">
-                  <i class="fa-solid fa-chart-line mr-1.5"></i> Live Stream
-                </span>
+              <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl">
+                <i class="fa-solid fa-wallet text-lg"></i>
               </div>
             </div>
-            <div class="relative w-full h-56">
-              <canvas id="financialStreamCanvas"></canvas>
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center"
+            >
+              <div>
+                <p
+                  class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                >
+                  Order Quantities
+                </p>
+                <h3
+                  id="stat-orders"
+                  class="text-2xl font-black text-slate-800 mt-1 font-mono"
+                >
+                  0 Invoices
+                </h3>
+              </div>
+              <div class="bg-blue-50 text-blue-600 p-3.5 rounded-xl">
+                <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
+              </div>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center"
+            >
+              <div>
+                <p
+                  class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                >
+                  Active Products Inventory
+                </p>
+                <h3
+                  id="stat-products"
+                  class="text-2xl font-black text-slate-800 mt-1 font-mono"
+                >
+                  0 Items
+                </h3>
+              </div>
+              <div class="bg-pink-50 text-pink-600 p-3.5 rounded-xl">
+                <i class="fa-solid fa-spray-can-sparkles text-lg"></i>
+              </div>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex justify-between items-center"
+            >
+              <div>
+                <p
+                  class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+                >
+                  Active Profiles
+                </p>
+                <h3
+                  id="stat-users"
+                  class="text-2xl font-black text-slate-800 mt-1 font-mono"
+                >
+                  1 Profile
+                </h3>
+              </div>
+              <div class="bg-amber-50 text-amber-600 p-3.5 rounded-xl">
+                <i class="fa-solid fa-user-shield text-lg"></i>
+              </div>
             </div>
           </div>
-          
-          <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex flex-col justify-between">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-1">Fast Utilities Terminal</h3>
-              <p class="text-xs text-slate-400">Quick-fire commands tool assets</p>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs lg:col-span-2"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3
+                    class="font-bold text-slate-800 text-sm uppercase tracking-wide"
+                  >
+                    Financial Progress Stream
+                  </h3>
+                  <p class="text-xs text-slate-400">
+                    Real-time accumulated order revenue metrics matrix
+                  </p>
+                </div>
+                <div>
+                  <span
+                    class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-600"
+                  >
+                    <i class="fa-solid fa-chart-line mr-1.5"></i> Live Stream
+                  </span>
+                </div>
+              </div>
+              <div class="relative w-full h-56">
+                <canvas id="financialStreamCanvas"></canvas>
+              </div>
             </div>
-            <div class="space-y-2 my-4">
-              <button onclick="refreshAdminDataMatrix()" class="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer">
-                <span>Sync live Database Rows</span> <i class="fa-solid fa-arrow-rotate-left text-slate-400"></i>
-              </button>
-              <button onclick="clearAllOrdersTerminal()" class="w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer">
-                <span>Flush Active Order Display</span> <i class="fa-solid fa-dumpster-fire text-red-400"></i>
-              </button>
+
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex flex-col justify-between"
+            >
+              <div>
+                <h3
+                  class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-1"
+                >
+                  Fast Utilities Terminal
+                </h3>
+                <p class="text-xs text-slate-400">
+                  Quick-fire commands tool assets
+                </p>
+              </div>
+              <div class="space-y-2 my-4">
+                <button
+                  onclick="refreshAdminDataMatrix()"
+                  class="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer"
+                >
+                  <span>Sync live Database Rows</span>
+                  <i class="fa-solid fa-arrow-rotate-left text-slate-400"></i>
+                </button>
+                <button
+                  onclick="clearAllOrdersTerminal()"
+                  class="w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-all text-left flex items-center justify-between cursor-pointer"
+                >
+                  <span>Flush Active Order Display</span>
+                  <i class="fa-solid fa-dumpster-fire text-red-400"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- TAB 2: INVENTORY MANAGEMENT -->
-      <div id="tab-inventory" class="tab-panel hidden space-y-4">
-        <div class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-xs">
-          <div class="relative flex-1 max-w-md">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-            <input type="text" id="inventory-search" oninput="renderInventoryTable()" placeholder="Search items catalog by title name or group tags..." class="w-full text-xs pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors">
+        <!-- TAB 2: INVENTORY MANAGEMENT -->
+        <div id="tab-inventory" class="tab-panel hidden space-y-4">
+          <div
+            class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-xs"
+          >
+            <div class="relative flex-1 max-w-md">
+              <i
+                class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"
+              ></i>
+              <input
+                type="text"
+                id="inventory-search"
+                oninput="renderInventoryTable()"
+                placeholder="Search items catalog by title name or group tags..."
+                class="w-full text-xs pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors"
+              />
+            </div>
+            <div class="flex items-center gap-2">
+              <select
+                id="filter-category"
+                onchange="renderInventoryTable()"
+                class="text-xs bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 focus:outline-none text-slate-600 font-medium"
+              >
+                <option value="ALL">Display All Groups</option>
+              </select>
+              <button
+                onclick="openCreateMode()"
+                class="bg-[#0099ff] hover:bg-[#0077cc] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-plus"></i> Add Item
+              </button>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <select id="filter-category" onchange="renderInventoryTable()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 focus:outline-none text-slate-600 font-medium">
-              <option value="ALL">Display All Groups</option>
+
+          <div
+            class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr
+                    class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100"
+                  >
+                    <th class="p-4 pl-6">SKU Product Line Variant</th>
+                    <th class="p-4">Category Group</th>
+                    <th class="p-4 text-center">Unit Price</th>
+                    <th class="p-4 text-center">Warehouse Stocks</th>
+                    <th class="p-4 text-center">Availability Status</th>
+                    <th class="p-4 pr-6 text-right">Action Frameworks</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="inventory-table-body"
+                  class="divide-y divide-slate-100 text-slate-600 font-medium"
+                ></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: CUSTOMER ORDER LOGS -->
+        <div id="tab-orders" class="tab-panel hidden space-y-4">
+          <div
+            class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr
+                    class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100"
+                  >
+                    <th class="p-4 pl-6">Invoice ID</th>
+                    <th class="p-4">Customer</th>
+                    <th class="p-4">Checkout Timestamp</th>
+                    <th class="p-4">Item Allocation Summary</th>
+                    <th class="p-4 text-center">Payment Method</th>
+                    <th class="p-4 pr-6 text-right">Total Payment</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="order-log-table-body"
+                  class="divide-y divide-slate-100 text-slate-600 font-medium"
+                ></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div
+      id="profile-modal"
+      class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl relative border border-slate-100"
+      >
+        <button
+          onclick="closeProfileModal()"
+          class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 cursor-pointer text-base"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="border-b border-slate-100 pb-3 mb-4">
+          <h3
+            class="text-base font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-user-gear text-[#0099ff]"></i> Profile
+            Settings
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Customize permission roles
+          </p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1"
+              >Custom Display Name</label
+            >
+            <input
+              type="text"
+              id="input-profile-name"
+              placeholder="e.g., Administrator Root"
+              class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1"
+              >Switch System Role Access</label
+            >
+            <select
+              id="select-profile-role"
+              class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors font-medium text-slate-600"
+            >
+              <option value="Administrator">Administrator (Full Access)</option>
+              <option value="Owner">Owner (Inventory Control)</option>
             </select>
-            <button onclick="openCreateMode()" class="bg-[#0099ff] hover:bg-[#0077cc] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5">
-              <i class="fa-solid fa-plus"></i> Add Item
+          </div>
+          <div class="pt-2 flex gap-2">
+            <button
+              onclick="saveProfileChanges()"
+              class="flex-1 bg-[#0099ff] hover:bg-[#0077cc] text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-md"
+            >
+              Save Profile
+            </button>
+            <button
+              onclick="closeProfileModal()"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
+            >
+              Cancel
             </button>
           </div>
         </div>
-
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
-                  <th class="p-4 pl-6">SKU Product Line Variant</th>
-                  <th class="p-4">Category Group</th>
-                  <th class="p-4 text-center">Unit Price</th>
-                  <th class="p-4 text-center">Warehouse Stocks</th>
-                  <th class="p-4 text-center">Availability Status</th>
-                  <th class="p-4 pr-6 text-right">Action Frameworks</th>
-                </tr>
-              </thead>
-              <tbody id="inventory-table-body" class="divide-y divide-slate-100 text-slate-600 font-medium"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 3: CUSTOMER ORDER LOGS -->
-      <div id="tab-orders" class="tab-panel hidden space-y-4">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
-                  <th class="p-4 pl-6">Invoice ID</th>
-                  <th class="p-4">Customer</th> 
-                  <th class="p-4">Checkout Timestamp</th>
-                  <th class="p-4">Item Allocation Summary</th>
-                  <th class="p-4 text-center">Payment Method</th>
-                  <th class="p-4 pr-6 text-right">Total Payment</th>
-                </tr>
-              </thead>
-              <tbody id="order-log-table-body" class="divide-y divide-slate-100 text-slate-600 font-medium"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- PROFILE MODAL -->
-  <div id="profile-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-    <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl relative border border-slate-100">
-      <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 cursor-pointer text-base">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <div class="border-b border-slate-100 pb-3 mb-4">
-        <h3 class="text-base font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
-          <i class="fa-solid fa-user-gear text-[#0099ff]"></i> Profile Settings
-        </h3>
-        <p class="text-xs text-slate-400 mt-0.5">Customize permission roles</p>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-slate-500 mb-1">Custom Display Name</label>
-          <input type="text" id="input-profile-name" placeholder="e.g., Administrator Root" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-500 mb-1">Switch System Role Access</label>
-          <select id="select-profile-role" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] focus:bg-white transition-colors font-medium text-slate-600">
-            <option value="Administrator">Administrator (Full Access)</option>
-            <option value="Owner">Owner (Inventory Control)</option>
-          </select>
-        </div>
-        <div class="pt-2 flex gap-2">
-          <button onclick="saveProfileChanges()" class="flex-1 bg-[#0099ff] hover:bg-[#0077cc] text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-md">Save Profile</button>
-          <button onclick="closeProfileModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors cursor-pointer">Cancel</button>
-        </div>
       </div>
     </div>
-  </div>
 
-  <!-- PRODUCT CRUD MODAL -->
-  <div id="crud-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 id="form-title" class="text-sm font-bold text-slate-800 flex items-center gap-2"></h3>
-        <button onclick="closeCrudModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <form id="product-crud-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
-        <input type="hidden" id="edit-index" value="-1">
-        <input type="hidden" id="prod-existing-img" value="">
-
-        <div class="space-y-1">
-          <label class="text-xs font-bold text-slate-700">Product Title Name</label>
-          <input type="text" id="prod-name" required placeholder="e.g., Vitamin C Glow Concentrate" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div class="space-y-1">
-            <label class="text-xs font-bold text-slate-700">Price Amount ($)</label>
-            <input type="number" step="0.01" id="prod-price" required placeholder="24.50" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-          </div>
-          <div class="space-y-1">
-            <label class="text-xs font-bold text-slate-700">Warehouse Stock Count</label>
-            <input type="number" id="prod-stock" required placeholder="50" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-          </div>
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between items-center">
-            <label class="text-xs font-bold text-slate-700">Category Classification Group</label>
-            <button type="button" onclick="promptAddNewCategory()" class="text-[11px] font-bold text-[#0099ff] hover:underline cursor-pointer"><i class="fa-solid fa-plus"></i> Add New Category</button>
-          </div>
-          <select id="prod-category" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] text-slate-600 font-medium"></select>
-        </div>
-
-        <div class="space-y-1">
-          <label class="text-xs font-bold text-slate-700">Products Image File Upload</label>
-          <input type="file" id="prod-img-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#0099ff]/10 file:text-[#0099ff] hover:file:bg-[#0099ff]/20 cursor-pointer bg-slate-50 border border-slate-200 rounded-xl">
-          <p class="text-[10px] text-slate-400">Upload a product image file from your computer instead of entering a URL string.</p>
-        </div>
-
-        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeCrudModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 cursor-pointer">Dismiss</button>
-          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0099ff] hover:bg-[#0077cc] cursor-pointer">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- PROMOTION MODAL -->
-  <div id="promotion-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl relative border border-slate-100">
-      <button onclick="closePromotionModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 cursor-pointer text-base">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <div class="border-b border-slate-100 pb-3 mb-4">
-        <h3 id="promo-form-title" class="text-base font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
-          <i class="fa-solid fa-tags text-[#0099ff]"></i> Configure Promotional Discount
-        </h3>
-        <p id="promo-base-info" class="text-xs text-slate-400 mt-0.5">Original Base Price: $0.00</p>
-      </div>
-      
-      <form id="promotion-crud-form" onsubmit="handlePromotionSubmit(event)" class="space-y-4">
-        <input type="hidden" id="promo-prod-id">
-        
-        <div>
-          <label class="block text-xs font-bold text-slate-500 mb-1">Promotional Sale Price ($)</label>
-          <input type="number" id="promo-price" step="0.01" min="0" placeholder="0 for no discount" required class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-        </div>
-
-        <div id="promo-advanced-fields" class="space-y-4 pt-2 border-t border-slate-100">
-          <div>
-            <label class="block text-xs font-bold text-slate-500 mb-1">Sale Start Date & Time</label>
-            <input type="datetime-local" id="promo-start" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-500 mb-1">Expiration Deadline</label>
-            <input type="datetime-local" id="promo-end" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-500 mb-1">Limited Per User</label>
-            <input type="number" id="promo-limit" min="0" value="0" class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]">
-          </div>
-        </div>
-
-        <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 bg-[#0099ff] hover:bg-[#0077cc] text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-md">
-            Apply Promotion 
-          </button>
-          <button type="button" onclick="closePromotionModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors cursor-pointer">
-            Cancel
+    <!-- PRODUCT CRUD MODAL -->
+    <div
+      id="crud-modal"
+      class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="flex justify-between items-center border-b border-slate-100 pb-3"
+        >
+          <h3
+            id="form-title"
+            class="text-sm font-bold text-slate-800 flex items-center gap-2"
+          ></h3>
+          <button
+            onclick="closeCrudModal()"
+            class="text-slate-400 hover:text-slate-600 cursor-pointer"
+          >
+            <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-      </form>
+
+        <form
+          id="product-crud-form"
+          onsubmit="handleFormSubmit(event)"
+          class="space-y-3"
+        >
+          <input type="hidden" id="edit-index" value="-1" />
+          <input type="hidden" id="prod-existing-img" value="" />
+
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-slate-700"
+              >Product Title Name</label
+            >
+            <input
+              type="text"
+              id="prod-name"
+              required
+              placeholder="e.g., Vitamin C Glow Concentrate"
+              class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-slate-700"
+                >Price Amount ($)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                id="prod-price"
+                required
+                placeholder="24.50"
+                class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+              />
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-slate-700"
+                >Warehouse Stock Count</label
+              >
+              <input
+                type="number"
+                id="prod-stock"
+                required
+                placeholder="50"
+                class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+              />
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-slate-700"
+                >Category Classification Group</label
+              >
+              <button
+                type="button"
+                onclick="promptAddNewCategory()"
+                class="text-[11px] font-bold text-[#0099ff] hover:underline cursor-pointer"
+              >
+                <i class="fa-solid fa-plus"></i> Add New Category
+              </button>
+            </div>
+            <select
+              id="prod-category"
+              class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff] text-slate-600 font-medium"
+            ></select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-slate-700"
+              >Products Image File Upload</label
+            >
+            <input
+              type="file"
+              id="prod-img-file"
+              accept="image/*"
+              class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#0099ff]/10 file:text-[#0099ff] hover:file:bg-[#0099ff]/20 cursor-pointer bg-slate-50 border border-slate-200 rounded-xl"
+            />
+            <p class="text-[10px] text-slate-400">
+              Upload a product image file from your computer instead of entering
+              a URL string.
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+            <button
+              type="button"
+              onclick="closeCrudModal()"
+              class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 cursor-pointer"
+            >
+              Dismiss
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0099ff] hover:bg-[#0077cc] cursor-pointer"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <script>
-    // Dynamic API Base URL supporting local testing and Render production deployment
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:3000/api'
-      : 'https://minee-beauty-store.onrender.com/api';
+    <!-- PROMOTION MODAL -->
+    <div
+      id="promotion-modal"
+      class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl relative border border-slate-100"
+      >
+        <button
+          onclick="closePromotionModal()"
+          class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 cursor-pointer text-base"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="border-b border-slate-100 pb-3 mb-4">
+          <h3
+            id="promo-form-title"
+            class="text-base font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-tags text-[#0099ff]"></i> Configure
+            Promotional Discount
+          </h3>
+          <p id="promo-base-info" class="text-xs text-slate-400 mt-0.5">
+            Original Base Price: $0.00
+          </p>
+        </div>
 
-    let currentProducts = [];
-    let currentOrders = [];
-    let customCategories = ["Sunscreen", "Serum", "Cream", "EyesCream", "Mask", "Toner", "Lipstick", "Lipbalm", "Mascara", "Eyespalette"];
-    let financialStreamChart = null;
+        <form
+          id="promotion-crud-form"
+          onsubmit="handlePromotionSubmit(event)"
+          class="space-y-4"
+        >
+          <input type="hidden" id="promo-prod-id" />
 
-    let currentProfile = {
-      name: "Administrator Root",
-      role: "Administrator"
-    };
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1"
+              >Promotional Sale Price ($)</label
+            >
+            <input
+              type="number"
+              id="promo-price"
+              step="0.01"
+              min="0"
+              placeholder="0 for no discount"
+              required
+              class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+            />
+          </div>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      refreshAdminDataMatrix();
-      loadSavedProfile();
-    });
+          <div
+            id="promo-advanced-fields"
+            class="space-y-4 pt-2 border-t border-slate-100"
+          >
+            <div>
+              <label class="block text-xs font-bold text-slate-500 mb-1"
+                >Sale Start Date & Time</label
+              >
+              <input
+                type="datetime-local"
+                id="promo-start"
+                class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+              />
+            </div>
 
-    async function refreshAdminDataMatrix() {
-      await loadLiveProductsFromDatabase();
-      await loadLiveAllCustomerOrders();
-      extractAndBuildCategories();
-      renderDashboard();
-    }
+            <div>
+              <label class="block text-xs font-bold text-slate-500 mb-1"
+                >Expiration Deadline</label
+              >
+              <input
+                type="datetime-local"
+                id="promo-end"
+                class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+              />
+            </div>
 
-    async function loadLiveProductsFromDatabase() {
-      try {
-        const response = await fetch(`${API_URL}/products`);
-        if (response.ok) {
-          currentProducts = await response.json();
-        }
-      } catch (err) {
-        console.error("Failed to fetch products from MySQL:", err);
-      }
-    }
+            <div>
+              <label class="block text-xs font-bold text-slate-500 mb-1"
+                >Limited Per User</label
+              >
+              <input
+                type="number"
+                id="promo-limit"
+                min="0"
+                value="0"
+                class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+              />
+            </div>
+          </div>
 
-    async function loadLiveAllCustomerOrders() {
-      try {
-        const response = await fetch(`${API_URL}/orders`); 
-        if (response.ok) {
-          const rawData = await response.json();
-          
-          let groupedOrders = {};
-          rawData.forEach(row => {
-            if (!groupedOrders[row.order_id]) {
-              groupedOrders[row.order_id] = {
-                id: row.order_id,
-                customerName: row.customer_name || row.customer || "Guest User",
-                customerPhone: row.customer_phone || row.phone || "",
-                rawDate: row.created_at,
-                date: row.created_at ? new Date(row.created_at).toLocaleDateString() : "Unknown Date",
-                time: row.created_at ? new Date(row.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "",
-                method: row.payment_method || "COD",
-                items: []
-              };
-            }
-            groupedOrders[row.order_id].items.push({
-              title: row.title || row.product_name || "Unlabelled Products",
-              quantity: parseInt(row.quantity || 1, 10),
-              price: parseFloat(row.price || 0)
-            });
-          });
-          currentOrders = Object.values(groupedOrders).sort((a, b) => b.id - a.id);
-        }
-      } catch (err) {
-        console.error("Failed to load customer orders from MySQL:", err);
-      }
-    }
+          <div class="pt-2 flex gap-2">
+            <button
+              type="submit"
+              class="flex-1 bg-[#0099ff] hover:bg-[#0077cc] text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-md"
+            >
+              Apply Promotion
+            </button>
+            <button
+              type="button"
+              onclick="closePromotionModal()"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-    function openProfileModal() {
-      document.getElementById("input-profile-name").value = currentProfile.name;
-      document.getElementById("select-profile-role").value = currentProfile.role;
-      document.getElementById("profile-modal").classList.remove("hidden");
-    }
+    <script>
+      // Dynamic API Base URL supporting local testing and Render production deployment
+      const API_URL =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:3000/api"
+          : "https://minee-beauty-store.onrender.com/api";
 
-    function closeProfileModal() {
-      document.getElementById("profile-modal").classList.add("hidden");
-    }
+      let currentProducts = [];
+      let currentOrders = [];
+      let customCategories = [
+        "Sunscreen",
+        "Serum",
+        "Cream",
+        "EyesCream",
+        "Mask",
+        "Toner",
+        "Lipstick",
+        "Lipbalm",
+        "Mascara",
+        "Eyespalette",
+      ];
+      let financialStreamChart = null;
 
-    function saveProfileChanges() {
-      const nameInput = document.getElementById("input-profile-name").value.trim();
-      const roleSelect = document.getElementById("select-profile-role").value;
-
-      if (nameInput === "") {
-        alert("Please enter a valid display name.");
-        return;
-      }
-
-      currentProfile.name = nameInput;
-      currentProfile.role = roleSelect;
-      localStorage.setItem("minee_admin_profile", JSON.stringify(currentProfile));
-      applyProfileUI();
-      closeProfileModal();
-    }
-
-    function applyProfileUI() {
-      document.getElementById("profile-name").innerText = currentProfile.name;
-      document.getElementById("profile-role-sub").innerText = currentProfile.role + " Node";
-
-      const words = currentProfile.name.split(" ");
-      let badgeText = "";
-      if (words.length >= 2) {
-        badgeText = words[0].charAt(0) + words[1].charAt(0);
-      } else if (words.length === 1) {
-        badgeText = words[0].substring(0, 2);
-      } else {
-        badgeText = "AD";
-      }
-      document.getElementById("profile-badge").innerText = badgeText;
-      
-      const badgeElem = document.getElementById("profile-badge");
-      if (currentProfile.role === "Administrator") {
-        badgeElem.className = "w-8 h-8 rounded-lg bg-gradient-to-tr from-[#0099ff] to-[#28c4e7] text-white flex items-center justify-center text-xs font-black shadow-xs uppercase";
-      } else if (currentProfile.role === "Owner") {
-        badgeElem.className = "w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center text-xs font-black shadow-xs uppercase";
-      } else {
-        badgeElem.className = "w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center text-xs font-black shadow-xs uppercase";
-      }
-    }
-
-    function loadSavedProfile() {
-      const saved = localStorage.getItem("minee_admin_profile");
-      if (saved) {
-        currentProfile = JSON.parse(saved);
-      }
-      applyProfileUI();
-    }
-
-    function extractAndBuildCategories() {
-      let categorySet = new Set(customCategories);
-      currentProducts.forEach(p => {
-        if (p.category) categorySet.add(p.category.trim());
-      });
-      customCategories = Array.from(categorySet).sort();
-
-      const filterSelect = document.getElementById("filter-category");
-      if (filterSelect) {
-        const currentSelection = filterSelect.value;
-        filterSelect.innerHTML = `<option value="ALL">Display All Groups</option>`;
-        customCategories.forEach(cat => {
-          filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-        });
-        filterSelect.value = currentSelection;
-      }
-
-      const formSelect = document.getElementById("prod-category");
-      if (formSelect) {
-        const currentFormSelection = formSelect.value;
-        formSelect.innerHTML = "";
-        customCategories.forEach(cat => {
-          formSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-        });
-        if (currentFormSelection) formSelect.value = currentFormSelection;
-      }
-    }
-
-    function promptAddNewCategory() {
-      const newCat = prompt("Enter new category name:");
-      if (newCat && newCat.trim() !== "") {
-        const cleanCat = newCat.trim();
-        if (!customCategories.includes(cleanCat)) {
-          customCategories.push(cleanCat);
-          extractAndBuildCategories();
-          document.getElementById("prod-category").value = cleanCat;
-        } else {
-          document.getElementById("prod-category").value = cleanCat;
-        }
-      }
-    }
-
-    function switchTab(targetTabId) {
-      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
-      document.getElementById(targetTabId).classList.remove('hidden');
-
-      document.querySelectorAll('nav button').forEach(btn => {
-        btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50";
-      });
-
-      const activeNav = document.getElementById(`nav-${targetTabId}`);
-      if (activeNav) {
-        activeNav.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-white bg-slate-800 shadow-xs";
-      }
-
-      const titlesDict = {
-        'tab-overview': 'Dashboard Overview',
-        'tab-inventory': 'Inventory Distribution Management',
-        'tab-orders': 'Customer Order Audit Logs'
+      let currentProfile = {
+        name: "Administrator Root",
+        role: "Administrator",
       };
-      document.getElementById("current-screen-title").innerText = titlesDict[targetTabId] || "Admin Desk";
-    }
 
-    function renderDashboard() {
-      renderMetricsSummary();
-      renderInventoryTable();
-      renderOrderHistoryLogs();
-      renderFinancialProgressStream();
-    }
-
-    function renderMetricsSummary() {
-      document.getElementById("stat-products").innerText = `${currentProducts.length} Items`;
-      document.getElementById("stat-orders").innerText = `${currentOrders.length} Invoices`;
-
-      let totalRevenue = 0;
-      currentOrders.forEach(order => {
-        order.items.forEach(i => {
-          totalRevenue += (parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10));
-        });
-      });
-      document.getElementById("stat-revenue").innerText = `$${totalRevenue.toFixed(2)}`;
-    }
-
-    function renderFinancialProgressStream() {
-      const canvasElement = document.getElementById("financialStreamCanvas");
-      if (!canvasElement) return;
-
-      const revenueMap = {};
-      const sortedAscOrders = [...currentOrders].sort((a, b) => {
-        const dateA = a.rawDate ? new Date(a.rawDate) : new Date(0);
-        const dateB = b.rawDate ? new Date(b.rawDate) : new Date(0);
-        return dateA - dateB;
+      document.addEventListener("DOMContentLoaded", () => {
+        refreshAdminDataMatrix();
+        loadSavedProfile();
       });
 
-      sortedAscOrders.forEach(order => {
-        let orderTotal = 0;
-        order.items.forEach(item => {
-          orderTotal += (parseFloat(item.price || 0) * parseInt(item.quantity || 1, 10));
-        });
-
-        const dateKey = order.date || "Unknown Date";
-        if (!revenueMap[dateKey]) {
-          revenueMap[dateKey] = 0;
-        }
-        revenueMap[dateKey] += orderTotal;
-      });
-
-      const labels = Object.keys(revenueMap);
-      const dataPoints = Object.values(revenueMap);
-
-      let cumulativeSum = 0;
-      const cumulativeData = dataPoints.map(val => {
-        cumulativeSum += val;
-        return cumulativeSum;
-      });
-
-      const ctx = canvasElement.getContext("2d");
-
-      if (financialStreamChart) {
-        financialStreamChart.data.labels = labels.length > 0 ? labels : ["No Data Logged"];
-        financialStreamChart.data.datasets[0].data = dataPoints.length > 0 ? dataPoints : [0];
-        financialStreamChart.data.datasets[1].data = cumulativeData.length > 0 ? cumulativeData : [0];
-        financialStreamChart.update();
-        return;
+      async function refreshAdminDataMatrix() {
+        await loadLiveProductsFromDatabase();
+        await loadLiveAllCustomerOrders();
+        extractAndBuildCategories();
+        renderDashboard();
       }
 
-      financialStreamChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels.length > 0 ? labels : ["No Data Logged"],
-          datasets: [
-            {
-              label: 'Daily Revenue ($)',
-              data: dataPoints.length > 0 ? dataPoints : [0],
-              borderColor: '#0099ff',
-              backgroundColor: 'rgba(0, 153, 255, 0.05)',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.3
-            },
-            {
-              label: 'Cumulative Stream ($)',
-              data: cumulativeData.length > 0 ? cumulativeData : [0],
-              borderColor: '#10b981',
-              backgroundColor: 'transparent',
-              borderWidth: 2,
-              borderDash: [4, 4],
-              tension: 0.3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: true, position: 'bottom' } },
-          scales: {
-            y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-            x: { grid: { display: false } }
+      async function loadLiveProductsFromDatabase() {
+        try {
+          const response = await fetch(`${API_URL}/products`);
+          if (response.ok) {
+            currentProducts = await response.json();
+          }
+        } catch (err) {
+          console.error("Failed to fetch products from MySQL:", err);
+        }
+      }
+
+      async function loadLiveAllCustomerOrders() {
+        try {
+          const response = await fetch(`${API_URL}/orders`);
+          if (response.ok) {
+            const rawData = await response.json();
+
+            let groupedOrders = {};
+            rawData.forEach((row) => {
+              if (!groupedOrders[row.order_id]) {
+                groupedOrders[row.order_id] = {
+                  id: row.order_id,
+                  customerName:
+                    row.customer_name || row.customer || "Guest User",
+                  customerPhone: row.customer_phone || row.phone || "",
+                  rawDate: row.created_at,
+                  date: row.created_at
+                    ? new Date(row.created_at).toLocaleDateString()
+                    : "Unknown Date",
+                  time: row.created_at
+                    ? new Date(row.created_at).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "",
+                  method: row.payment_method || "COD",
+                  items: [],
+                };
+              }
+              groupedOrders[row.order_id].items.push({
+                title: row.title || row.product_name || "Unlabelled Products",
+                quantity: parseInt(row.quantity || 1, 10),
+                price: parseFloat(row.price || 0),
+              });
+            });
+            currentOrders = Object.values(groupedOrders).sort(
+              (a, b) => b.id - a.id,
+            );
+          }
+        } catch (err) {
+          console.error("Failed to load customer orders from MySQL:", err);
+        }
+      }
+
+      function openProfileModal() {
+        document.getElementById("input-profile-name").value =
+          currentProfile.name;
+        document.getElementById("select-profile-role").value =
+          currentProfile.role;
+        document.getElementById("profile-modal").classList.remove("hidden");
+      }
+
+      function closeProfileModal() {
+        document.getElementById("profile-modal").classList.add("hidden");
+      }
+
+      function saveProfileChanges() {
+        const nameInput = document
+          .getElementById("input-profile-name")
+          .value.trim();
+        const roleSelect = document.getElementById("select-profile-role").value;
+
+        if (nameInput === "") {
+          alert("Please enter a valid display name.");
+          return;
+        }
+
+        currentProfile.name = nameInput;
+        currentProfile.role = roleSelect;
+        localStorage.setItem(
+          "minee_admin_profile",
+          JSON.stringify(currentProfile),
+        );
+        applyProfileUI();
+        closeProfileModal();
+      }
+
+      function applyProfileUI() {
+        document.getElementById("profile-name").innerText = currentProfile.name;
+        document.getElementById("profile-role-sub").innerText =
+          currentProfile.role + " Node";
+
+        const words = currentProfile.name.split(" ");
+        let badgeText = "";
+        if (words.length >= 2) {
+          badgeText = words[0].charAt(0) + words[1].charAt(0);
+        } else if (words.length === 1) {
+          badgeText = words[0].substring(0, 2);
+        } else {
+          badgeText = "AD";
+        }
+        document.getElementById("profile-badge").innerText = badgeText;
+
+        const badgeElem = document.getElementById("profile-badge");
+        if (currentProfile.role === "Administrator") {
+          badgeElem.className =
+            "w-8 h-8 rounded-lg bg-gradient-to-tr from-[#0099ff] to-[#28c4e7] text-white flex items-center justify-center text-xs font-black shadow-xs uppercase";
+        } else if (currentProfile.role === "Owner") {
+          badgeElem.className =
+            "w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center text-xs font-black shadow-xs uppercase";
+        } else {
+          badgeElem.className =
+            "w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center text-xs font-black shadow-xs uppercase";
+        }
+      }
+
+      function loadSavedProfile() {
+        const saved = localStorage.getItem("minee_admin_profile");
+        if (saved) {
+          currentProfile = JSON.parse(saved);
+        }
+        applyProfileUI();
+      }
+
+      function extractAndBuildCategories() {
+        let categorySet = new Set(customCategories);
+        currentProducts.forEach((p) => {
+          if (p.category) categorySet.add(p.category.trim());
+        });
+        customCategories = Array.from(categorySet).sort();
+
+        const filterSelect = document.getElementById("filter-category");
+        if (filterSelect) {
+          const currentSelection = filterSelect.value;
+          filterSelect.innerHTML = `<option value="ALL">Display All Groups</option>`;
+          customCategories.forEach((cat) => {
+            filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+          });
+          filterSelect.value = currentSelection;
+        }
+
+        const formSelect = document.getElementById("prod-category");
+        if (formSelect) {
+          const currentFormSelection = formSelect.value;
+          formSelect.innerHTML = "";
+          customCategories.forEach((cat) => {
+            formSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+          });
+          if (currentFormSelection) formSelect.value = currentFormSelection;
+        }
+      }
+
+      function promptAddNewCategory() {
+        const newCat = prompt("Enter new category name:");
+        if (newCat && newCat.trim() !== "") {
+          const cleanCat = newCat.trim();
+          if (!customCategories.includes(cleanCat)) {
+            customCategories.push(cleanCat);
+            extractAndBuildCategories();
+            document.getElementById("prod-category").value = cleanCat;
+          } else {
+            document.getElementById("prod-category").value = cleanCat;
           }
         }
-      });
-    }
-
-    function renderInventoryTable() {
-      const tbody = document.getElementById("inventory-table-body");
-      if (!tbody) return;
-
-      const searchTerm = document.getElementById("inventory-search") ? document.getElementById("inventory-search").value.toLowerCase() : "";
-      const selectedCategory = document.getElementById("filter-category") ? document.getElementById("filter-category").value : "ALL";
-
-      const filtered = currentProducts.filter(p => {
-        const titleMatch = (p.title || "").toLowerCase().includes(searchTerm) || (p.sku || "").toLowerCase().includes(searchTerm);
-        const categoryMatch = selectedCategory === "ALL" || (p.category || "").trim() === selectedCategory;
-        return titleMatch && categoryMatch;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No matching products found in database inventory.</td></tr>`;
-        return;
       }
 
-      tbody.innerHTML = "";
-      filtered.forEach((p, idx) => {
-        const skuText = p.sku || `MB-${Math.floor(10 + Math.random() * 90)}`;
-        const stockCount = parseInt(p.stock !== undefined ? p.stock : (p.quantity || 10), 10);
-        const statusHtml = stockCount > 0 
-          ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600">In Stock (${stockCount})</span>`
-          : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600">Out of Stock</span>`;
+      function switchTab(targetTabId) {
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((panel) => panel.classList.add("hidden"));
+        document.getElementById(targetTabId).classList.remove("hidden");
 
-        tbody.innerHTML += `
+        document.querySelectorAll("nav button").forEach((btn) => {
+          btn.className =
+            "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50";
+        });
+
+        const activeNav = document.getElementById(`nav-${targetTabId}`);
+        if (activeNav) {
+          activeNav.className =
+            "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-200 cursor-pointer text-white bg-slate-800 shadow-xs";
+        }
+
+        const titlesDict = {
+          "tab-overview": "Dashboard Overview",
+          "tab-inventory": "Inventory Distribution Management",
+          "tab-orders": "Customer Order Audit Logs",
+        };
+        document.getElementById("current-screen-title").innerText =
+          titlesDict[targetTabId] || "Admin Desk";
+      }
+
+      function renderDashboard() {
+        renderMetricsSummary();
+        renderInventoryTable();
+        renderOrderHistoryLogs();
+        renderFinancialProgressStream();
+      }
+
+      function renderMetricsSummary() {
+        document.getElementById("stat-products").innerText =
+          `${currentProducts.length} Items`;
+        document.getElementById("stat-orders").innerText =
+          `${currentOrders.length} Invoices`;
+
+        let totalRevenue = 0;
+        currentOrders.forEach((order) => {
+          order.items.forEach((i) => {
+            totalRevenue +=
+              parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10);
+          });
+        });
+        document.getElementById("stat-revenue").innerText =
+          `$${totalRevenue.toFixed(2)}`;
+      }
+
+      function renderFinancialProgressStream() {
+        const canvasElement = document.getElementById("financialStreamCanvas");
+        if (!canvasElement) return;
+
+        const revenueMap = {};
+        const sortedAscOrders = [...currentOrders].sort((a, b) => {
+          const dateA = a.rawDate ? new Date(a.rawDate) : new Date(0);
+          const dateB = b.rawDate ? new Date(b.rawDate) : new Date(0);
+          return dateA - dateB;
+        });
+
+        sortedAscOrders.forEach((order) => {
+          let orderTotal = 0;
+          order.items.forEach((item) => {
+            orderTotal +=
+              parseFloat(item.price || 0) * parseInt(item.quantity || 1, 10);
+          });
+
+          const dateKey = order.date || "Unknown Date";
+          if (!revenueMap[dateKey]) {
+            revenueMap[dateKey] = 0;
+          }
+          revenueMap[dateKey] += orderTotal;
+        });
+
+        const labels = Object.keys(revenueMap);
+        const dataPoints = Object.values(revenueMap);
+
+        let cumulativeSum = 0;
+        const cumulativeData = dataPoints.map((val) => {
+          cumulativeSum += val;
+          return cumulativeSum;
+        });
+
+        const ctx = canvasElement.getContext("2d");
+
+        if (financialStreamChart) {
+          financialStreamChart.data.labels =
+            labels.length > 0 ? labels : ["No Data Logged"];
+          financialStreamChart.data.datasets[0].data =
+            dataPoints.length > 0 ? dataPoints : [0];
+          financialStreamChart.data.datasets[1].data =
+            cumulativeData.length > 0 ? cumulativeData : [0];
+          financialStreamChart.update();
+          return;
+        }
+
+        financialStreamChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels.length > 0 ? labels : ["No Data Logged"],
+            datasets: [
+              {
+                label: "Daily Revenue ($)",
+                data: dataPoints.length > 0 ? dataPoints : [0],
+                borderColor: "#0099ff",
+                backgroundColor: "rgba(0, 153, 255, 0.05)",
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+              },
+              {
+                label: "Cumulative Stream ($)",
+                data: cumulativeData.length > 0 ? cumulativeData : [0],
+                borderColor: "#10b981",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                borderDash: [4, 4],
+                tension: 0.3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: true, position: "bottom" } },
+            scales: {
+              y: { beginAtZero: true, grid: { color: "#f1f5f9" } },
+              x: { grid: { display: false } },
+            },
+          },
+        });
+      }
+
+      function renderInventoryTable() {
+        const tbody = document.getElementById("inventory-table-body");
+        if (!tbody) return;
+
+        const searchTerm = document.getElementById("inventory-search")
+          ? document.getElementById("inventory-search").value.toLowerCase()
+          : "";
+        const selectedCategory = document.getElementById("filter-category")
+          ? document.getElementById("filter-category").value
+          : "ALL";
+
+        const filtered = currentProducts.filter((p) => {
+          const titleMatch =
+            (p.title || "").toLowerCase().includes(searchTerm) ||
+            (p.sku || "").toLowerCase().includes(searchTerm);
+          const categoryMatch =
+            selectedCategory === "ALL" ||
+            (p.category || "").trim() === selectedCategory;
+          return titleMatch && categoryMatch;
+        });
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No matching products found in database inventory.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = "";
+        filtered.forEach((p, idx) => {
+          const skuText = p.sku || `MB-${Math.floor(10 + Math.random() * 90)}`;
+          const stockCount = parseInt(
+            p.stock !== undefined ? p.stock : p.quantity || 10,
+            10,
+          );
+          const statusHtml =
+            stockCount > 0
+              ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600">In Stock (${stockCount})</span>`
+              : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600">Out of Stock</span>`;
+
+          tbody.innerHTML += `
           <tr class="hover:bg-slate-50/80 transition-colors">
             <td class="p-4 pl-6 flex items-center gap-3">
-              <img src="${p.image || 'https://placehold.co/100x100?text=Item'}" alt="" class="w-10 h-10 rounded-xl object-cover border border-slate-100 bg-slate-50">
-              <div>
-                <p class="font-bold text-slate-800">${p.title || 'Untitled Item'}</p>
+<img
+  src="${p.image_url || p.image || "./image/logo copy.png"}"
+  alt="${p.title || "Product image"}"
+  class="w-10 h-10 rounded-xl object-cover border border-slate-100 bg-slate-50"
+  onerror="this.onerror=null; this.src='./image/logo copy.png';"
+>              <div>
+                <p class="font-bold text-slate-800">${p.title || "Untitled Item"}</p>
                 <p class="text-[10px] font-mono text-slate-400">SKU: ${skuText}</p>
               </div>
             </td>
-            <td class="p-4"><span class="px-2.5 py-1 bg-slate-100 rounded-lg text-slate-600 font-medium">${p.category || 'General'}</span></td>
+            <td class="p-4"><span class="px-2.5 py-1 bg-slate-100 rounded-lg text-slate-600 font-medium">${p.category || "General"}</span></td>
             <td class="p-4 text-center font-mono font-bold text-slate-800">$${parseFloat(p.price || 0).toFixed(2)}</td>
             <td class="p-4 text-center font-mono">${stockCount}</td>
             <td class="p-4 text-center">${statusHtml}</td>
@@ -688,27 +1097,30 @@
             </td>
           </tr>
         `;
-      });
-    }
-
-    function renderOrderHistoryLogs() {
-      const tbody = document.getElementById("order-log-table-body");
-      if (!tbody) return;
-
-      if (currentOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No customer orders recorded in database yet.</td></tr>`;
-        return;
+        });
       }
 
-      tbody.innerHTML = "";
-      currentOrders.forEach(order => {
-        let orderTotal = 0;
-        let itemsHtml = order.items.map(i => {
-          orderTotal += (parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10));
-          return `<span class="inline-block bg-slate-100 px-2 py-0.5 rounded mr-1 mb-1 text-[11px]">${i.title} (x${i.quantity})</span>`;
-        }).join('');
+      function renderOrderHistoryLogs() {
+        const tbody = document.getElementById("order-log-table-body");
+        if (!tbody) return;
 
-        tbody.innerHTML += `
+        if (currentOrders.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No customer orders recorded in database yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = "";
+        currentOrders.forEach((order) => {
+          let orderTotal = 0;
+          let itemsHtml = order.items
+            .map((i) => {
+              orderTotal +=
+                parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10);
+              return `<span class="inline-block bg-slate-100 px-2 py-0.5 rounded mr-1 mb-1 text-[11px]">${i.title} (x${i.quantity})</span>`;
+            })
+            .join("");
+
+          tbody.innerHTML += `
           <tr class="hover:bg-slate-50/80 transition-colors">
             <td class="p-4 pl-6 font-mono font-bold text-slate-700">#INV-${order.id}</td>
             <td class="p-4 font-bold text-slate-800">${order.customerName} <br><span class="text-[10px] font-mono font-normal text-slate-400">${order.customerPhone}</span></td>
@@ -718,179 +1130,205 @@
             <td class="p-4 pr-6 text-right font-mono font-black text-slate-800">$${orderTotal.toFixed(2)}</td>
           </tr>
         `;
-      });
-    }
-
-    function openCreateMode() {
-      document.getElementById("form-title").innerText = "Launch New Product Record";
-      document.getElementById("edit-index").value = "-1";
-      document.getElementById("product-crud-form").reset();
-      document.getElementById("prod-existing-img").value = "";
-      document.getElementById("crud-modal").classList.remove("hidden");
-    }
-
-    function openEditMode(id) {
-      const product = currentProducts.find(p => p.id === id);
-      if (!product) return;
-
-      document.getElementById("form-title").innerText = "Modify Product Record";
-      document.getElementById("edit-index").value = product.id;
-      document.getElementById("prod-name").value = product.title || "";
-      document.getElementById("prod-price").value = product.price || 0;
-      document.getElementById("prod-stock").value = product.stock !== undefined ? product.stock : 10;
-      document.getElementById("prod-category").value = product.category || customCategories[0];
-      document.getElementById("prod-existing-img").value = product.image || "";
-      document.getElementById("crud-modal").classList.remove("hidden");
-    }
-
-    function closeCrudModal() {
-      document.getElementById("crud-modal").classList.add("hidden");
-    }
-
-    function openPromotionModal(id) {
-      const product = currentProducts.find(p => p.id === id);
-      if (!product) return;
-
-      document.getElementById("promo-prod-id").value = product.id;
-      document.getElementById("promo-base-info").innerText = `Original Base Price: $${parseFloat(product.price || 0).toFixed(2)} — ${product.title || ''}`;
-      document.getElementById("promo-price").value = product.sale_price !== undefined && product.sale_price !== null ? product.sale_price : "";
-      document.getElementById("promo-start").value = product.sale_start ? product.sale_start.substring(0, 16) : "";
-      document.getElementById("promo-end").value = product.sale_end ? product.sale_end.substring(0, 16) : "";
-      document.getElementById("promo-limit").value = product.sale_limit !== undefined ? product.sale_limit : 0;
-      
-      document.getElementById("promotion-modal").classList.remove("hidden");
-    }
-
-    function closePromotionModal() {
-      document.getElementById("promotion-modal").classList.add("hidden");
-    }
-
-    async function handlePromotionSubmit(event) {
-      event.preventDefault();
-      const id = document.getElementById("promo-prod-id").value;
-      const salePrice = parseFloat(document.getElementById("promo-price").value) || 0;
-      const saleStart = document.getElementById("promo-start").value || null;
-      const saleEnd = document.getElementById("promo-end").value || null;
-      const saleLimit = parseInt(document.getElementById("promo-limit").value) || 0;
-
-      const product = currentProducts.find(p => p.id == id);
-      if (!product) return;
-
-      const promoPayload = {
-        title: product.title,
-        price: product.price,
-        stock: product.stock !== undefined ? product.stock : 10,
-        category: product.category,
-        image: product.image,
-        sale_price: salePrice > 0 ? salePrice : null,
-        sale_start: saleStart,
-        sale_end: saleEnd,
-        sale_limit: saleLimit
-      };
-
-      try {
-        const response = await fetch(`${API_URL}/products/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(promoPayload)
         });
-
-        if (response.ok) {
-          closePromotionModal();
-          await refreshAdminDataMatrix();
-        } else {
-          alert("Failed to apply promotion settings to database.");
-        }
-      } catch (err) {
-        console.error("Error submitting promotion:", err);
-        alert("Connection error while updating promotion.");
-      }
-    }
-
-    async function handleFormSubmit(event) {
-      event.preventDefault();
-
-      const editId = parseInt(document.getElementById("edit-index").value, 10);
-      const title = document.getElementById("prod-name").value.trim();
-      const price = parseFloat(document.getElementById("prod-price").value);
-      const stock = parseInt(document.getElementById("prod-stock").value, 10);
-      const category = document.getElementById("prod-category").value;
-      const fileInput = document.getElementById("prod-img-file");
-      
-      let imageUrl = document.getElementById("prod-existing-img").value || "https://placehold.co/300x300?text=Minee+Beauty";
-
-      if (fileInput.files && fileInput.files[0]) {
-        imageUrl = await convertFileToDataUri(fileInput.files[0]);
       }
 
-      const productPayload = {
-        title,
-        price,
-        stock,
-        category,
-        image: imageUrl
-      };
+      function openCreateMode() {
+        document.getElementById("form-title").innerText =
+          "Launch New Product Record";
+        document.getElementById("edit-index").value = "-1";
+        document.getElementById("product-crud-form").reset();
+        document.getElementById("prod-existing-img").value = "";
+        document.getElementById("crud-modal").classList.remove("hidden");
+      }
 
-      try {
-        let response;
-        if (editId === -1) {
-          response = await fetch(`${API_URL}/products`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(productPayload)
+      function openEditMode(id) {
+        const product = currentProducts.find((p) => p.id === id);
+        if (!product) return;
+
+        document.getElementById("form-title").innerText =
+          "Modify Product Record";
+        document.getElementById("edit-index").value = product.id;
+        document.getElementById("prod-name").value = product.title || "";
+        document.getElementById("prod-price").value = product.price || 0;
+        document.getElementById("prod-stock").value =
+          product.stock !== undefined ? product.stock : 10;
+        document.getElementById("prod-category").value =
+          product.category || customCategories[0];
+        document.getElementById("prod-existing-img").value =
+          product.image || "";
+        document.getElementById("crud-modal").classList.remove("hidden");
+      }
+
+      function closeCrudModal() {
+        document.getElementById("crud-modal").classList.add("hidden");
+      }
+
+      function openPromotionModal(id) {
+        const product = currentProducts.find((p) => p.id === id);
+        if (!product) return;
+
+        document.getElementById("promo-prod-id").value = product.id;
+        document.getElementById("promo-base-info").innerText =
+          `Original Base Price: $${parseFloat(product.price || 0).toFixed(2)} — ${product.title || ""}`;
+        document.getElementById("promo-price").value =
+          product.sale_price !== undefined && product.sale_price !== null
+            ? product.sale_price
+            : "";
+        document.getElementById("promo-start").value = product.sale_start
+          ? product.sale_start.substring(0, 16)
+          : "";
+        document.getElementById("promo-end").value = product.sale_end
+          ? product.sale_end.substring(0, 16)
+          : "";
+        document.getElementById("promo-limit").value =
+          product.sale_limit !== undefined ? product.sale_limit : 0;
+
+        document.getElementById("promotion-modal").classList.remove("hidden");
+      }
+
+      function closePromotionModal() {
+        document.getElementById("promotion-modal").classList.add("hidden");
+      }
+
+      async function handlePromotionSubmit(event) {
+        event.preventDefault();
+        const id = document.getElementById("promo-prod-id").value;
+        const salePrice =
+          parseFloat(document.getElementById("promo-price").value) || 0;
+        const saleStart = document.getElementById("promo-start").value || null;
+        const saleEnd = document.getElementById("promo-end").value || null;
+        const saleLimit =
+          parseInt(document.getElementById("promo-limit").value) || 0;
+
+        const product = currentProducts.find((p) => p.id == id);
+        if (!product) return;
+
+        const promoPayload = {
+          title: product.title,
+          price: product.price,
+          stock: product.stock !== undefined ? product.stock : 10,
+          category: product.category,
+          image: product.image,
+          sale_price: salePrice > 0 ? salePrice : null,
+          sale_start: saleStart,
+          sale_end: saleEnd,
+          sale_limit: saleLimit,
+        };
+
+        try {
+          const response = await fetch(`${API_URL}/products/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(promoPayload),
           });
-        } else {
-          response = await fetch(`${API_URL}/products/${editId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(productPayload)
-          });
-        }
 
-        if (response.ok) {
-          closeCrudModal();
-          await refreshAdminDataMatrix();
-        } else {
-          alert("Failed to save product to database server.");
+          if (response.ok) {
+            closePromotionModal();
+            await refreshAdminDataMatrix();
+          } else {
+            alert("Failed to apply promotion settings to database.");
+          }
+        } catch (err) {
+          console.error("Error submitting promotion:", err);
+          alert("Connection error while updating promotion.");
         }
-      } catch (err) {
-        console.error("Error submitting product form:", err);
-        alert("Connection error while saving product.");
       }
-    }
 
-    function convertFileToDataUri(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      });
-    }
+      async function handleFormSubmit(event) {
+        event.preventDefault();
 
-    async function deleteProductRow(id) {
-      if (!confirm("Are you sure you want to delete this product from the database?")) return;
+        const editId = parseInt(
+          document.getElementById("edit-index").value,
+          10,
+        );
+        const title = document.getElementById("prod-name").value.trim();
+        const price = parseFloat(document.getElementById("prod-price").value);
+        const stock = parseInt(document.getElementById("prod-stock").value, 10);
+        const category = document.getElementById("prod-category").value;
+        const fileInput = document.getElementById("prod-img-file");
 
-      try {
-        const response = await fetch(`${API_URL}/products/${id}`, {
-          method: 'DELETE'
+        let imageUrl =
+          document.getElementById("prod-existing-img").value ||
+          "https://placehold.co/300x300?text=Minee+Beauty";
+
+        if (fileInput.files && fileInput.files[0]) {
+          imageUrl = await convertFileToDataUri(fileInput.files[0]);
+        }
+
+        const productPayload = {
+          title,
+          price,
+          stock,
+          category,
+          image: imageUrl,
+        };
+
+        try {
+          let response;
+          if (editId === -1) {
+            response = await fetch(`${API_URL}/products`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(productPayload),
+            });
+          } else {
+            response = await fetch(`${API_URL}/products/${editId}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(productPayload),
+            });
+          }
+
+          if (response.ok) {
+            closeCrudModal();
+            await refreshAdminDataMatrix();
+          } else {
+            alert("Failed to save product to database server.");
+          }
+        } catch (err) {
+          console.error("Error submitting product form:", err);
+          alert("Connection error while saving product.");
+        }
+      }
+
+      function convertFileToDataUri(file) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
         });
-        if (response.ok) {
-          await refreshAdminDataMatrix();
-        } else {
-          alert("Failed to delete product from database.");
-        }
-      } catch (err) {
-        console.error("Error deleting product:", err);
-        alert("Connection error while deleting product.");
       }
-    }
 
-    async function clearAllOrdersTerminal() {
-      if (!confirm("Are you sure you want to flush all order logs?")) return;
-      currentOrders = [];
-      renderOrderHistoryLogs();
-      renderMetricsSummary();
-    }
-  </script>
-</body>
+      async function deleteProductRow(id) {
+        if (
+          !confirm(
+            "Are you sure you want to delete this product from the database?",
+          )
+        )
+          return;
+
+        try {
+          const response = await fetch(`${API_URL}/products/${id}`, {
+            method: "DELETE",
+          });
+          if (response.ok) {
+            await refreshAdminDataMatrix();
+          } else {
+            alert("Failed to delete product from database.");
+          }
+        } catch (err) {
+          console.error("Error deleting product:", err);
+          alert("Connection error while deleting product.");
+        }
+      }
+
+      async function clearAllOrdersTerminal() {
+        if (!confirm("Are you sure you want to flush all order logs?")) return;
+        currentOrders = [];
+        renderOrderHistoryLogs();
+        renderMetricsSummary();
+      }
+    </script>
+  </body>
 </html>

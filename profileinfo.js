@@ -1,142 +1,161 @@
+// FIXED: Corrected API path mapping port down to 3000 to meet Express server setups
+const API_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000/api"
+    : "https://minee-beauty-store.onrender.com/api";
+let loadedDatabaseOrders = {};
 
-    // FIXED: Corrected API path mapping port down to 3000 to meet Express server setups
-    const API_URL = "http://localhost:3000/api";
-    let loadedDatabaseOrders = {};
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user) {
+    window.location.href = "contact.html";
+    return;
+  }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const user = JSON.parse(localStorage.getItem("currentUser"));
-      if (!user) { window.location.href = "contact.html"; return; }
+  document.getElementById("name").innerText = user.name || "User Profile";
+  document.getElementById("username").innerText = user.email
+    ? `@${user.email.split("@")[0]}`
+    : "@username";
 
-      document.getElementById("name").innerText = user.name || "User Profile";
-      document.getElementById("username").innerText = user.email ? `@${user.email.split('@')[0]}` : "@username";
+  const avatar = document.getElementById("avatar");
+  if (user.customAvatar) {
+    avatar.src = user.customAvatar;
+  }
 
-      const avatar = document.getElementById("avatar");
-      if (user.customAvatar) {
-        avatar.src = user.customAvatar;
-      }
+  document.getElementById("uploadPhoto").addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      document.getElementById("uploadPhoto").addEventListener("change", (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Image = event.target.result;
+      avatar.src = base64Image;
+      user.customAvatar = base64Image;
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      if (user.email)
+        localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
+    };
+    reader.readAsDataURL(file);
+  });
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const base64Image = event.target.result;
-          avatar.src = base64Image;
-          user.customAvatar = base64Image;
-          localStorage.setItem("currentUser", JSON.stringify(user));
-          if (user.email) localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
-        };
-        reader.readAsDataURL(file);
-      });
+  if (!user.addressBook) user.addressBook = [];
+  renderAddresses();
+  loadLiveDatabaseHistory(user.name);
+});
 
-      if(!user.addressBook) user.addressBook = [];
-      renderAddresses();
-      loadLiveDatabaseHistory(user.name);
-    });
+function toggleSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  section.style.display = section.style.display === "none" ? "block" : "none";
+}
 
-    function toggleSection(sectionId) {
-      const section = document.getElementById(sectionId);
-      section.style.display = (section.style.display === "none") ? "block" : "none";
-    }
+function renderAddresses() {
+  const list = document.getElementById("address-list");
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!list || !user) return;
 
-    function renderAddresses() {
-      const list = document.getElementById("address-list");
-      const user = JSON.parse(localStorage.getItem("currentUser"));
-      if (!list || !user) return;
+  list.innerHTML = "";
+  const book = user.addressBook || [];
 
-      list.innerHTML = "";
-      const book = user.addressBook || [];
+  if (book.length === 0) {
+    list.innerHTML = `<li class="py-2 text-sm text-gray-400 italic">No addresses saved yet.</li>`;
+    return;
+  }
 
-      if(book.length === 0) {
-        list.innerHTML = `<li class="py-2 text-sm text-gray-400 italic">No addresses saved yet.</li>`;
-        return;
-      }
-
-      book.forEach((item, index) => {
-        list.innerHTML += `
+  book.forEach((item, index) => {
+    list.innerHTML += `
           <li class="py-2.5 border-b border-gray-100 last:border-b-0 text-sm flex justify-between items-center gap-4">
             <span class="text-gray-700 font-medium"><strong class="text-[#0099ff] font-semibold">[${item.label}]</strong> ${item.address}</span>
             <i class="fa-solid fa-trash-can text-red-500 hover:text-red-700 cursor-pointer text-sm p-1" onclick="deleteAddress(${index})"></i>
           </li>`;
-      });
+  });
+}
+
+function addAddress() {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const text = prompt("Enter complete street delivery address:");
+  if (!text) return;
+  const type =
+    prompt("Enter address label (e.g., Home, Work):", "Home") || "Home";
+
+  if (!user.addressBook) user.addressBook = [];
+  user.addressBook.push({ label: type, address: text });
+
+  localStorage.setItem("currentUser", JSON.stringify(user));
+  if (user.email)
+    localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
+  renderAddresses();
+}
+
+function deleteAddress(index) {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user || !user.addressBook) return;
+  user.addressBook.splice(index, 1);
+  localStorage.setItem("currentUser", JSON.stringify(user));
+  if (user.email)
+    localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
+  renderAddresses();
+}
+
+// --- FIXED: INTEGRATED LIVE SQL RELATIONAL HISTORY FETCH ---
+async function loadLiveDatabaseHistory(customerName) {
+  const list = document.getElementById("history-list");
+  if (!list) return;
+
+  list.innerHTML = "";
+  let rawData = [];
+
+  try {
+    const response = await fetch(
+      `${API_URL}/orders/${encodeURIComponent(customerName)}`,
+    );
+    if (response.ok) {
+      rawData = await response.json();
     }
+  } catch (err) {
+    console.error("Database history aggregation routing error:", err);
+  }
 
-    function addAddress() {
-      const user = JSON.parse(localStorage.getItem("currentUser"));
-      const text = prompt("Enter complete street delivery address:");
-      if (!text) return;
-      const type = prompt("Enter address label (e.g., Home, Work):", "Home") || "Home";
-
-      if (!user.addressBook) user.addressBook = [];
-      user.addressBook.push({ label: type, address: text });
-
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      if (user.email) localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
-      renderAddresses();
+  // Group database JOIN table lines by their parent Order IDs
+  loadedDatabaseOrders = {};
+  rawData.forEach((row) => {
+    if (!loadedDatabaseOrders[row.order_id]) {
+      loadedDatabaseOrders[row.order_id] = {
+        id: row.order_id,
+        total: parseFloat(row.total),
+        created_at: row.created_at,
+        items: [],
+      };
     }
+    loadedDatabaseOrders[row.order_id].items.push({
+      title: row.title,
+      quantity: row.quantity,
+      price: parseFloat(row.price),
+    });
+  });
 
-    function deleteAddress(index) {
-      const user = JSON.parse(localStorage.getItem("currentUser"));
-      if (!user || !user.addressBook) return;
-      user.addressBook.splice(index, 1);
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      if (user.email) localStorage.setItem(`account_${user.email}`, JSON.stringify(user));
-      renderAddresses();
-    }
+  const orderIds = Object.keys(loadedDatabaseOrders).sort((a, b) => b - a);
 
-    // --- FIXED: INTEGRATED LIVE SQL RELATIONAL HISTORY FETCH ---
-    async function loadLiveDatabaseHistory(customerName) {
-      const list = document.getElementById("history-list");
-      if (!list) return;
+  if (orderIds.length === 0) {
+    list.innerHTML = `<li class="py-4 text-sm text-neutral-400 italic text-center">No history yet.</li>`;
+    return;
+  }
 
-      list.innerHTML = "";
-      let rawData = [];
+  // Render orders pulled dynamically out of your MySQL tables
+  orderIds.forEach((id) => {
+    const order = loadedDatabaseOrders[id];
+    const dateObj = new Date(order.created_at);
+    const formattedDate = dateObj.toLocaleDateString();
+    const formattedTime = dateObj.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-      try {
-        const response = await fetch(`${API_URL}/orders/${encodeURIComponent(customerName)}`);
-        if (response.ok) {
-          rawData = await response.json();
-        }
-      } catch (err) {
-        console.error("Database history aggregation routing error:", err);
-      }
+    const itemsSummary = order.items
+      .map((item) => `${item.title} (x${item.quantity})`)
+      .join(", ");
 
-      // Group database JOIN table lines by their parent Order IDs
-      loadedDatabaseOrders = {};
-      rawData.forEach(row => {
-        if (!loadedDatabaseOrders[row.order_id]) {
-          loadedDatabaseOrders[row.order_id] = {
-            id: row.order_id,
-            total: parseFloat(row.total),
-            created_at: row.created_at,
-            items: []
-          };
-        }
-        loadedDatabaseOrders[row.order_id].items.push({
-          title: row.title,
-          quantity: row.quantity,
-          price: parseFloat(row.price)
-        });
-      });
-
-      const orderIds = Object.keys(loadedDatabaseOrders).sort((a, b) => b - a);
-
-      if (orderIds.length === 0) {
-        list.innerHTML = `<li class="py-4 text-sm text-neutral-400 italic text-center">No previous checkout history found in MySQL.</li>`;
-        return;
-      }
-
-      // Render orders pulled dynamically out of your MySQL tables
-      orderIds.forEach(id => {
-        const order = loadedDatabaseOrders[id];
-        const dateObj = new Date(order.created_at);
-        const formattedDate = dateObj.toLocaleDateString();
-        const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        const itemsSummary = order.items.map(item => `${item.title} (x${item.quantity})`).join(", ");
-
-        list.innerHTML += `
+    list.innerHTML += `
           <li class="p-3 bg-pink-50/30 rounded-xl border border-pink-100/60 flex justify-between items-center cursor-pointer hover:bg-pink-50/70 transition-colors animate-fade-in" onclick="openInvoiceModal('${id}')">
             <div class="max-w-[70%]">
               <span class="font-mono text-pink-600 font-bold">#ORDER_ID_${order.id}</span> 
@@ -148,40 +167,43 @@
               <span class="text-[9px] uppercase tracking-wide px-1.5 py-0.5 bg-pink-100 rounded-md font-bold text-pink-700">View Invoice</span>
             </div>
           </li>`;
-      });
-    }
+  });
+}
 
-    // --- FIXED: DISPLAY LIVE DETAILED INVOICE MODAL FROM DATABASE ---
-    function openInvoiceModal(orderId) {
-      const order = loadedDatabaseOrders[orderId];
-      if (!order) return;
+// --- FIXED: DISPLAY LIVE DETAILED INVOICE MODAL FROM DATABASE ---
+function openInvoiceModal(orderId) {
+  const order = loadedDatabaseOrders[orderId];
+  if (!order) return;
 
-      const modal = document.getElementById("invoice-modal");
-      const content = document.getElementById("invoice-modal-content");
-      
-      let itemsHTML = "";
-      let subtotal = 0;
+  const modal = document.getElementById("invoice-modal");
+  const content = document.getElementById("invoice-modal-content");
 
-      order.items.forEach(item => {
-        let rowTotal = item.price * item.quantity;
-        subtotal += rowTotal;
-        itemsHTML += `
+  let itemsHTML = "";
+  let subtotal = 0;
+
+  order.items.forEach((item) => {
+    let rowTotal = item.price * item.quantity;
+    subtotal += rowTotal;
+    itemsHTML += `
           <div class="flex justify-between items-center text-xs py-2 border-b border-neutral-100 text-neutral-600">
             <div class="font-medium max-w-[60%] truncate">${item.title} <span class="text-neutral-400 ml-1">x${item.quantity}</span></div>
             <div class="font-mono font-medium text-neutral-700">$${rowTotal.toFixed(2)}</div>
           </div>`;
-      });
+  });
 
-      // Recalculate original checkout breakdown structures for display
-      const deliveryFee = 1.50;
-      let discountApplied = subtotal + deliveryFee - order.total;
-      if (discountApplied < 0.01) discountApplied = 0; // Handle precision adjustments
+  // Recalculate original checkout breakdown structures for display
+  const deliveryFee = 1.5;
+  let discountApplied = subtotal + deliveryFee - order.total;
+  if (discountApplied < 0.01) discountApplied = 0; // Handle precision adjustments
 
-      const dateObj = new Date(order.created_at);
-      const formattedDate = dateObj.toLocaleDateString();
-      const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateObj = new Date(order.created_at);
+  const formattedDate = dateObj.toLocaleDateString();
+  const formattedTime = dateObj.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-      content.innerHTML = `
+  content.innerHTML = `
         <div class="text-center pb-4 border-b border-dashed border-neutral-200 mb-4">
           <img src="./image/logo copy.png" alt="Invoice Logo" class="w-[60px] mx-auto mb-1">
           <h2 class="text-base font-bold uppercase text-neutral-800 tracking-wider">Minee Beauty Invoice</h2>
@@ -218,20 +240,19 @@
         </div>
       `;
 
-      modal.classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-    }
+  modal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
 
-    function closeInvoiceModal() {
-      document.getElementById("invoice-modal").classList.add("hidden");
-      document.body.style.overflow = "auto";
-    }
+function closeInvoiceModal() {
+  document.getElementById("invoice-modal").classList.add("hidden");
+  document.body.style.overflow = "auto";
+}
 
-    function logout() {
-      const confirmLogout = confirm("Are you sure you want to log out?");
-      if (confirmLogout) {
-        localStorage.removeItem("currentUser");
-        window.location.href = "contact.html";
-      }
-    }
- 
+function logout() {
+  const confirmLogout = confirm("Are you sure you want to log out?");
+  if (confirmLogout) {
+    localStorage.removeItem("currentUser");
+    window.location.href = "contact.html";
+  }
+}

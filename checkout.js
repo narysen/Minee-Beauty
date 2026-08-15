@@ -1,4 +1,8 @@
-const API_URL = "http://localhost:3000/api";
+const API_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000/api"
+    : "https://minee-beauty-store.onrender.com/api";
 
 let checkoutCart = JSON.parse(localStorage.getItem("minee_cart")) || [];
 let selectedMethod = "Cash on Delivery";
