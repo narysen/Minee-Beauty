@@ -630,7 +630,6 @@
               step="0.01"
               min="0"
               placeholder="0 for no discount"
-              required
               class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
             />
           </div>
@@ -672,6 +671,48 @@
                 value="0"
                 class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
               />
+            </div>
+            <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-100">
+              <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1">
+                  Bulk Minimum Quantity
+                </label>
+
+                <input
+                  type="number"
+                  id="promo-bulk-min"
+                  min="0"
+                  step="1"
+                  value="0"
+                  placeholder="e.g. 2"
+                  class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+                />
+
+                <p class="text-[10px] text-slate-400 mt-1">
+                  Set to 0 to disable
+                </p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1">
+                  Bulk Discount (%)
+                </label>
+
+                <input
+                  type="number"
+                  id="promo-bulk-percent"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value="0"
+                  placeholder="e.g. 10"
+                  class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0099ff]"
+                />
+
+                <p class="text-[10px] text-slate-400 mt-1">
+                  Example: Buy 2+, save 10%
+                </p>
+              </div>
             </div>
           </div>
 
@@ -1156,7 +1197,7 @@
         document.getElementById("prod-category").value =
           product.category || customCategories[0];
         document.getElementById("prod-existing-img").value =
-          product.image || "";
+          product.image_url || product.image || "";
         document.getElementById("crud-modal").classList.remove("hidden");
       }
 
@@ -1165,24 +1206,50 @@
       }
 
       function openPromotionModal(id) {
-        const product = currentProducts.find((p) => p.id === id);
+        const product = currentProducts.find(
+          (item) => Number(item.id) === Number(id),
+        );
+
         if (!product) return;
 
+        const toDateTimeLocal = (value) => {
+          if (!value) return "";
+
+          return String(value).replace(" ", "T").substring(0, 16);
+        };
+
         document.getElementById("promo-prod-id").value = product.id;
+
         document.getElementById("promo-base-info").innerText =
-          `Original Base Price: $${parseFloat(product.price || 0).toFixed(2)} — ${product.title || ""}`;
+          `Original Base Price: $${Number(product.price || 0).toFixed(
+            2,
+          )} — ${product.title || ""}`;
+
         document.getElementById("promo-price").value =
-          product.sale_price !== undefined && product.sale_price !== null
-            ? product.sale_price
+          product.discount_price !== null &&
+          product.discount_price !== undefined
+            ? product.discount_price
             : "";
-        document.getElementById("promo-start").value = product.sale_start
-          ? product.sale_start.substring(0, 16)
-          : "";
-        document.getElementById("promo-end").value = product.sale_end
-          ? product.sale_end.substring(0, 16)
-          : "";
+
+        document.getElementById("promo-start").value = toDateTimeLocal(
+          product.discount_start,
+        );
+
+        document.getElementById("promo-end").value = toDateTimeLocal(
+          product.discount_end,
+        );
+
         document.getElementById("promo-limit").value =
-          product.sale_limit !== undefined ? product.sale_limit : 0;
+          product.limit_per_user !== undefined ? product.limit_per_user : 0;
+        document.getElementById("promo-bulk-min").value =
+          product.bulk_min_quantity !== undefined
+            ? product.bulk_min_quantity
+            : 0;
+
+        document.getElementById("promo-bulk-percent").value =
+          product.bulk_discount_percent !== undefined
+            ? product.bulk_discount_percent
+            : 0;
 
         document.getElementById("promotion-modal").classList.remove("hidden");
       }
@@ -1193,45 +1260,110 @@
 
       async function handlePromotionSubmit(event) {
         event.preventDefault();
-        const id = document.getElementById("promo-prod-id").value;
-        const salePrice =
-          parseFloat(document.getElementById("promo-price").value) || 0;
-        const saleStart = document.getElementById("promo-start").value || null;
-        const saleEnd = document.getElementById("promo-end").value || null;
-        const saleLimit =
-          parseInt(document.getElementById("promo-limit").value) || 0;
 
-        const product = currentProducts.find((p) => p.id == id);
+        const id = Number(document.getElementById("promo-prod-id").value);
+
+        const promoPriceInput = document.getElementById("promo-price").value;
+
+        const promoPrice =
+          promoPriceInput === "" ? null : Number(promoPriceInput);
+
+        const promoStart = document.getElementById("promo-start").value || null;
+
+        const promoEnd = document.getElementById("promo-end").value || null;
+
+        const promoLimit =
+          Number.parseInt(document.getElementById("promo-limit").value, 10) ||
+          0;
+        const bulkMinimum =
+          Number.parseInt(
+            document.getElementById("promo-bulk-min").value,
+            10,
+          ) || 0;
+
+        const bulkPercent =
+          Number(document.getElementById("promo-bulk-percent").value) || 0;
+
+        const product = currentProducts.find((item) => Number(item.id) === id);
+
         if (!product) return;
 
-        const promoPayload = {
-          title: product.title,
-          price: product.price,
-          stock: product.stock !== undefined ? product.stock : 10,
-          category: product.category,
-          image: product.image,
-          sale_price: salePrice > 0 ? salePrice : null,
-          sale_start: saleStart,
-          sale_end: saleEnd,
-          sale_limit: saleLimit,
-        };
+        if (
+          promoPrice !== null &&
+          (!Number.isFinite(promoPrice) ||
+            promoPrice <= 0 ||
+            promoPrice >= Number(product.price))
+        ) {
+          alert(
+            "Promotional price must be greater than zero and lower than the original price.",
+          );
 
+          return;
+        }
+
+        if (
+          promoStart &&
+          promoEnd &&
+          new Date(promoEnd) <= new Date(promoStart)
+        ) {
+          alert("Promotion expiration must be later than its start time.");
+
+          return;
+        }
+
+        if (promoLimit < 0) {
+          alert("Purchase limit cannot be negative.");
+
+          return;
+        }
+        const bulkPromotionIsDisabled = bulkMinimum === 0 && bulkPercent === 0;
+
+        const bulkPromotionIsValid =
+          Number.isInteger(bulkMinimum) &&
+          bulkMinimum >= 2 &&
+          Number.isFinite(bulkPercent) &&
+          bulkPercent > 0 &&
+          bulkPercent <= 100;
+
+        if (!bulkPromotionIsDisabled && !bulkPromotionIsValid) {
+          alert(
+            "For a quantity discount, minimum quantity must be at least 2 and discount must be between 1% and 100%. Set both fields to 0 to disable it.",
+          );
+
+          return;
+        }
+
+        const promoPayload = {
+          promo_price: promoPrice,
+          promo_start: promoStart,
+          promo_end: promoEnd,
+          promo_limit: promoLimit,
+          bulk_min_quantity: bulkMinimum,
+          bulk_discount_percent: bulkPercent,
+        };
         try {
-          const response = await fetch(`${API_URL}/products/${id}`, {
+          const response = await fetch(`${API_URL}/products/${id}/promotion`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(promoPayload),
           });
 
-          if (response.ok) {
-            closePromotionModal();
-            await refreshAdminDataMatrix();
-          } else {
-            alert("Failed to apply promotion settings to database.");
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              result.message || result.error || "Failed to update promotion.",
+            );
           }
-        } catch (err) {
-          console.error("Error submitting promotion:", err);
-          alert("Connection error while updating promotion.");
+
+          closePromotionModal();
+          await refreshAdminDataMatrix();
+        } catch (error) {
+          console.error("Error updating promotion:", error);
+
+          alert(error.message);
         }
       }
 
@@ -1242,53 +1374,77 @@
           document.getElementById("edit-index").value,
           10,
         );
+
         const title = document.getElementById("prod-name").value.trim();
+
         const price = parseFloat(document.getElementById("prod-price").value);
+
         const stock = parseInt(document.getElementById("prod-stock").value, 10);
+
         const category = document.getElementById("prod-category").value;
+
         const fileInput = document.getElementById("prod-img-file");
 
-        let imageUrl =
-          document.getElementById("prod-existing-img").value ||
-          "https://placehold.co/300x300?text=Minee+Beauty";
+        const existingImage =
+          document.getElementById("prod-existing-img").value;
 
-        if (fileInput.files && fileInput.files[0]) {
-          imageUrl = await convertFileToDataUri(fileInput.files[0]);
+        if (!title) {
+          alert("Product title is required.");
+          return;
         }
 
-        const productPayload = {
-          title,
-          price,
-          stock,
-          category,
-          image: imageUrl,
-        };
+        if (!Number.isFinite(price) || price <= 0) {
+          alert("Enter a valid product price.");
+          return;
+        }
+
+        if (!Number.isInteger(stock) || stock < 0) {
+          alert("Stock must be zero or a positive whole number.");
+          return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("title", title);
+        formData.append("price", String(price));
+        formData.append("stock", String(stock));
+        formData.append("category", category);
+
+        if (existingImage) {
+          formData.append("image_url", existingImage);
+        }
+
+        if (fileInput.files && fileInput.files.length > 0) {
+          formData.append("image_file", fileInput.files[0]);
+        }
+
+        const requestUrl =
+          editId === -1
+            ? `${API_URL}/products`
+            : `${API_URL}/products/${editId}`;
+
+        const requestMethod = editId === -1 ? "POST" : "PUT";
 
         try {
-          let response;
-          if (editId === -1) {
-            response = await fetch(`${API_URL}/products`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(productPayload),
-            });
-          } else {
-            response = await fetch(`${API_URL}/products/${editId}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(productPayload),
-            });
+          const response = await fetch(requestUrl, {
+            method: requestMethod,
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              result.message || result.error || "Failed to save product.",
+            );
           }
 
-          if (response.ok) {
-            closeCrudModal();
-            await refreshAdminDataMatrix();
-          } else {
-            alert("Failed to save product to database server.");
-          }
-        } catch (err) {
-          console.error("Error submitting product form:", err);
-          alert("Connection error while saving product.");
+          closeCrudModal();
+          await refreshAdminDataMatrix();
+        } catch (error) {
+          console.error("Error saving product:", error);
+
+          alert(error.message);
         }
       }
 

@@ -73,9 +73,11 @@ const initDatabase = () => {
             discount_price DECIMAL(10, 2) DEFAULT NULL,
             discount_start DATETIME DEFAULT NULL,
             discount_end DATETIME DEFAULT NULL,
-            stock INT DEFAULT 0,
-            limit_per_user INT DEFAULT 0,
-            image_url VARCHAR(255),
+stock INT DEFAULT 0,
+limit_per_user INT DEFAULT 0,
+bulk_min_quantity INT NOT NULL DEFAULT 0,
+bulk_discount_percent DECIMAL(5, 2) NOT NULL DEFAULT 0,
+image_url VARCHAR(255),
             description TEXT,
             ingredients TEXT
         );`,
@@ -133,13 +135,34 @@ const initDatabase = () => {
     KEY idx_khqr_status_expiry (status, expires_at),
     KEY idx_khqr_order (order_id)
 );`,
+    `ALTER TABLE products
+     ADD COLUMN bulk_min_quantity INT NOT NULL DEFAULT 0
+     AFTER limit_per_user;`,
+
+    `ALTER TABLE products
+     ADD COLUMN bulk_discount_percent DECIMAL(5, 2) NOT NULL DEFAULT 0
+     AFTER bulk_min_quantity;`,
   ];
 
-  queries.forEach((query) => {
-    db.query(query, (err) => {
-      if (err) console.error("Database auto-init error:", err.message);
+  const runNextQuery = (index = 0) => {
+    if (index >= queries.length) {
+      console.log("Database tables and promotion columns are ready.");
+
+      return;
+    }
+
+    db.query(queries[index], (error) => {
+      const columnAlreadyExists = error && error.code === "ER_DUP_FIELDNAME";
+
+      if (error && !columnAlreadyExists) {
+        console.error("Database auto-init error:", error.message);
+      }
+
+      runNextQuery(index + 1);
     });
-  });
+  };
+
+  runNextQuery();
 };
 
 initDatabase();
