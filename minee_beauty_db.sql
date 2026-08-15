@@ -191,10 +191,13 @@ INNER JOIN order_items oi ON o.id = oi.order_id
 INNER JOIN products pd ON oi.product_id = pd.id
 LIMIT 0, 1000;
 -- to manage on the discount funtion
+-- Product promotion and purchase-limit configuration
 ALTER TABLE products
 ADD COLUMN discount_start DATETIME NULL,
 ADD COLUMN discount_end DATETIME NULL,
-ADD COLUMN limit_per_user INT DEFAULT 0; -- 0 means unlimited purchase power
+ADD COLUMN limit_per_user INT NOT NULL DEFAULT 0,
+ADD COLUMN bulk_min_quantity INT NOT NULL DEFAULT 0,
+ADD COLUMN bulk_discount_percent DECIMAL(5, 2) NOT NULL DEFAULT 0;
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,

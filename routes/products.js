@@ -103,9 +103,21 @@ module.exports = function (db) {
             : null,
           limit_per_user:
             product.limit_per_user !== undefined
-              ? parseInt(product.limit_per_user)
+              ? parseInt(product.limit_per_user, 10)
               : 0,
-          stock: product.stock !== undefined ? parseInt(product.stock) : 0,
+
+          bulk_min_quantity:
+            product.bulk_min_quantity !== undefined
+              ? parseInt(product.bulk_min_quantity, 10)
+              : 0,
+
+          bulk_discount_percent:
+            product.bulk_discount_percent !== undefined
+              ? parseFloat(product.bulk_discount_percent)
+              : 0,
+
+          stock: product.stock !== undefined ? parseInt(product.stock, 10) : 0,
+
           image_url: absoluteImageUrl,
           description: product.description,
           ingredients: product.ingredients,
@@ -407,14 +419,16 @@ module.exports = function (db) {
       // Lock products until checkout finishes.
       const [products] = await connection.query(
         `
-                        SELECT
-                            id,
-                            title,
-                            price,
-                            discount_price,
-                            discount_start,
-                            discount_end,
-                            stock
+SELECT
+    id,
+    title,
+    price,
+    discount_price,
+    discount_start,
+    discount_end,
+    bulk_min_quantity,
+    bulk_discount_percent,
+    stock
                         FROM products
                         WHERE id IN (${placeholders})
                         FOR UPDATE
@@ -470,7 +484,6 @@ module.exports = function (db) {
         const endsAt = product.discount_end
           ? new Date(product.discount_end)
           : null;
-
         const promotionIsActive =
           Number.isFinite(discountPrice) &&
           discountPrice > 0 &&
@@ -478,10 +491,26 @@ module.exports = function (db) {
           (!startsAt || now >= startsAt) &&
           (!endsAt || now <= endsAt);
 
-        const unitPrice = promotionIsActive ? discountPrice : regularPrice;
+        const promotionalUnitPrice = promotionIsActive
+          ? discountPrice
+          : regularPrice;
 
-        const unitPriceCents = Math.round(unitPrice * 100);
+        const bulkMinimum = Number(product.bulk_min_quantity);
+        const bulkPercent = Number(product.bulk_discount_percent);
 
+        const bulkPromotionIsActive =
+          Number.isInteger(bulkMinimum) &&
+          bulkMinimum >= 2 &&
+          Number.isFinite(bulkPercent) &&
+          bulkPercent > 0 &&
+          bulkPercent <= 100 &&
+          quantity >= bulkMinimum;
+
+        const finalUnitPrice = bulkPromotionIsActive
+          ? promotionalUnitPrice * (1 - bulkPercent / 100)
+          : promotionalUnitPrice;
+
+        const unitPriceCents = Math.round(finalUnitPrice * 100);
         subtotalCents += unitPriceCents * quantity;
 
         orderItems.push({
