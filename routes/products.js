@@ -279,7 +279,7 @@ module.exports = function (db) {
     });
   });
 
-  router.put("/products/:id", upload.single("image_file"), (req, res) => {
+ router.put("/products/:id", upload.single("image_file"), (req, res) => {
     const productId = req.params.id;
     const {
       title,
@@ -306,7 +306,6 @@ module.exports = function (db) {
     }
 
     let rawImageUrl = image_url || image || img || "image/logo copy.png";
-    // Strip any absolute domain prefix if present before updating database cleanly
     if (rawImageUrl.includes("localhost:3000/")) {
       rawImageUrl = rawImageUrl.split("localhost:3000/")[1];
     }
@@ -327,12 +326,12 @@ module.exports = function (db) {
         : `MB-${productId}`;
 
     const updateQuery = `
-            UPDATE products 
-            SET sku = ?, title = ?, brand = ?, category = ?, price = ?, discount_price = ?, 
-                stock = ?, image_url = ?, description = ?, ingredients = ?, 
-                discount_start = ?, discount_end = ?, limit_per_user = ? 
-            WHERE id = ?
-        `;
+      UPDATE products 
+      SET sku = ?, title = ?, brand = ?, category = ?, price = ?, discount_price = ?, 
+          stock = ?, image_url = ?, description = ?, ingredients = ?, 
+          discount_start = ?, discount_end = ?, limit_per_user = ? 
+      WHERE id = ?
+    `;
 
     const parsedDiscountPrice =
       discount_price !== undefined &&
@@ -341,10 +340,16 @@ module.exports = function (db) {
       parseFloat(discount_price) > 0
         ? parseFloat(discount_price)
         : null;
-    const parsedDiscountStart =
-      discount_start && discount_start.trim() !== "" ? discount_start : null;
-    const parsedDiscountEnd =
-      discount_end && discount_end.trim() !== "" ? discount_end : null;
+
+    // Helper to fix datetime-local format (YYYY-MM-DDTHH:mm) into MySQL format (YYYY-MM-DD HH:mm:ss)
+    const formatForMySQL = (dateString) => {
+      if (!dateString || dateString.trim() === "") return null;
+      const formatted = dateString.replace("T", " ");
+      return formatted.length === 16 ? `${formatted}:00` : formatted;
+    };
+
+    const parsedDiscountStart = formatForMySQL(discount_start);
+    const parsedDiscountEnd = formatForMySQL(discount_end);
 
     const values = [
       validSku,
@@ -365,6 +370,7 @@ module.exports = function (db) {
 
     db.query(updateQuery, values, (err, result) => {
       if (err) {
+        console.error("Database update error:", err.message);
         return res.status(500).json({ success: false, error: err.message });
       }
       if (result.affectedRows === 0) {
